@@ -7,6 +7,13 @@ body {
     color: #333;
 }
 
+
+.home-page {
+    min-height: 100vh; /* Ensures the page takes up the full height of the viewport */
+    display: flex;
+    flex-direction: column;
+}
+
 a {
     text-decoration: none;
     color: inherit;
