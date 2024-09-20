@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34902.65
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manim-API", "Manim-API\Manim-API.csproj", "{67F6FB1B-C33B-4147-A0B4-EB2D6383DFA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manim-Repositories", "Manim-Repository\Manim-Repositories.csproj", "{CD7192C4-F185-4CB4-9B1C-571096CEED9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manim-Service", "Manim-Service\Manim-Service.csproj", "{953681A0-8D89-4468-9911-5DE88033696D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manim-Model", "Manim-Model\Manim-Model.csproj", "{CB4B893A-8064-453D-8A6F-20AF9143B937}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{67F6FB1B-C33B-4147-A0B4-EB2D6383DFA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67F6FB1B-C33B-4147-A0B4-EB2D6383DFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67F6FB1B-C33B-4147-A0B4-EB2D6383DFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67F6FB1B-C33B-4147-A0B4-EB2D6383DFA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD7192C4-F185-4CB4-9B1C-571096CEED9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD7192C4-F185-4CB4-9B1C-571096CEED9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD7192C4-F185-4CB4-9B1C-571096CEED9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD7192C4-F185-4CB4-9B1C-571096CEED9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{953681A0-8D89-4468-9911-5DE88033696D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{953681A0-8D89-4468-9911-5DE88033696D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{953681A0-8D89-4468-9911-5DE88033696D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{953681A0-8D89-4468-9911-5DE88033696D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB4B893A-8064-453D-8A6F-20AF9143B937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB4B893A-8064-453D-8A6F-20AF9143B937}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB4B893A-8064-453D-8A6F-20AF9143B937}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB4B893A-8064-453D-8A6F-20AF9143B937}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7F4196F-23DD-43AD-B21D-F72B6DCD1E3C}
+	EndGlobalSection
+EndGlobal
