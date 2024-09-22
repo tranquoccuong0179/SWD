@@ -51,7 +51,7 @@ try
         c.RoutePrefix = string.Empty;
     });
     app.UseSwaggerUI();
-    app.UseMiddleware<ExceptionHandlingMiddleware>();
+    app.UseMiddleware<ExceptionMiddleware>();
 
     app.UseHttpsRedirection();
     app.UseCors(CorsConstant.PolicyName);
