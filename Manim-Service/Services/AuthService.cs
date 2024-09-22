@@ -73,7 +73,7 @@ namespace Manim_Service.Services
                 CreateAt = DateTime.Now
             };
             await _unitOfWork.GetRepository<ApplicationUser>().InsertAsync(newUser);
-            //await _unitOfWork.Ss();
+            await _unitOfWork.CommitAsync();
         }
         public GetTokenVM GenerateTokens(ApplicationUser user)
         {

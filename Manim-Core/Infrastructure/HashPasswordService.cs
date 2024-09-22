@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Manim_Service.Services
+namespace Manim_Core.Infrastructure
 {
     public static class HashPasswordService
     {

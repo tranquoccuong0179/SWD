@@ -3,6 +3,7 @@ using Manim_API.Converter;
 using Manim_API.Extensions;
 using Manim_API.Middlewares;
 using Manim_Service;
+using Manim_Service.Mapper;
 using NLog.Web;
 using System.Text.Json.Serialization;
 
@@ -34,7 +35,8 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddConfigSwagger();
     builder.Services.AddSwaggerGen();
-
+    //Auto Mapper
+    builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
