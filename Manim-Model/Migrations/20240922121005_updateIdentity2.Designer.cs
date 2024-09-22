@@ -4,6 +4,7 @@ using Manim_Model.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Manim_Model.Migrations
 {
     [DbContext(typeof(Swd392Context))]
-    partial class Swd392ContextModelSnapshot : ModelSnapshot
+    [Migration("20240922121005_updateIdentity2")]
+    partial class updateIdentity2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,6 +163,10 @@ namespace Manim_Model.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("WalletId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -169,6 +176,9 @@ namespace Manim_Model.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("WalletId")
+                        .IsUnique();
 
                     b.ToTable("Users", (string)null);
                 });
@@ -469,14 +479,10 @@ namespace Manim_Model.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Wallets");
                 });
@@ -570,6 +576,17 @@ namespace Manim_Model.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Manim_Model.Entity.ApplicationUser", b =>
+                {
+                    b.HasOne("Manim_Model.Entity.Wallet", "Wallet")
+                        .WithOne("User")
+                        .HasForeignKey("Manim_Model.Entity.ApplicationUser", "WalletId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Manim_Model.Entity.ApplicationUserRoles", b =>
@@ -667,15 +684,6 @@ namespace Manim_Model.Migrations
                     b.Navigation("Wallet");
                 });
 
-            modelBuilder.Entity("Manim_Model.Entity.Wallet", b =>
-                {
-                    b.HasOne("Manim_Model.Entity.ApplicationUser", "User")
-                        .WithOne("Wallet")
-                        .HasForeignKey("Manim_Model.Entity.Wallet", "UserId");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("NhaMayMay.Contract.Repositories.Entity.ApplicationUserClaims", b =>
                 {
                     b.HasOne("Manim_Model.Entity.ApplicationUser", null)
@@ -708,8 +716,6 @@ namespace Manim_Model.Migrations
                     b.Navigation("Deposits");
 
                     b.Navigation("Solutions");
-
-                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Manim_Model.Entity.Chapter", b =>
@@ -745,6 +751,8 @@ namespace Manim_Model.Migrations
             modelBuilder.Entity("Manim_Model.Entity.Wallet", b =>
                 {
                     b.Navigation("Transactions");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,7 +1,9 @@
 ﻿using Manim_Model.Entity;
+using Manim_Repository;
 using Manim_Repository.Repository.Implement;
 using Manim_Repository.Repository.Interface;
 using Manim_Service.IServices;
+using Manim_Service.Mapper;
 using Manim_Service.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -23,6 +25,7 @@ namespace Manim_Service
             services.AddRepository();
             services.AddAutoMapper();
             services.AddServices();
+            services.SeedData();
         }
         public static void AddRepository(this IServiceCollection services)
         {
@@ -46,6 +49,13 @@ namespace Manim_Service
                 // Đăng ký dịch vụ với scope phù hợp (Scoped, Transient, Singleton)
                 services.AddScoped(service.Interface!, service.Implementation!);
             }
+        }
+        public static void SeedData(this IServiceCollection services)
+        {
+            using var scope = services.BuildServiceProvider().CreateScope();
+            using var context = scope.ServiceProvider.GetRequiredService<Swd392Context>();
+            var initialiser = new SeedData(context);
+            initialiser.SeedingData();
         }
         public class ServicesType
         {

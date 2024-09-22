@@ -1,17 +1,13 @@
-﻿using System;
+﻿using Manim_Model.Base;
+using System;
 using System.Collections.Generic;
 
 namespace Manim_Model.Entity;
 
-public partial class Wallet
+public partial class Wallet : BaseEntity
 {
-    public string Id { get; set; } = null!;
-
-    public string? UserId { get; set; }
-
+    public Guid? UserId { get; set; }
     public decimal? Balance { get; set; }
-
     public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
-
     public virtual ApplicationUser? User { get; set; }
 }

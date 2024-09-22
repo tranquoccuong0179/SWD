@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Manim-Core\Manim-Core.csproj" />
     <ProjectReference Include="..\Manim-Model\Manim-Model.csproj" />
   </ItemGroup>
 
