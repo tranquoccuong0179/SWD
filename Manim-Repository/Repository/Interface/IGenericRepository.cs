@@ -12,6 +12,7 @@ namespace Manim_Repository.Repository.Interface
     public interface IGenericRepository<T> : IDisposable where T : class
     {
         #region Get Async
+        IQueryable<T> Entities { get; }
 
         Task<T> SingleOrDefaultAsync(
             Expression<Func<T, bool>> predicate = null,

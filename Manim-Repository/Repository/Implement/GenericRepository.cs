@@ -16,11 +16,13 @@ namespace Manim_Repository.Repository.Implement
         protected readonly DbContext _dbContext;
         protected readonly DbSet<T> _dbSet;
 
+
         public GenericRepository(DbContext context)
         {
             _dbContext = context;
             _dbSet = context.Set<T>();
         }
+        public IQueryable<T> Entities => _dbContext.Set<T>();
 
         public void Dispose()
         {

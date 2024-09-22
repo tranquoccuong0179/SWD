@@ -32,8 +32,7 @@ namespace Manim_API.Extensions
 
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
         {
-            
-
+     
             return services;
         }
 
