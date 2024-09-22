@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Azure.Core;
 using Manim_Core.Infrastructure;
 using Manim_Model.Entity;
 using Manim_Model.ViewModel.AuthVM;
@@ -6,6 +7,7 @@ using Manim_Model.ViewModel.UserVM;
 using Manim_Repository.Repository.Interface;
 using Manim_Service.IServices;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -21,6 +23,7 @@ namespace Manim_Service.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+
 
         public AuthService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IMapper mapper)
         {
@@ -56,7 +59,7 @@ namespace Manim_Service.Services
             ApplicationUser? user = await _unitOfWork.GetRepository<ApplicationUser>().Entities.FirstOrDefaultAsync(p => p.UserName == model.Username);
             if (user != null)
             {
-                throw new ErrorException(StatusCodes.Status409Conflict, ErrorCode.Conflicted, "Số điện thoại này đã được đăng ký! Vui lòng đăng nhập!");
+                throw new ErrorException(StatusCodes.Status409Conflict, ErrorCode.Conflicted, "Tên đăng nhập này đã tồn tại!");
             }
             if (model.Password != model.ConfirmPassword)
             {
@@ -72,6 +75,17 @@ namespace Manim_Service.Services
                 FullName = model.FullName,               
                 CreateAt = DateTime.Now
             };
+
+            ApplicationRole roleUser = _unitOfWork.GetRepository<ApplicationRole>().Entities.Where(x => x.Name == "User").FirstOrDefault()
+                ?? throw new ErrorException(StatusCodes.Status404NotFound, ResponseCodeConstants.NOT_FOUND, "Vai trò không tồn tại"); 
+            ApplicationUserRoles userRoles = new()
+            {
+                UserId = newUser.Id,
+                RoleId = roleUser.Id,
+                CreateAt = DateTime.Now,
+                UpdateAt = DateTime.Now
+            };
+            await _unitOfWork.GetRepository<ApplicationUserRoles>().InsertAsync(userRoles);
             await _unitOfWork.GetRepository<ApplicationUser>().InsertAsync(newUser);
             await _unitOfWork.CommitAsync();
         }
