@@ -31,6 +31,8 @@ try
     builder.Services.AddUnitOfWork();
     builder.Services.AddServices(builder.Configuration);
     builder.Services.AddApplication(builder.Configuration);
+    builder.Services.AddGoogleAuthentication();
+    builder.Services.AddAuthentication();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddConfigSwagger();

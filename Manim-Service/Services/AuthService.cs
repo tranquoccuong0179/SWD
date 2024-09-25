@@ -6,6 +6,8 @@ using Manim_Model.ViewModel.AuthVM;
 using Manim_Model.ViewModel.UserVM;
 using Manim_Repository.Repository.Interface;
 using Manim_Service.IServices;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +19,7 @@ using System.Text;
 
 namespace Manim_Service.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService : IAuthService, IGoogleAuthenticationService
     {
         private IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -72,12 +74,12 @@ namespace Manim_Service.Services
                 PhoneNumber = model.Phone,
                 Email = model.Email,
                 Gender = model.Gender,
-                FullName = model.FullName,               
+                FullName = model.FullName,
                 CreateAt = DateTime.Now
             };
 
             ApplicationRole roleUser = _unitOfWork.GetRepository<ApplicationRole>().Entities.Where(x => x.Name == "User").FirstOrDefault()
-                ?? throw new ErrorException(StatusCodes.Status404NotFound, ResponseCodeConstants.NOT_FOUND, "Vai trò không tồn tại"); 
+                ?? throw new ErrorException(StatusCodes.Status404NotFound, ResponseCodeConstants.NOT_FOUND, "Vai trò không tồn tại");
             ApplicationUserRoles userRoles = new()
             {
                 UserId = newUser.Id,
@@ -135,5 +137,33 @@ namespace Manim_Service.Services
                 RefreshToken = refreshTokenString
             };
         }
+
+        public async Task<GoogleAuthVM> AuthenticateGoogleUser(HttpContext context)
+        {
+            var authenticateResult = await context.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            if (authenticateResult?.Principal == null) return null;
+
+            var name = authenticateResult.Principal.FindFirstValue(ClaimTypes.Name);
+            var email = authenticateResult.Principal.FindFirstValue(ClaimTypes.Email);
+
+            if (string.IsNullOrEmpty(email)) return null;
+
+            var accessToken = authenticateResult.Properties.GetTokenValue("access_token");
+            var refreshToken = authenticateResult.Properties.GetTokenValue("refresh_token");
+
+            return new GoogleAuthVM
+            {
+                Email = email,
+                Name = name,
+                Token = new GetTokenVM
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
+                }
+            };
+        }
+
+
     }
 }
