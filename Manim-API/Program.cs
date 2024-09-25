@@ -47,12 +47,21 @@ try
     //    options.SerializeAsV2 = true;
     //});
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    // Configure the HTTP request pipeline
+    if (app.Environment.IsDevelopment())
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bean-Mind Web API v1");
-        c.RoutePrefix = string.Empty;
-    });
-    app.UseSwaggerUI();
+
+        app.UseSwaggerUI();
+    }
+    else
+    {
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            c.RoutePrefix = string.Empty;
+        });
+    }
+
     app.UseMiddleware<ExceptionMiddleware>();
 
     app.UseHttpsRedirection();
