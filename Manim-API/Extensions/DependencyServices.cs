@@ -1,6 +1,8 @@
 ﻿using Manim_Model.Entity;
 using Manim_Repository.Repository.Implement;
 using Manim_Repository.Repository.Interface;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -35,8 +37,44 @@ namespace Manim_API.Extensions
      
             return services;
         }
+        private static string CreateClientId(IConfiguration configuration)
+        {
+            var clientId = Environment.GetEnvironmentVariable("GOOGLE_OAUTH_CLIENT_ID")
+                           ?? configuration.GetValue<string>("Oauth:ClientId");
+            return clientId;
+        }
 
-        public static IServiceCollection AddConfigSwagger(this IServiceCollection services)
+        private static string CreateClientSecret(IConfiguration configuration)
+        {
+            var clientSecret = Environment.GetEnvironmentVariable("GOOGLE_OAUTH_CLIENT_SECRET")
+                               ?? configuration.GetValue<string>("Oauth:ClientSecret");
+            return clientSecret;
+        }
+
+        public static IServiceCollection AddGoogleAuthentication(this IServiceCollection services)
+        {
+            IConfiguration configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
+            .AddCookie(options =>
+            {
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            })
+            .AddGoogle(options =>
+            {
+                options.ClientId = CreateClientId(configuration);
+                options.ClientSecret = CreateClientSecret(configuration);
+                options.SaveTokens = true;
+
+            });
+            return services;
+        }
+            public static IServiceCollection AddConfigSwagger(this IServiceCollection services)
         {
             services.AddSwaggerGen(options =>
             {
