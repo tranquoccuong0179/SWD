@@ -1,23 +1,13 @@
-﻿using System;
+﻿using Manim_Model.Base;
+using System;
 using System.Collections.Generic;
 
 namespace Manim_Model.Entity;
 
-public partial class Subject
+public partial class Subject : BaseEntity
 {
-    public string Id { get; set; } = null!;
-
-    public string? Name { get; set; }
-
-    public decimal? Price { get; set; }
-
-    public bool? Status { get; set; }
-
-    public string? Createdby { get; set; }
-
-    public DateTime? CreateAt { get; set; }
-
-    public DateTime? UpdateAt { get; set; }
-
+    public string Name { get; set; } = string.Empty;
+    public decimal Price { get; set; }
+    public bool Status { get; set; } = true;
     public virtual ICollection<Chapter> Chapters { get; set; } = new List<Chapter>();
 }

@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Manim_Model.Base;
+using System;
 using System.Collections.Generic;
 
 namespace Manim_Model.Entity;
 
-public partial class Transaction
+public partial class Transaction : BaseEntity
 {
-    public string Id { get; set; } = null!;
-
     public string? WalletId { get; set; }
 
     public string? SolutionId { get; set; }
