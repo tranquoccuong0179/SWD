@@ -1,4 +1,5 @@
-﻿using Manim_Model.Paginate;
+﻿using Manim_Core.Infrastructure;
+using Manim_Model.Paginate;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,9 @@ namespace Manim_Repository.Repository.Interface
     {
         #region Get Async
         IQueryable<T> Entities { get; }
+        Task<T> GetByIdAsync(object id);
+        Task<PaginatedList<T>> GetPagging(IQueryable<T> query, int index, int pageSize);
+
 
         Task<T> SingleOrDefaultAsync(
             Expression<Func<T, bool>> predicate = null,
@@ -63,13 +67,13 @@ namespace Manim_Repository.Repository.Interface
 
         #region Update
 
-        void UpdateAsync(T entity);
+        Task UpdateAsync(T entity);
 
-        void UpdateRange(IEnumerable<T> entities);
+        Task UpdateRange(IEnumerable<T> entities);
 
         #endregion
 
-        void DeleteAsync(T entity);
-        void DeleteRangeAsync(IEnumerable<T> entities);
+        Task DeleteAsync(T entity);
+        Task DeleteRangeAsync(IEnumerable<T> entities);
     }
 }

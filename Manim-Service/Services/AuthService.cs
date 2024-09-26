@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -42,13 +43,17 @@ namespace Manim_Service.Services
             ApplicationUser? user = await _unitOfWork.GetRepository<ApplicationUser>().Entities.FirstOrDefaultAsync(p => p.UserName == model.Username);
             if (user == null)
             {
-                throw new ErrorException(StatusCodes.Status401Unauthorized, ErrorCode.UnAuthorized, "Số điện thoại này chưa có tài khoản! Vui lòng đăng ký!");
+                throw new ErrorException(StatusCodes.Status401Unauthorized, ErrorCode.UnAuthorized, "Bạn chưa có tài khoản! Vui lòng đăng ký!");
             }
             if (user.PasswordHash != HashPasswordService.HashPasswordThrice(model.Password))
             {
-                throw new ErrorException(StatusCodes.Status401Unauthorized, ErrorCode.UnAuthorized, "Số điện thoại hoặc mật khẩu không đúng!");
+                throw new ErrorException(StatusCodes.Status401Unauthorized, ErrorCode.UnAuthorized, "Tên đăng nhâp hoặc hoặc mật khẩu không đúng!");
             }
-            GetTokenVM token = GenerateTokens(user);
+            ApplicationUserRoles roleUser = _unitOfWork.GetRepository<ApplicationUserRoles>().Entities.Where(x => x.UserId == user.Id).FirstOrDefault()
+                                ?? throw new ErrorException(StatusCodes.Status401Unauthorized, ResponseCodeConstants.BADREQUEST, "Không tìm thấy tài khoản");
+            string role = _unitOfWork.GetRepository<ApplicationRole>().Entities.Where(x => x.Id == roleUser.RoleId).Select(x => x.Name).FirstOrDefault()
+             ?? "unknow";
+            GetTokenVM token = GenerateTokens(user, role);
             return new GetSignInVM()
             {
                 User = _mapper.Map<GetUserVM>(user),
@@ -69,6 +74,7 @@ namespace Manim_Service.Services
             }
             ApplicationUser newUser = new ApplicationUser()
             {
+                Id = Guid.NewGuid(),
                 UserName = model.Username,
                 PasswordHash = HashPasswordService.HashPasswordThrice(model.Password),
                 PhoneNumber = model.Phone,
@@ -91,7 +97,7 @@ namespace Manim_Service.Services
             await _unitOfWork.GetRepository<ApplicationUser>().InsertAsync(newUser);
             await _unitOfWork.CommitAsync();
         }
-        public GetTokenVM GenerateTokens(ApplicationUser user)
+        public GetTokenVM GenerateTokens(ApplicationUser user, string role)
         {
             DateTime now = DateTime.Now;
 
@@ -99,7 +105,8 @@ namespace Manim_Service.Services
             List<Claim> claims =
             [
                 new Claim("id", user.Id.ToString()),
-                new Claim("exp", now.Ticks.ToString())
+                new Claim("exp", now.Ticks.ToString()),
+                new Claim("role", role),
             ];
 
             var keyString = _configuration.GetSection("JWT:SecretKey").Value ?? string.Empty;

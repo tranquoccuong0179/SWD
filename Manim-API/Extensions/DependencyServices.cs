@@ -22,14 +22,14 @@ namespace Manim_API.Extensions
         {
             IConfiguration configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true).Build();
-            services.AddDbContext<Swd392Context>(options => options.UseSqlServer(CreateConnectionString(configuration)));
+            services.AddDbContext<Swd392Context>(options => options.UseLazyLoadingProxies().UseSqlServer(CreateConnectionString(configuration)));
             return services;
         }
 
         private static string CreateConnectionString(IConfiguration configuration)
         {
             var connectionString = configuration.GetValue<string>("ConnectionStrings:MyConnectionString");
-            return connectionString;
+            return connectionString ?? "";
         }
 
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)

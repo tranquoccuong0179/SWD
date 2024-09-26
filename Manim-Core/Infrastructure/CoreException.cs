@@ -96,5 +96,7 @@ namespace Manim_Core.Infrastructure
         public const string INVALID_INPUT = "Invalid input!";
         public const string UNAUTHORIZED = "Unauthorized!";
         public const string BADREQUEST = "Bad request!";
+        public const string FORBIDDEN = "Forbidden!";
+
     }
 }

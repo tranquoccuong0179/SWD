@@ -38,7 +38,6 @@ try
     builder.Services.AddConfigSwagger();
     builder.Services.AddSwaggerGen();
     //Auto Mapper
-    builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
@@ -63,6 +62,7 @@ try
     }
 
     app.UseMiddleware<ExceptionMiddleware>();
+    app.UseMiddleware<PermissionMiddleware>();
 
     app.UseHttpsRedirection();
     app.UseCors(CorsConstant.PolicyName);
