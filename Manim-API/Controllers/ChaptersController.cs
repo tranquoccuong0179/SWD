@@ -17,8 +17,8 @@ namespace Manim_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetChapters(int index = 1, int pageSize = 10, string? id = null, string? nameSearch = null)
         {
-            var result = await _chapterService.GetChapters();
-            return Ok(new BaseResponseModel<GetChaptersVM>(
+            var result = await _chapterService.GetChapters(index, pageSize, id, nameSearch);
+            return Ok(new BaseResponseModel<PaginatedList<GetChaptersVM>?>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 data: result));

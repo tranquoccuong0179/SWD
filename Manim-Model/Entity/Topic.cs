@@ -6,9 +6,10 @@ namespace Manim_Model.Entity;
 
 public partial class Topic : BaseEntity
 {
-    public string ChapterId { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
     public long? Number { get; set; }
     public bool Status { get; set; } = true;
+    public string ChapterId { get; set; } = string.Empty;
     public virtual Chapter? Chapter { get; set; }
     public virtual ICollection<ProblemType> ProblemTypes { get; set; } = new List<ProblemType>();
 }

@@ -71,7 +71,7 @@ namespace Manim_API.Middlewares
                 string userRole = Authentication.GetUserRoleFromHttpContext(context);
 
                 //// If the user role is admin, allow access to all controllers
-                if (userRole == "Admin") return true;
+                if (userRole == "AdminSystem") return true;
 
                 // Check if the user's role has permission to access the requested controller
                 if (_rolePermissions.TryGetValue(userRole, out var allowedControllers))

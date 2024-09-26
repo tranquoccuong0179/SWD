@@ -8,5 +8,12 @@ namespace Manim_Model.ViewModel.SolutionVM
 {
     public class GetSolutionsVM
     {
+        public string Id { get; set; } = string.Empty;
+        public string ProblemTypeId { get; set; } = string.Empty;
+        public string ProblemTypeName { get; set; } = string.Empty;
+        public string UserId { get; set; } = string.Empty;
+        public string UserUserName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public decimal Price { get; set; }
     }
 }

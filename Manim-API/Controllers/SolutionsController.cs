@@ -16,8 +16,8 @@ namespace Manim_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetSolutions(int index = 1, int pageSize = 10, string? id = null, string? nameSearch = null)
         {
-            var result = await _solutionService.GetSolutions();
-            return Ok(new BaseResponseModel<GetSolutionsVM>(
+            var result = await _solutionService.GetSolutions(index, pageSize, id, nameSearch);
+            return Ok(new BaseResponseModel<PaginatedList<GetSolutionsVM>?>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 data: result));

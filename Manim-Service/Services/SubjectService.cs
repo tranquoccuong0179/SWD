@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Manim_Core.Infrastructure;
 using Manim_Model.Entity;
+using Manim_Model.ViewModel.ChapterVM;
 using Manim_Model.ViewModel.SubjectVM;
 using Manim_Repository.Repository.Interface;
 using Manim_Service.IServices;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -43,7 +45,15 @@ namespace Manim_Service.Services
 
             var resultQuery = await _unitOfWork.GetRepository<Subject>().GetPagging(query, index, pageSize);
 
-            var responseItems = resultQuery.Items.Select(item =>_mapper.Map<GetSubjectsVM>(item)).ToList();
+            var responseItems = resultQuery.Items.Select(item =>
+            {
+                IEnumerable<GetChapterNamesVM> chapterName = item.Chapters
+                    .Select(ch => new GetChapterNamesVM { Id = ch.Id, Name = ch.Name })
+                    .ToList();
+                var result = _mapper.Map<GetSubjectsVM>(item);
+                result.Chapters = chapterName;
+                return result;
+            }).ToList();
 
             // Create paginated response
             var responsePaginatedList = new PaginatedList<GetSubjectsVM>(

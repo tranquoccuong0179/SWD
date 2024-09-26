@@ -26,6 +26,7 @@ namespace Manim_Service
             services.AddAutoMapper();
             services.AddServices();
             services.SeedData();
+            services.AddAutoMapper();
         }
         public static void AddRepository(this IServiceCollection services)
         {
@@ -36,7 +37,12 @@ namespace Manim_Service
 
         private static void AddAutoMapper(this IServiceCollection services)
         {
-            //services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(typeof(UserProfile).Assembly);
+            services.AddAutoMapper(typeof(ChapterProfile).Assembly);
+            services.AddAutoMapper(typeof(ProblemTypeProfile).Assembly);
+            services.AddAutoMapper(typeof(SolutionProfile).Assembly);
+            services.AddAutoMapper(typeof(SubjectProfile).Assembly);
+            services.AddAutoMapper(typeof(TopicProfile).Assembly);
         }
         public static void AddServices(this IServiceCollection services)
         {

@@ -16,8 +16,8 @@ namespace Manim_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTopics(int index = 1, int pageSize = 10, string? id = null, string? nameSearch = null)
         {
-            var result = await _topicService.GetTopics();
-            return Ok(new BaseResponseModel<GetTopicsVM>(
+            var result = await _topicService.GetTopics(index, pageSize, id, nameSearch);
+            return Ok(new BaseResponseModel<PaginatedList<GetTopicsVM>?>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 data: result));

@@ -1,4 +1,5 @@
-﻿using Manim_Model.ViewModel.SolutionVM;
+﻿using Manim_Core.Infrastructure;
+using Manim_Model.ViewModel.SolutionVM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace Manim_Service.IServices
 {
     public interface ISolutionService
     {
-        Task DeleteSolution(object model);
-        Task<GetSolutionsVM?> GetSolutions();
+        Task DeleteSolution(string id);
+        Task<PaginatedList<GetSolutionsVM>?> GetSolutions(int index, int pageSize, string? id, string? nameSearch);
         Task PostSolution(PostSolutionVM model);
         Task PutSolution(string id, PostSolutionVM model);
     }

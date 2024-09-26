@@ -1,4 +1,5 @@
-﻿using Manim_Model.ViewModel.ChapterVM;
+﻿using Manim_Core.Infrastructure;
+using Manim_Model.ViewModel.ChapterVM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace Manim_Service.IServices
 {
     public interface IChapterService
     {
-        Task DeleteChapter(object model);
-        Task<GetChaptersVM?> GetChapters();
+        Task DeleteChapter(string id);
+        Task<PaginatedList<GetChaptersVM>?> GetChapters(int index, int pageSize, string? id, string? nameSearch);
         Task PostChapter(PostChapterVM model);
         Task PutChapter(string id, PostChapterVM model);
     }
