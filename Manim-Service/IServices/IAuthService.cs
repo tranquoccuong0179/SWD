@@ -13,6 +13,6 @@ namespace Manim_Service.IServices
     {
         Task<GetSignInVM> SignIn(PostSignInVM model);
         Task SignUp(PostSignUpVM model);
-        GetTokenVM GenerateTokens(ApplicationUser user);
+        GetTokenVM GenerateTokens(ApplicationUser user, string role);
     }
 }

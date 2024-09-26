@@ -6,8 +6,9 @@ public partial class ApplicationUser : IdentityUser<Guid>
 {
     public string? FullName { get; set; }
     public long? Gender { get; set; }
-    public DateTime? CreateAt { get; set; }
-    public DateTime? UpdateAt { get; set; }
+    public DateTime CreateAt { get; set; }
+    public DateTime UpdateAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
     public bool? Status { get; set; }
     public string? Avatar { get; set; }
     public virtual ICollection<Deposit> Deposits { get; set; } = new List<Deposit>();

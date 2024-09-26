@@ -47,11 +47,12 @@ try
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bean-Mind Web API v1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Manim Web API v1");
         c.RoutePrefix = string.Empty;
     });
     app.UseSwaggerUI();
     app.UseMiddleware<ExceptionMiddleware>();
+    app.UseMiddleware<PermissionMiddleware>();
 
     app.UseHttpsRedirection();
     app.UseCors(CorsConstant.PolicyName);

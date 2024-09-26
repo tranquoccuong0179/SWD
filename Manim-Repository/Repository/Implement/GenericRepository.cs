@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Manim_Model.Paginate;
+using Manim_Core.Infrastructure;
 
 namespace Manim_Repository.Repository.Implement
 {
@@ -23,7 +24,14 @@ namespace Manim_Repository.Repository.Implement
             _dbSet = context.Set<T>();
         }
         public IQueryable<T> Entities => _dbContext.Set<T>();
-
+        public async Task<T> GetByIdAsync(object id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+        public async Task<PaginatedList<T>> GetPagging(IQueryable<T> query, int index, int pageSize)
+        {
+            return await query.GetPaginatedList(index, pageSize);
+        }
         public void Dispose()
         {
             _dbContext?.Dispose();
@@ -120,25 +128,31 @@ namespace Manim_Repository.Repository.Implement
         #endregion
 
         #region Update
-        public void UpdateAsync(T entity)
+        public async Task UpdateAsync(T obj)
         {
-            _dbSet.Update(entity);
+            _dbSet.Attach(obj);
+            _dbContext.Entry(obj).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync(); // Save changes asynchronously
         }
 
-        public void UpdateRange(IEnumerable<T> entities)
+        public async Task UpdateRange(IEnumerable<T> entities)
         {
             _dbSet.UpdateRange(entities);
+            await _dbContext.SaveChangesAsync(); // Save changes asynchronously
         }
 
-        public void DeleteAsync(T entity)
+        public async Task DeleteAsync(T entity)
         {
             _dbSet.Remove(entity);
+            await _dbContext.SaveChangesAsync(); // Save changes asynchronously
         }
 
-        public void DeleteRangeAsync(IEnumerable<T> entities)
+        public async Task DeleteRangeAsync(IEnumerable<T> entities)
         {
             _dbSet.RemoveRange(entities);
+            await _dbContext.SaveChangesAsync(); // Save changes asynchronously
         }
+
 
         Task<IPaginate<T>> IGenericRepository<T>.GetPagingListAsync(Expression<Func<T, bool>> predicate, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy, Func<IQueryable<T>, IIncludableQueryable<T, object>> include, int page, int size)
         {

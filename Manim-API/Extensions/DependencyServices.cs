@@ -27,7 +27,7 @@ namespace Manim_API.Extensions
         private static string CreateConnectionString(IConfiguration configuration)
         {
             var connectionString = configuration.GetValue<string>("ConnectionStrings:MyConnectionString");
-            return connectionString;
+            return connectionString ?? "";
         }
 
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration config)
@@ -40,7 +40,7 @@ namespace Manim_API.Extensions
         {
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo() { Title = "BeanMind System", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo() { Title = "Manim System", Version = "v1" });
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
                     In = ParameterLocation.Header,
