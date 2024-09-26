@@ -81,7 +81,7 @@ namespace Manim_Service.Services
             );
             if (account == null) throw new BadHttpRequestException("Account not found");
             var guidClaim = new Tuple<string, Guid>("userId", account.Id);
-            var token = _authService.GenerateTokens(account);
+            var token = _authService.GenerateTokens(account, "");
             // _logger.LogInformation($"Token: {token} ");
             return token;
         }
