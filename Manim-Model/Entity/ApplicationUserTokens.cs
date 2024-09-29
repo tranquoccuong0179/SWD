@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace NhaMayMay.Contract.Repositories.Entity;
+namespace Manim_Model.Entity;
 
 public class ApplicationUserTokens : IdentityUserToken<Guid>
 {

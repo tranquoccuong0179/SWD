@@ -26,4 +26,8 @@
     <Folder Include="Request\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Manim-Core\Manim-Core.csproj" />
+  </ItemGroup>
+
 </Project>

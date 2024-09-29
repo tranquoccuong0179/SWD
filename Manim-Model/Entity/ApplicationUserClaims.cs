@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace NhaMayMay.Contract.Repositories.Entity;
+namespace Manim_Model.Entity;
 public class ApplicationUserClaims : IdentityUserClaim<Guid>
 {
     public DateTime? CreateAt { get; set; }

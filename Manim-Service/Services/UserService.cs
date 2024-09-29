@@ -87,7 +87,7 @@ namespace Manim_Service.Services
         }
 
         public async Task<bool> GetAccountByEmail(string email)
-        {
+        {     
             if (email == null) throw new BadHttpRequestException("Email cannot be null");
 
             var account = await _unitOfWork.GetRepository<ApplicationUser>().SingleOrDefaultAsync(
