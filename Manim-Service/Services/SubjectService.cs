@@ -2,20 +2,12 @@
 using Manim_Core.Infrastructure;
 using Manim_Model.Entity;
 using Manim_Model.ViewModel.ChapterVM;
+using Manim_Model.ViewModel.ParameterVM;
 using Manim_Model.ViewModel.SubjectVM;
 using Manim_Repository.Repository.Interface;
 using Manim_Service.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Manim_Service.Services
 {
@@ -64,7 +56,11 @@ namespace Manim_Service.Services
             );
             return responsePaginatedList;
         }
-
+        public async Task<GetSubjectsVM?> GetSubjectById(string id)
+        {
+            Subject? existedParam = await _unitOfWork.GetRepository<Subject>().Entities.Where(s => s.Id == id && !s.DeletedAt.HasValue).FirstOrDefaultAsync() ?? throw new ErrorException(StatusCodes.Status409Conflict, ErrorCode.Conflicted, "Môn học không tồn tại!");
+            return _mapper.Map<GetSubjectsVM?>(existedParam);
+        }
 
         public async Task PostSubject(PostSubjectVM model)
         {
@@ -95,5 +91,7 @@ namespace Manim_Service.Services
             await _unitOfWork.GetRepository<Subject>().UpdateAsync(existedSubject);
             await _unitOfWork.CommitAsync();
         }
+
+
     }
 }

@@ -22,23 +22,28 @@ namespace Manim_Service.Services
         }
 
 
-        public Task<PaginatedList<GetSolutionOutputsVM>?> GetSolutions(int index, int pageSize, string? id, string? nameSearch)
+        public Task<PaginatedList<GetSolutionOutputsVM>?> GetSolutionOutputs(int index, int pageSize, string? id, string? nameSearch)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<GetSolutionOutputsVM?> GetSolutionOutputById(string id)
+        {
+            throw new NotImplementedException();
+        }
+        public Task PostSolutionOutput(PostSolutionOutputVM model)
         {
             throw new NotImplementedException();
         }
 
-        public Task PostSolution(PostSolutionOutputVM model)
+        public Task PutSolutionOutput(string id, PostSolutionOutputVM model)
+        {
+            throw new NotImplementedException();
+        }
+        public Task DeleteSolutionOutput(string id)
         {
             throw new NotImplementedException();
         }
 
-        public Task PutSolution(string id, PostSolutionOutputVM model)
-        {
-            throw new NotImplementedException();
-        }
-        public Task DeleteSolution(string id)
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

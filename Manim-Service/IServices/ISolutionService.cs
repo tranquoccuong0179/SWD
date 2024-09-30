@@ -11,6 +11,7 @@ namespace Manim_Service.IServices
     public interface ISolutionService
     {
         Task DeleteSolution(string id);
+        Task<GetSolutionsVM?> GetSolutionById(string id);
         Task<PaginatedList<GetSolutionsVM>?> GetSolutions(int index, int pageSize, string? id, string? nameSearch);
         Task PostSolution(PostSolutionVM model);
         Task PutSolution(string id, PostSolutionVM model);

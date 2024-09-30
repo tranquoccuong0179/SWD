@@ -11,6 +11,7 @@ namespace Manim_Service.IServices
     public interface IParameterService
     {
         Task DeleteParameter(string id);
+        Task<GetParametersVM?> GetParameterById(string id);
         Task<PaginatedList<GetParametersVM>?> GetParameters(int index, int pageSize, string? id, string? nameSearch);
         Task PostParameter(PostParameterVM model);
         Task PutParameter(string id, PostParameterVM model);

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Manim_Core.Infrastructure;
 using Manim_Model.Entity;
+using Manim_Model.ViewModel.ParameterVM;
 using Manim_Model.ViewModel.SolutionVM;
 using Manim_Repository.Repository.Interface;
 using Manim_Service.IServices;
@@ -50,7 +51,11 @@ namespace Manim_Service.Services
             );
             return responsePaginatedList;
         }
-
+        public async Task<GetSolutionsVM?> GetSolutionById(string id)
+        {
+            Solution? existedSolution = await _unitOfWork.GetRepository<Solution>().Entities.Where(s => s.Id == id && !s.DeletedAt.HasValue).FirstOrDefaultAsync() ?? throw new ErrorException(StatusCodes.Status409Conflict, ErrorCode.Conflicted, "Giải pháp không tồn tại!");
+            return _mapper.Map<GetSolutionsVM?>(existedSolution);
+        }
 
         public async Task PostSolution(PostSolutionVM model)
         {
@@ -81,5 +86,7 @@ namespace Manim_Service.Services
             await _unitOfWork.GetRepository<Solution>().UpdateAsync(existedSolution);
             await _unitOfWork.CommitAsync();
         }
+
+
     }
 }

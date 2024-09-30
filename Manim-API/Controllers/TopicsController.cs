@@ -1,4 +1,5 @@
 ﻿using Manim_Core.Infrastructure;
+using Manim_Model.ViewModel.ChapterVM;
 using Manim_Model.ViewModel.TopicVM;
 using Manim_Service.IServices;
 using Manim_Service.Services;
@@ -18,6 +19,15 @@ namespace Manim_API.Controllers
         {
             var result = await _topicService.GetTopics(index, pageSize, id, nameSearch);
             return Ok(new BaseResponseModel<PaginatedList<GetTopicsVM>?>(
+                statusCode: StatusCodes.Status200OK,
+                code: ResponseCodeConstants.SUCCESS,
+                data: result));
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTopicById(string id)
+        {
+            var result = await _topicService.GetTopicById(id);
+            return Ok(new BaseResponseModel<GetTopicsVM>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 data: result));

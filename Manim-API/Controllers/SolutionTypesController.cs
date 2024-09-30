@@ -1,5 +1,6 @@
 ﻿using Manim_Core.Infrastructure;
 using Manim_Model.Entity;
+using Manim_Model.ViewModel.ChapterVM;
 using Manim_Model.ViewModel.SolutionTypeVM;
 using Manim_Service.IServices;
 using Manim_Service.Services;
@@ -19,6 +20,15 @@ namespace Manim_API.Controllers
         {
             var result = await _solutionTypeService.GetSolutionTypes(index, pageSize, id, nameSearch);
             return Ok(new BaseResponseModel<PaginatedList<GetSolutionTypesVM>?>(
+                statusCode: StatusCodes.Status200OK,
+                code: ResponseCodeConstants.SUCCESS,
+                data: result));
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetSolutionTypeById(string id)
+        {
+            var result = await _solutionTypeService.GetSolutionTypeById(id);
+            return Ok(new BaseResponseModel<GetSolutionTypesVM>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 data: result));

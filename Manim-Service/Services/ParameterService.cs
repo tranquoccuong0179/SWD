@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Manim_Core.Infrastructure;
 using Manim_Model.Entity;
+using Manim_Model.ViewModel.ChapterVM;
 using Manim_Model.ViewModel.ParameterVM;
 using Manim_Repository.Repository.Interface;
 using Manim_Service.IServices;
@@ -45,7 +46,11 @@ namespace Manim_Service.Services
             );
             return responsePaginatedList;
         }
-
+        public async Task<GetParametersVM?> GetParameterById(string id)
+        {
+            Parameter? existedParam = await _unitOfWork.GetRepository<Parameter>().Entities.Where(s => s.Id == id && !s.DeletedAt.HasValue).FirstOrDefaultAsync() ?? throw new ErrorException(StatusCodes.Status409Conflict, ErrorCode.Conflicted, "Biến không tồn tại!");
+            return _mapper.Map<GetParametersVM?>(existedParam);
+        }
         public async Task PostParameter(PostParameterVM model)
         {
             Parameter? existedParameter = await _unitOfWork.GetRepository<Parameter>().Entities.Where(p => !p.DeletedAt.HasValue && p.Name == model.Name).FirstOrDefaultAsync();
@@ -78,5 +83,7 @@ namespace Manim_Service.Services
             await _unitOfWork.GetRepository<Parameter>().UpdateAsync(existedParameter);
             await _unitOfWork.CommitAsync();
         }
+
+
     }
 }

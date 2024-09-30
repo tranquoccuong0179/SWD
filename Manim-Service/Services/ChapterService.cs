@@ -55,7 +55,11 @@ namespace Manim_Service.Services
             );
             return responsePaginatedList;
         }
-
+        public async Task<GetChaptersVM?> GetChapterById(string id)
+        {
+            Chapter? existedChapter = await _unitOfWork.GetRepository<Chapter>().Entities.Where(s => s.Id == id && !s.DeletedAt.HasValue).FirstOrDefaultAsync() ?? throw new ErrorException(StatusCodes.Status409Conflict, ErrorCode.Conflicted, "Chương không tồn tại!");
+            return _mapper.Map<GetChaptersVM?>(existedChapter);
+        }
 
         public async Task PostChapter(PostChapterVM model)
         {
@@ -87,5 +91,7 @@ namespace Manim_Service.Services
             await _unitOfWork.GetRepository<Chapter>().UpdateAsync(existedChapter);
             await _unitOfWork.CommitAsync();
         }
+
+
     }
 }

@@ -11,6 +11,7 @@ namespace Manim_Service.IServices
     public interface IProblemService
     {
         Task DeleteProblem(string id);
+        Task<GetProblemsVM?> GetProblemById(string id);
         Task<PaginatedList<GetProblemsVM>?> GetProblems(int index, int pageSize, string? id, string? nameSearch);
         Task PostProblem(PostProblemVM model);
         Task PutProblem(string id, PostProblemVM model);

@@ -19,7 +19,10 @@ namespace Manim_Service.Services
         {
             throw new NotImplementedException();
         }
-
+        public Task<GetSolutionTypesVM?> GetSolutionTypeById(string id)
+        {
+            throw new NotImplementedException();
+        }
         public Task PostSolutionType(PostSolutionTypeVM model)
         {
             throw new NotImplementedException();
@@ -33,5 +36,7 @@ namespace Manim_Service.Services
         {
             throw new NotImplementedException();
         }
+
+
     }
 }

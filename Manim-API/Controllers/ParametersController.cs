@@ -1,4 +1,5 @@
 ﻿using Manim_Core.Infrastructure;
+using Manim_Model.ViewModel.ChapterVM;
 using Manim_Model.ViewModel.ParameterVM;
 using Manim_Service.IServices;
 using Manim_Service.Services;
@@ -18,6 +19,15 @@ namespace Manim_API.Controllers
         {
             var result = await _parameterService.GetParameters(index, pageSize, id, nameSearch);
             return Ok(new BaseResponseModel<PaginatedList<GetParametersVM>?>(
+                statusCode: StatusCodes.Status200OK,
+                code: ResponseCodeConstants.SUCCESS,
+                data: result));
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetParameterById(string id)
+        {
+            var result = await _parameterService.GetParameterById(id);
+            return Ok(new BaseResponseModel<GetParametersVM>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 data: result));

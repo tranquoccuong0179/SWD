@@ -23,6 +23,15 @@ namespace Manim_API.Controllers
                 code: ResponseCodeConstants.SUCCESS,
                 data: result));
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetChapterById(string id)
+        {
+            var result = await _chapterService.GetChapterById(id);
+            return Ok(new BaseResponseModel<GetChaptersVM>(
+                statusCode: StatusCodes.Status200OK,
+                code: ResponseCodeConstants.SUCCESS,
+                data: result));
+        }
         [HttpPost]
         public async Task<IActionResult> PostChapter(PostChapterVM model)
         {

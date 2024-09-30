@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Manim_Core.Infrastructure;
 using Manim_Model.Entity;
-using Manim_Model.ViewModel.ChapterVM;
+using Manim_Model.ViewModel.ParameterVM;
 using Manim_Model.ViewModel.ProblemVM;
 using Manim_Model.ViewModel.TopicVM;
 using Manim_Repository.Repository.Interface;
@@ -55,7 +55,11 @@ namespace Manim_Service.Services
             return responsePaginatedList;
         }
 
-
+        public async Task<GetTopicsVM?> GetTopicById(string id)
+        {
+            Topic? existedParam = await _unitOfWork.GetRepository<Topic>().Entities.Where(s => s.Id == id && !s.DeletedAt.HasValue).FirstOrDefaultAsync() ?? throw new ErrorException(StatusCodes.Status409Conflict, ErrorCode.Conflicted, "Chủ đề không tồn tại!");
+            return _mapper.Map<GetTopicsVM?>(existedParam);
+        }
         public async Task PostTopic(PostTopicVM model)
         {
             //Topic? existedTopic = await _unitOfWork.GetRepository<Topic>().Entities.Where(s => s.Name == model.Name).FirstOrDefaultAsync();
