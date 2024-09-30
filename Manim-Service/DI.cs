@@ -43,6 +43,8 @@ namespace Manim_Service
             services.AddAutoMapper(typeof(SolutionProfile).Assembly);
             services.AddAutoMapper(typeof(SubjectProfile).Assembly);
             services.AddAutoMapper(typeof(TopicProfile).Assembly);
+            services.AddAutoMapper(typeof(ParameterProfile).Assembly);
+
         }
         public static void AddServices(this IServiceCollection services)
         {

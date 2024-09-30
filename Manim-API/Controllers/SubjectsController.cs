@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manim_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/subjects")]
     [ApiController]
     public class SubjectsController(ISubjectService subjectService) : ControllerBase
     {
@@ -40,7 +40,7 @@ namespace Manim_API.Controllers
                 code: ResponseCodeConstants.SUCCESS,
                 data: "Chỉnh sửa thành công"));
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSubject(string id)
         {
             await _subjectService.DeleteSubject(id);

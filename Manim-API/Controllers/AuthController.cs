@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Manim_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController(IAuthService authService, IUserService userService, IGoogleAuthenticationService googleAuthenticationService) : ControllerBase
     {

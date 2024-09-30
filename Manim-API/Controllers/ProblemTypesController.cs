@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manim_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/problem_types")]
     [ApiController]
     public class ProblemsController(IProblemService problemTypeService) : ControllerBase
     {
@@ -40,7 +40,7 @@ namespace Manim_API.Controllers
                 code: ResponseCodeConstants.SUCCESS,
                 data: "Chỉnh sửa thành công"));
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProblem(string id)
         {
             await _problemTypeService.DeleteProblem(id);

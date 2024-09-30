@@ -19,13 +19,13 @@ namespace Manim_API.Middlewares
             _logger = logger;
             _excludedUris =
             [
-                "/api/Auth/SignIn",
-                "/api/Auth/SignUp"
+                "/api/auth/SignIn",
+                "/api/auth/SignUp"
             ];
             _rolePermissions = new Dictionary<string, List<string>>()
             {
                 //author bang role, roleClaim userClaim
-                { "User", new List<string> { "/api/Subjects"} }
+                { "User", new List<string> { "/api/subjects"} }
             };
             
         }

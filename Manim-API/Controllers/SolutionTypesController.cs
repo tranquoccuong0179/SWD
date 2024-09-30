@@ -1,5 +1,6 @@
 ﻿using Manim_Core.Infrastructure;
-using Manim_Model.ViewModel.SolutionVM;
+using Manim_Model.Entity;
+using Manim_Model.ViewModel.SolutionTypeVM;
 using Manim_Service.IServices;
 using Manim_Service.Services;
 using Microsoft.AspNetCore.Http;
@@ -7,43 +8,43 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manim_API.Controllers
 {
-    [Route("api/solutions")]
+    [Route("api/solution_types")]
     [ApiController]
-    public class SolutionsController(ISolutionService solutionService) : ControllerBase
+    public class SolutionTypesController(ISolutionTypeService solutionTypeService) : ControllerBase
     {
-        public readonly ISolutionService _solutionService = solutionService;
+        public readonly ISolutionTypeService _solutionTypeService = solutionTypeService;
 
         [HttpGet]
-        public async Task<IActionResult> GetSolutions(int index = 1, int pageSize = 10, string? id = null, string? nameSearch = null)
+        public async Task<IActionResult> GetSolutionTypes(int index = 1, int pageSize = 10, string? id = null, string? nameSearch = null)
         {
-            var result = await _solutionService.GetSolutions(index, pageSize, id, nameSearch);
-            return Ok(new BaseResponseModel<PaginatedList<GetSolutionsVM>?>(
+            var result = await _solutionTypeService.GetSolutionTypes(index, pageSize, id, nameSearch);
+            return Ok(new BaseResponseModel<PaginatedList<GetSolutionTypesVM>?>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 data: result));
         }
         [HttpPost]
-        public async Task<IActionResult> PostSolution(PostSolutionVM model)
+        public async Task<IActionResult> PostSolutionType(PostSolutionTypeVM model)
         {
-            await _solutionService.PostSolution(model);
+            await _solutionTypeService.PostSolutionType(model);
             return Ok(new BaseResponseModel<string>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 data: "Thêm thành công"));
         }
         [HttpPut]
-        public async Task<IActionResult> PutSolution(string id, PostSolutionVM model)
+        public async Task<IActionResult> PutSolutionType(string id, PostSolutionTypeVM model)
         {
-            await _solutionService.PutSolution(id, model);
+            await _solutionTypeService.PutSolutionType(id, model);
             return Ok(new BaseResponseModel<string>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 data: "Chỉnh sửa thành công"));
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSolution(string id)
+        public async Task<IActionResult> DeleteSolutionType(string id)
         {
-            await _solutionService.DeleteSolution(id);
+            await _solutionTypeService.DeleteSolutionType(id);
             return Ok(new BaseResponseModel<string>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,

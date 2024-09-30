@@ -1,4 +1,5 @@
 ﻿using Manim_Core.Infrastructure;
+using Manim_Model.ViewModel.SolutionOutputVM;
 using Manim_Model.ViewModel.SolutionVM;
 using Manim_Service.IServices;
 using Manim_Service.Services;
@@ -7,34 +8,34 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manim_API.Controllers
 {
-    [Route("api/solutions")]
+    [Route("api/solution_outputs")]
     [ApiController]
-    public class SolutionsController(ISolutionService solutionService) : ControllerBase
+    public class SolutionOutputsController(ISolutionOutputService solutionOutputService) : ControllerBase
     {
-        public readonly ISolutionService _solutionService = solutionService;
+        public readonly ISolutionOutputService _solutionOutputService = solutionOutputService;
 
         [HttpGet]
         public async Task<IActionResult> GetSolutions(int index = 1, int pageSize = 10, string? id = null, string? nameSearch = null)
         {
-            var result = await _solutionService.GetSolutions(index, pageSize, id, nameSearch);
-            return Ok(new BaseResponseModel<PaginatedList<GetSolutionsVM>?>(
+            var result = await _solutionOutputService.GetSolutions(index, pageSize, id, nameSearch);
+            return Ok(new BaseResponseModel<PaginatedList<GetSolutionOutputsVM>?>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 data: result));
         }
         [HttpPost]
-        public async Task<IActionResult> PostSolution(PostSolutionVM model)
+        public async Task<IActionResult> PostSolution(PostSolutionOutputVM model)
         {
-            await _solutionService.PostSolution(model);
+            await _solutionOutputService.PostSolution(model);
             return Ok(new BaseResponseModel<string>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
                 data: "Thêm thành công"));
         }
         [HttpPut]
-        public async Task<IActionResult> PutSolution(string id, PostSolutionVM model)
+        public async Task<IActionResult> PutSolution(string id, PostSolutionOutputVM model)
         {
-            await _solutionService.PutSolution(id, model);
+            await _solutionOutputService.PutSolution(id, model);
             return Ok(new BaseResponseModel<string>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,
@@ -43,7 +44,7 @@ namespace Manim_API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSolution(string id)
         {
-            await _solutionService.DeleteSolution(id);
+            await _solutionOutputService.DeleteSolution(id);
             return Ok(new BaseResponseModel<string>(
                 statusCode: StatusCodes.Status200OK,
                 code: ResponseCodeConstants.SUCCESS,

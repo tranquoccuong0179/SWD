@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Manim_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/chapters")]
     [ApiController]
     public class ChaptersController(IChapterService chapterService) : ControllerBase
     {
@@ -41,7 +41,7 @@ namespace Manim_API.Controllers
                 code: ResponseCodeConstants.SUCCESS,
                 data: "Chỉnh sửa thành công"));
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteChapter(string id)
         {
             await _chapterService.DeleteChapter(id);
