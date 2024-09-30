@@ -1,5 +1,5 @@
 ﻿using Manim_Core.Infrastructure;
-using Manim_Model.ViewModel.ProblemTypeVM;
+using Manim_Model.ViewModel.ProblemVM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Manim_Service.IServices
 {
-    public interface IProblemTypeService
+    public interface IProblemService
     {
-        Task DeleteProblemType(string id);
-        Task<PaginatedList<GetProblemTypesVM>?> GetProblemTypes(int index, int pageSize, string? id, string? nameSearch);
-        Task PostProblemType(PostProblemTypeVM model);
-        Task PutProblemType(string id, PostProblemTypeVM model);
+        Task DeleteProblem(string id);
+        Task<PaginatedList<GetProblemsVM>?> GetProblems(int index, int pageSize, string? id, string? nameSearch);
+        Task PostProblem(PostProblemVM model);
+        Task PutProblem(string id, PostProblemVM model);
     }
 }

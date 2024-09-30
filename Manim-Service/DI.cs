@@ -39,7 +39,7 @@ namespace Manim_Service
         {
             services.AddAutoMapper(typeof(UserProfile).Assembly);
             services.AddAutoMapper(typeof(ChapterProfile).Assembly);
-            services.AddAutoMapper(typeof(ProblemTypeProfile).Assembly);
+            services.AddAutoMapper(typeof(ProblemProfile).Assembly);
             services.AddAutoMapper(typeof(SolutionProfile).Assembly);
             services.AddAutoMapper(typeof(SubjectProfile).Assembly);
             services.AddAutoMapper(typeof(TopicProfile).Assembly);

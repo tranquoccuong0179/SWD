@@ -10,8 +10,11 @@ namespace Manim_Model.Entity
     public class SolutionType : BaseEntity
     {
         public string Name { get; set; } = string.Empty;    
-        public string Description { get; set; } = string.Empty; 
-        public virtual ICollection<SolutionOutput> SolutionOutputs { get; set; } = new List<SolutionOutput>();
-        public virtual ICollection<Parameter> Parameters { get; set; } = new List<Parameter>();
+        public string Description { get; set; } = string.Empty;
+        public string ProblemId { get; set; } = string.Empty;
+        public virtual Problem? Problem { get; set; }
+        public virtual Solution? Solution { get; set; }
+
+        public virtual ICollection<SolutionParameter> SolutionParameters { get; set; } = new List<SolutionParameter>();
     }
 }

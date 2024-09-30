@@ -1,4 +1,4 @@
-using Manim_Model.ViewModel.ProblemTypeVM;
+using Manim_Model.ViewModel.ProblemVM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ namespace Manim_Model.ViewModel.TopicVM
         public string ChapterName { get; set; } = string.Empty;
         public long? Number { get; set; }
         public bool Status { get; set; } = true; 
-        public IEnumerable<GetProblemTypeNamesVM>? ProblemTypes { get; set; }
+        public IEnumerable<GetProblemNamesVM>? Problems { get; set; }
 
     }
 }

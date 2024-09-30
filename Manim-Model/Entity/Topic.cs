@@ -11,5 +11,5 @@ public partial class Topic : BaseEntity
     public bool Status { get; set; } = true;
     public string ChapterId { get; set; } = string.Empty;
     public virtual Chapter? Chapter { get; set; }
-    public virtual ICollection<ProblemType> ProblemTypes { get; set; } = new List<ProblemType>();
+    public virtual ICollection<Problem> Problems { get; set; } = new List<Problem>();
 }

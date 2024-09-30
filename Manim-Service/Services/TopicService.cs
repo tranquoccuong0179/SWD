@@ -2,7 +2,7 @@
 using Manim_Core.Infrastructure;
 using Manim_Model.Entity;
 using Manim_Model.ViewModel.ChapterVM;
-using Manim_Model.ViewModel.ProblemTypeVM;
+using Manim_Model.ViewModel.ProblemVM;
 using Manim_Model.ViewModel.TopicVM;
 using Manim_Repository.Repository.Interface;
 using Manim_Service.IServices;
@@ -38,11 +38,11 @@ namespace Manim_Service.Services
             var resultQuery = await _unitOfWork.GetRepository<Topic>().GetPagging(query, index, pageSize);
 
             var responseItems = resultQuery.Items.Select(item => {
-                IEnumerable<GetProblemTypeNamesVM> ptNames = item.ProblemTypes
-                    .Select(ch => new GetProblemTypeNamesVM { Id = ch.Id, Name = ch.Name })
+                IEnumerable<GetProblemNamesVM> ptNames = item.Problems
+                    .Select(ch => new GetProblemNamesVM { Id = ch.Id, Name = ch.Name })
                     .ToList();
                 var result = _mapper.Map<GetTopicsVM>(item);
-                result.ProblemTypes = ptNames;
+                result.Problems = ptNames;
                 return result;
             }).ToList();
             // Create paginated response

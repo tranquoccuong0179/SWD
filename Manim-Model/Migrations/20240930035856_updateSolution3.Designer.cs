@@ -4,6 +4,7 @@ using Manim_Model.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Manim_Model.Migrations
 {
     [DbContext(typeof(Swd392Context))]
-    partial class Swd392ContextModelSnapshot : ModelSnapshot
+    [Migration("20240930035856_updateSolution3")]
+    partial class updateSolution3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -460,7 +463,11 @@ namespace Manim_Model.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UserId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -468,7 +475,7 @@ namespace Manim_Model.Migrations
                     b.HasIndex("SolutionTypeId")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Solutions", (string)null);
                 });
@@ -819,9 +826,7 @@ namespace Manim_Model.Migrations
 
                     b.HasOne("Manim_Model.Entity.ApplicationUser", "User")
                         .WithMany("Solutions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("SolutionType");
 

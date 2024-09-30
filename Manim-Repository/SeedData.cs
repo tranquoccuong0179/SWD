@@ -41,14 +41,14 @@ namespace Manim_Repository
         public void Seed()
         {
             int data = 0;
-            data = _context.ApplicationRoles.Count();
+            data = _context.Roles.Count();
             if (data is 0)
             {
                 ApplicationRole[] roles = CreateRoleRole();
                 _context.AddRange(roles);
             }
 
-            data = _context.ApplicationUsers.Count();
+            data = _context.Users.Count();
             if (data is 0)
             {
                 ApplicationUser[] user = CreateUser();
@@ -168,8 +168,8 @@ namespace Manim_Repository
 
         private void AssignAdminRoleToUser(string username, string roleName)
         {
-            var user = _context.ApplicationUsers.FirstOrDefault(u => u.UserName == username);
-            var role = _context.ApplicationRoles.FirstOrDefault(r => r.Name == roleName);
+            var user = _context.Users.FirstOrDefault(u => u.UserName == username);
+            var role = _context.Roles.FirstOrDefault(r => r.Name == roleName);
 
 
             if (user != null && role != null)

@@ -17,19 +17,12 @@ public class Swd392Context : IdentityDbContext<ApplicationUser, ApplicationRole,
 
     public virtual DbSet<Chapter> Chapters { get; set; }
     public virtual DbSet<Deposit> Deposits { get; set; }
-    public virtual DbSet<ProblemType> ProblemTypes { get; set; }
+    public virtual DbSet<Problem> Problems { get; set; }
     public virtual DbSet<Solution> Solutions { get; set; }
     public virtual DbSet<Subject> Subjects { get; set; }
     public virtual DbSet<Topic> Topics { get; set; }
     public virtual DbSet<Transaction> Transactions { get; set; }
     public virtual DbSet<Wallet> Wallets { get; set; }
-    public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
-    public virtual DbSet<ApplicationRole> ApplicationRoles { get; set; }
-    public virtual DbSet<ApplicationUserRoles> ApplicationUserRoles { get; set; }
-    public virtual DbSet<ApplicationUserLogins> ApplicationUserLogin { get; set; }
-    public virtual DbSet<ApplicationUserTokens> ApplicationUserToken { get; set; }
-    public virtual DbSet<ApplicationUserClaims> ApplicationUserClaim { get; set; }
-    public virtual DbSet<ApplicationRoleClaims> ApplicationRoleClaim { get; set; }
 
     private string? GetConnectionString()
     {
@@ -48,11 +41,37 @@ public class Swd392Context : IdentityDbContext<ApplicationUser, ApplicationRole,
                 entityType.SetTableName(tableName.Substring(6));
             }
         }
-
+        modelBuilder.Entity<SolutionParameter>(entity =>
+        {
+            entity.HasKey(sp => new { sp.ParameterId, sp.SolutionTypeId });
+        });
         modelBuilder.Entity<ApplicationUser>()
             .HasOne(a => a.Wallet)
             .WithOne(w => w.User)
             .HasForeignKey<Wallet>(w => w.UserId);
+
+        modelBuilder.Entity<Solution>()
+            .HasOne(a => a.User)
+            .WithMany(w => w.Solutions)
+            .HasForeignKey(w => w.UserId);
+
+        modelBuilder.Entity<Solution>().ToTable("Solutions");
+        modelBuilder.Entity<SolutionOutput>().ToTable("SolutionOutputs");
+        modelBuilder.Entity<Parameter>().ToTable("Parameters");
+        modelBuilder.Entity<SolutionType>().ToTable("SolutionTypes");
+        modelBuilder.Entity<SolutionParameter>().ToTable("SolutionParameters");
+
+        modelBuilder.Entity<SolutionType>()
+            .HasOne(s => s.Solution)  
+            .WithOne(so => so.SolutionType)    
+            .HasForeignKey<Solution>(so => so.SolutionTypeId)  
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Solution>()
+            .HasOne(s => s.SolutionOutput)
+            .WithOne(so => so.Solution)
+            .HasForeignKey<SolutionOutput>(so => so.SolutionId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 
     //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

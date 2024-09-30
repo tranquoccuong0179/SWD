@@ -4,6 +4,7 @@ using Manim_Model.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Manim_Model.Migrations
 {
     [DbContext(typeof(Swd392Context))]
-    partial class Swd392ContextModelSnapshot : ModelSnapshot
+    [Migration("20240930033156_updateEntitySolution..")]
+    partial class updateEntitySolution
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -367,36 +370,6 @@ namespace Manim_Model.Migrations
                     b.ToTable("Deposits");
                 });
 
-            modelBuilder.Entity("Manim_Model.Entity.Parameter", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Createdby")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Unit")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Parameters", (string)null);
-                });
-
             modelBuilder.Entity("Manim_Model.Entity.Problem", b =>
                 {
                     b.Property<string>("Id")
@@ -460,7 +433,11 @@ namespace Manim_Model.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("UserId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -468,9 +445,9 @@ namespace Manim_Model.Migrations
                     b.HasIndex("SolutionTypeId")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
-                    b.ToTable("Solutions", (string)null);
+                    b.ToTable("Solutions");
                 });
 
             modelBuilder.Entity("Manim_Model.Entity.SolutionOutput", b =>
@@ -507,7 +484,7 @@ namespace Manim_Model.Migrations
                     b.HasIndex("SolutionId")
                         .IsUnique();
 
-                    b.ToTable("SolutionOutputs", (string)null);
+                    b.ToTable("SolutionOutput");
                 });
 
             modelBuilder.Entity("Manim_Model.Entity.SolutionParameter", b =>
@@ -537,7 +514,7 @@ namespace Manim_Model.Migrations
 
                     b.HasIndex("SolutionTypeId");
 
-                    b.ToTable("SolutionParameters", (string)null);
+                    b.ToTable("SolutionParameter");
                 });
 
             modelBuilder.Entity("Manim_Model.Entity.SolutionType", b =>
@@ -573,7 +550,7 @@ namespace Manim_Model.Migrations
 
                     b.HasIndex("ProblemId");
 
-                    b.ToTable("SolutionTypes", (string)null);
+                    b.ToTable("SolutionType");
                 });
 
             modelBuilder.Entity("Manim_Model.Entity.Subject", b =>
@@ -819,9 +796,7 @@ namespace Manim_Model.Migrations
 
                     b.HasOne("Manim_Model.Entity.ApplicationUser", "User")
                         .WithMany("Solutions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("SolutionType");
 
@@ -841,21 +816,11 @@ namespace Manim_Model.Migrations
 
             modelBuilder.Entity("Manim_Model.Entity.SolutionParameter", b =>
                 {
-                    b.HasOne("Manim_Model.Entity.Parameter", "Parameter")
-                        .WithMany("SolutionParameters")
-                        .HasForeignKey("ParameterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Manim_Model.Entity.SolutionType", "SolutionType")
+                    b.HasOne("Manim_Model.Entity.SolutionType", null)
                         .WithMany("SolutionParameters")
                         .HasForeignKey("SolutionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Parameter");
-
-                    b.Navigation("SolutionType");
                 });
 
             modelBuilder.Entity("Manim_Model.Entity.SolutionType", b =>
@@ -927,11 +892,6 @@ namespace Manim_Model.Migrations
             modelBuilder.Entity("Manim_Model.Entity.Deposit", b =>
                 {
                     b.Navigation("Transactions");
-                });
-
-            modelBuilder.Entity("Manim_Model.Entity.Parameter", b =>
-                {
-                    b.Navigation("SolutionParameters");
                 });
 
             modelBuilder.Entity("Manim_Model.Entity.Problem", b =>
