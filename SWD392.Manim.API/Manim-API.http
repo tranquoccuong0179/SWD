@@ -1,0 +1,6 @@
+@SWD392.Manim.API_HostAddress = http://localhost:5004
+
+GET {{SWD392.Manim.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
