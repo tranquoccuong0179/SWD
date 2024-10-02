@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using SWD392.Manim.Repositories.Entity;
 using SWD392.Manim.Repositories.ViewModel.ParameterVM;
 using SWD392.Manim.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace SWD392.Manim.Services.Services
 {

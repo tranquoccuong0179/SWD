@@ -1,4 +1,6 @@
-﻿namespace SWD392.Manim.Repositories.Repository.Interface
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace SWD392.Manim.Repositories.Repository.Interface
 {
     public interface IUnitOfWork : IGenericRepositoryFactory, IDisposable
     {

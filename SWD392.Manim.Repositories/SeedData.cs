@@ -1,4 +1,5 @@
-﻿using SWD392.Manim.Repositories.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using SWD392.Manim.Repositories.Entity;
 
 namespace SWD392.Manim.Repositories
 {

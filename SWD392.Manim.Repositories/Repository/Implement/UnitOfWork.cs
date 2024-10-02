@@ -1,4 +1,5 @@
-﻿using SWD392.Manim.Repositories.Repository.Interface;
+﻿using Microsoft.EntityFrameworkCore;
+using SWD392.Manim.Repositories.Repository.Interface;
 using System.ComponentModel.DataAnnotations;
 
 namespace SWD392.Manim.Repositories.Repository.Implement

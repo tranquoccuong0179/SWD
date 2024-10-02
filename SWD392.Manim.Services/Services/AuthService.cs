@@ -11,6 +11,10 @@ using SWD392.Manim.Services.Services;
 using System.Data;
 using System.Security.Claims;
 using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
+using SWD392.Manim.Repositories;
 
 namespace SWD392.Manim.Services.Services
 {

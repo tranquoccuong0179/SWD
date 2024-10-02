@@ -1,4 +1,7 @@
-﻿using SWD392.Manim.Repositories.Repository.Interface;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using SWD392.Manim.Repositories.Paginate;
+using SWD392.Manim.Repositories.Repository.Interface;
 using System.Linq.Expressions;
 
 namespace SWD392.Manim.Repositories.Repository.Implement

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using SWD392.Manim.Repositories.Entity;
 using SWD392.Manim.Repositories.ViewModel.AuthVM;
+using SWD392.Manim.Repositories;
 
 namespace SWD392.Manim.Services.Services
 {

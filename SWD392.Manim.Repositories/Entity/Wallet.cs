@@ -1,4 +1,5 @@
 ﻿using SWD392.Manim.Repositories.Base;
+using SWD392.Manim.Repositories.Enum;
 
 namespace SWD392.Manim.Repositories.Entity;
 
