@@ -1,0 +1,233 @@
+.loginContainer {
+    background-color: #FFFEFB;
+    min-height: 100vh;
+    display: flex;
+    padding: 38px 61px;
+}
+
+.contentWrapper {
+    display: flex;
+    gap: 20px;
+    width: 100vw;
+    height: 100%;
+}
+
+.imageColumn {
+    flex: 1.7;
+    position: relative;
+}
+
+.imageWrapper {
+    position: relative;
+    height: 100%;
+    border-radius: 29px;
+    overflow: hidden;
+}
+
+.backgroundImage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.title {
+    position: absolute;
+    bottom: 100px;
+    left: 69px;
+    color: white;
+    font-size: 37px;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+}
+
+.subtitle {
+    position: absolute;
+    bottom: 55px;
+    left: 69px;
+    color: white;
+    font-size: 25px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.formColumn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 20px;
+}
+
+.formWrapper {
+    max-width: 450px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.welcomeText {
+    font-size: 24px;
+    margin-bottom: 31px;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.authOptions {
+    background-color: rgba(73, 187, 189, 0.6);
+    border-radius: 33px;
+    display: flex;
+    padding: 5px;
+    margin-bottom: 52px;
+}
+
+.authButton {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 28px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.activeButton {
+    background-color: #49BBBD;
+}
+
+.formsContainer {
+    overflow: hidden;
+}
+
+.formSlider {
+    display: flex;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.slideLeft {
+    transform: translateX(-100%);
+}
+
+.formContent {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.fadeOut {
+    opacity: 0;
+}
+
+.fadeIn {
+    opacity: 1;
+}
+
+.loginPrompt {
+    color: #5B5B5B;
+    margin-bottom: 30px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.inputGroup {
+    margin-bottom: 20px;
+}
+
+.inputLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.inputField,
+.passwordWrapper {
+    width: 100%;
+    padding: 16px 31px;
+    border: 1px solid #49BBBD;
+    border-radius: 40px;
+    font-size: 15px;
+}
+
+.passwordWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.passwordWrapper input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+.passwordToggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.passwordIcon {
+    width: 18px;
+    height: 18px;
+}
+
+.optionsWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+    font-size: 12px;
+}
+
+.rememberMeWrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox {
+    width: 15px;
+    height: 15px;
+}
+
+.forgotPassword {
+    color: #000;
+    text-decoration: none;
+}
+
+.submitButton {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 36px;
+    background-color: #49BBBD;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+    background-color: #3DA7A9;
+}
+
+@media (max-width: 991px) {
+    .loginContainer {
+        padding: 20px;
+    }
+
+    .contentWrapper {
+        flex-direction: column;
+    }
+
+    .imageColumn {
+        display: none;
+    }
+
+    .formColumn {
+        padding: 20px 0;
+    }
+
+    .title, .subtitle {
+        left: 20px;
+    }
+}
