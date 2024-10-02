@@ -27,7 +27,7 @@ public class Swd392Context : IdentityDbContext<ApplicationUser, ApplicationRole,
 
     private string? GetConnectionString()
     {
-        IConfiguration configuration = new ConfigurationBuilder().SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../Manim-API")).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
+        IConfiguration configuration = new ConfigurationBuilder().SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../SWD392.Manim.API")).AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
         return configuration["ConnectionStrings:DefautDB"];
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(GetConnectionString());
