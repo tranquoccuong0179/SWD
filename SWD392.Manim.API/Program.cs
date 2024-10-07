@@ -3,6 +3,7 @@ using SWD392.Manim.API.Constants;
 using SWD392.Manim.API.Converter;
 using SWD392.Manim.API.Extensions;
 using SWD392.Manim.API.Middlewares;
+using SWD392.Manim.Repository.ViewModel.Wallet;
 using SWD392.Manim.Services;
 using System.Text.Json.Serialization;
 
@@ -32,6 +33,7 @@ try
     builder.Services.AddApplication(builder.Configuration);
     builder.Services.AddGoogleAuthentication();
     builder.Services.AddAuthentication();
+    builder.Services.Configure<PayOSSettings>(builder.Configuration.GetSection("PayOS"));
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddConfigSwagger();
