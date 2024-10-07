@@ -38,7 +38,7 @@ namespace SWD392.Manim.API.Controllers
         [HttpGet("google-auth/login")]
         public IActionResult Login()
         {
-            var props = new AuthenticationProperties { RedirectUri = $"api/Auth/google-auth/signin-google" };
+            var props = new AuthenticationProperties { RedirectUri = $"api/auth/google-auth/signin-google" };
             return Challenge(props, GoogleDefaults.AuthenticationScheme);
         }
 

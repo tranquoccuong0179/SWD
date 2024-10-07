@@ -20,7 +20,10 @@ namespace SWD392.Manim.API.Middlewares
             _excludedUris =
             [
                 "/api/auth/SignIn",
-                "/api/auth/SignUp"
+                "/api/auth/SignUp",
+                "/api/wallet/create",
+                "/api/auth/google-auth/login",
+                "/api/auth/google-auth/signin-google"
             ];
             _rolePermissions = new Dictionary<string, List<string>>()
             {
