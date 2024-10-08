@@ -51,14 +51,14 @@ namespace SWD392.Manim.Services.Services
 
                 // Create signature data
                 var signatureData = new Dictionary<string, object>
-        {
-            { "amount", balance },
-            { "cancelUrl", _payOSSettings.ReturnUrlFail },
-            { "description", description },
-            { "expiredAt", DateTimeOffset.Now.AddMinutes(10).ToUnixTimeSeconds() },
-            { "orderCode", orderCode },
-            { "returnUrl", _payOSSettings.ReturnUrl }
-        };
+                {
+                    { "amount", balance },
+                    { "cancelUrl", _payOSSettings.ReturnUrlFail },
+                    { "description", description },
+                    { "expiredAt", DateTimeOffset.Now.AddMinutes(10).ToUnixTimeSeconds() },
+                    { "orderCode", orderCode },
+                    { "returnUrl", _payOSSettings.ReturnUrl }
+                };
 
                 // Sort and compute the signature
                 var sortedSignatureData = new SortedDictionary<string, object>(signatureData);

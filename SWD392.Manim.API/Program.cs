@@ -63,7 +63,7 @@ try
     }
 
     app.UseMiddleware<ExceptionMiddleware>();
-    app.UseMiddleware<PermissionMiddleware>();
+    //app.UseMiddleware<PermissionMiddleware>();
 
     app.UseHttpsRedirection();
     app.UseCors(CorsConstant.PolicyName);
