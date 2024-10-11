@@ -1,8 +1,25 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import styles from './AuthPage.module.css';
 
 const AuthPage: React.FC = () => {
     const [isLogin, setIsLogin] = useState(true);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/login', {
+                username,
+                password
+            });
+            // Handle successful login, such as storing tokens
+            console.log('Login Success:', response.data);
+        } catch (error) {
+            console.error('Login Failed:', error);
+        }
+    };
 
     return (
         <main className={styles.loginContainer}>
@@ -43,7 +60,7 @@ const AuthPage: React.FC = () => {
                                     <p className={styles.loginPrompt}>
                                         Đăng nhập ngay để trải nghiệm các tính năng của Manim AI Physic Visualizer!
                                     </p>
-                                    <form>
+                                    <form onSubmit={handleLogin}>
                                         <div className={styles.inputGroup}>
                                             <label htmlFor="username" className={styles.inputLabel}>
                                                 Tên đăng nhập
@@ -52,6 +69,8 @@ const AuthPage: React.FC = () => {
                                                 type="text"
                                                 id="username"
                                                 className={styles.inputField}
+                                                value={username}
+                                                onChange={(e) => setUsername(e.target.value)}
                                                 placeholder="Nhập vào tên đăng nhập"
                                             />
                                         </div>
@@ -63,6 +82,8 @@ const AuthPage: React.FC = () => {
                                                 <input
                                                     type="password"
                                                     id="password"
+                                                    value={password}
+                                                    onChange={(e) => setPassword(e.target.value)}
                                                     placeholder="Nhập mật khẩu"
                                                 />
                                             </div>
