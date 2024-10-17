@@ -1,8 +1,8 @@
 import { Layout, Button, Typography } from 'antd';
-import Header from './Header';
+import Header from '../../components/Header';
 import FeaturedCourses from './FeaturedCourses';
 import Testimonials from './Testimonials';
-import Footer from './Footer';
+import Footer from '../../components/Footer';
 import './LandingPage.css';
 
 const { Content } = Layout;
