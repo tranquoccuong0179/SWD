@@ -49,9 +49,10 @@
 
 .course-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 3rem; /* Increase the gap for more spacing */
 }
+
 
 .course-card {
     display: flex;
@@ -60,7 +61,7 @@
 
 .course-image {
     width: 100%;
-    height: 200px;
+    height: 250px;
     object-fit: cover;
 }
 
@@ -76,16 +77,19 @@
 }
 
 .course-details {
+    margin-top: 0.5rem;
     display: flex;
     justify-content: space-between;
-    margin: 0.5rem 0;
+    font-size: 0.9rem; /* Make the text a bit smaller to fit */
+    color: #666;
 }
 
 .course-price {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #28a745; /* Price color */
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-top: 1rem;
 }
 
 .footer {

@@ -2,7 +2,7 @@ import { Layout, Button, Typography } from 'antd';
 import Header from '../../components/Header';
 import FeaturedCourses from './FeaturedCourses';
 import Testimonials from './Testimonials';
-import Footer from '../../components/Footer';
+import Footer from '../../components/Footer/Footer.tsx';
 import './LandingPage.css';
 
 const { Content } = Layout;

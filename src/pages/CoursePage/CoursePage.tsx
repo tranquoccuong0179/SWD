@@ -1,7 +1,7 @@
 import { Layout, Button, Card, Rate, Tag, Typography, Breadcrumb } from 'antd';
 import { ClockCircleOutlined, BookOutlined, UserOutlined } from '@ant-design/icons';
 import './CoursePage.css';
-import Footer from "../../components/Footer.tsx"
+import Footer from "../../components/Footer/Footer.tsx"
 import Header from "../../components/Header";
 
 
