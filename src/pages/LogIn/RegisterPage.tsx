@@ -79,7 +79,7 @@ const RegisterPage: React.FC = () => {
   return (
     <Container className="auth-container">
       <Row className="justify-content-center">
-        <Col md={6}>
+        <Col md={12}>
           <div className="auth-tabs">
             <Link to="/login" className="tab">LOGIN</Link>
             <div className="tab active">REGISTER</div>
