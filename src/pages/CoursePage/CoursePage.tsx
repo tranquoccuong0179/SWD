@@ -10,9 +10,9 @@ const { Title, Paragraph, Text } = Typography;
 
 const CoursePage = () => {
     const courses = [
-        { id: 1, title: 'Con lắc lò xo', description: 'Động con lắc lò xo để nghiên cứu dao động điều hòa và năng lượng học trong vật lý động lực học', image: '/con-lac-lo-xo.png', price: 17.84, rating: 4.3, reviews: 18321, duration: '2 giờ 30 phút', lessons: 12, students: 1500 },
-        { id: 2, title: 'Con lắc đơn', description: 'Vở con lắc đơn, thành phần lực tác động và động học của vật', image: '/con-lac-don.png', price: 8.99, rating: 3.9, reviews: 8321, duration: '1 giờ 45 phút', lessons: 8, students: 1200 },
-        { id: 3, title: 'Dao động điều hòa', description: 'Dao động điều hòa được dùng trong đời sống và các hiện tượng vật lý để mô tả các chuyển động ...', image: '/dao-dong-dieu-hoa.png', price: 11.70, rating: 4.2, reviews: 1231, duration: '3 giờ', lessons: 15, students: 1800 },
+        { id: 1, title: 'Con lắc lò xo', description: 'Động con lắc lò xo để nghiên cứu dao động điều hòa và năng lượng học trong vật lý động lực học', image: 'https://thidaihoc.vn/wp-content/uploads/2021/07/con-lac-lo-xo-treo-thang-dung.jpg', price: 17.84, rating: 4.3, reviews: 18321, duration: '2 giờ 30 phút', lessons: 12, students: 1500 },
+        { id: 2, title: 'Con lắc đơn', description: 'Vở con lắc đơn, thành phần lực tác động và động học của vật', image: 'https://i.ytimg.com/vi/32C191fJRs8/sddefault.jpg', price: 8.99, rating: 3.9, reviews: 8321, duration: '1 giờ 45 phút', lessons: 8, students: 1200 },
+        { id: 3, title: 'Dao động điều hòa', description: 'Dao động điều hòa được dùng trong đời sống và các hiện tượng vật lý để mô tả các chuyển động ...', image: 'https://blog.marathon.edu.vn/wp-content/uploads/2022/03/cac-dai-luong-dac-trung-cua-dao-dong-dieu-hoa.jpg', price: 11.70, rating: 4.2, reviews: 1231, duration: '3 giờ', lessons: 15, students: 1800 },
     ];
 
     return (

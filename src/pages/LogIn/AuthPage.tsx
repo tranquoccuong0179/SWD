@@ -10,7 +10,7 @@ const AuthPage: React.FC = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/login', {
+            const response = await axios.post('https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/SignIn', {
                 username,
                 password
             });
