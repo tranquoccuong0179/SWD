@@ -1,0 +1,71 @@
+.auth-container {
+    margin-top: 50px;
+  }
+  
+  .auth-tabs {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    text-decoration: none;
+  }
+  
+  .tab.active {
+    background-color: #e9ecef;
+    font-weight: bold;
+  }
+  
+  .auth-form {
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+  }
+  
+  .social-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .social-buttons button {
+    flex: 1;
+    margin: 0 5px;
+  }
+  
+  .divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+  }
+  
+  .divider::before,
+  .divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    border-top: 1px solid #dee2e6;
+  }
+  
+  .divider::before {
+    left: 0;
+  }
+  
+  .divider::after {
+    right: 0;
+  }
+  
+  .divider span {
+    background-color: #ffffff;
+    padding: 0 10px;
+    position: relative;
+    z-index: 1;
+  }
