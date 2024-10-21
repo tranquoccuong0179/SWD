@@ -1,7 +1,7 @@
 import './App.css'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import LoginPage from "./pages/LogIn/AuthPage.tsx";
+
 import LoginPage1 from "./pages/LogIn/LoginPage.tsx";
 import RegisterPage from './pages/LogIn/RegisterPage.tsx';
 import LandingPage from "./pages/LandingPage/LandingPage.tsx";
@@ -13,7 +13,6 @@ function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/Auth" element={<LoginPage />} />
                 <Route path="/Login" element={<LoginPage1 />} />
                 <Route path="/Register" element={<RegisterPage />} />
                 <Route path="/Home" element={<LandingPage />} />
