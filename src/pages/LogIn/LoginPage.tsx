@@ -1,20 +1,103 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { FaGoogle } from 'react-icons/fa';
-import './Auth.css'
+import { Link, useNavigate } from 'react-router-dom';
+import './Auth.css';
+import axios from 'axios';
+
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
+interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+}
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [remember, setRemember] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    // Load the Google Sign-In API script
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      window.google.accounts.id.initialize({
+        client_id: '945895220472-lu73hfjtbhadpp3e6i6hbuanj4dap22s.apps.googleusercontent.com',
+        callback: handleGoogleSignIn
+      });
+      window.google.accounts.id.renderButton(
+          document.getElementById('googleSignInButton'),
+          { theme: 'outline', size: 'large' }
+      );
+    };
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    // Add your login logic here
-    console.log({ email, password, remember });
+    try {
+      const response = await axios.post<LoginResponse>(
+          'https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/SignIn',
+          { username, password }
+      );
+
+      handleLoginSuccess(response.data);
+    } catch (err) {
+      setError('Login failed. Please check your credentials and try again.');
+    }
+  };
+
+  const handleGoogleSignIn = async (response: any) => {
+    try {
+      // GeneralOAuthFlow Google OAuth endpoint
+      const res = await axios.post<LoginResponse>(
+          'https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/google-auth/login',
+          { token: response.credential, flowName: 'GeneralOAuthFlow' } // Pass flowName
+      );
+
+      handleLoginSuccess(res.data);
+    } catch (err) {
+      setError('Google Sign-In failed. Please try again.');
+    }
+  };
+
+  const handleLoginSuccess = (data: LoginResponse) => {
+    const { accessToken, refreshToken } = data;
+
+    // Store tokens
+    localStorage.setItem('accessToken', accessToken);
+    if (remember) {
+      localStorage.setItem('refreshToken', refreshToken);
+    } else {
+      sessionStorage.setItem('refreshToken', refreshToken);
+    }
+
+    // Set up axios interceptor for future authenticated requests
+    axios.interceptors.request.use(
+        (config) => {
+          config.headers['Authorization'] = `Bearer ${accessToken}`;
+          return config;
+        },
+        (error) => {
+          return Promise.reject(error);
+        }
+    );
+
+    // Redirect to home page or dashboard
+    navigate('/dashboard');
   };
 
   return (
@@ -25,12 +108,10 @@ const LoginPage: React.FC = () => {
               <Button variant="light" style={{ marginRight: '10px' }}>LOGIN</Button>
               <Link to="/register" className="btn btn-light">REGISTER</Link>
             </div>
-            <Form className="auth-form" onSubmit={handleSubmit}>
+            <Form className="auth-form" onSubmit={handleLogin}>
               <h4 className="text-center mb-4">Sign in with:</h4>
               <div className="social-buttons text-center">
-                <Button variant="outline-danger" style={{ width: '100%', marginBottom: '15px' }}>
-                  <FaGoogle /> G
-                </Button>
+                <div id="googleSignInButton" style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px' }}></div>
               </div>
               <div className="divider text-center">
                 <span>or:</span>
@@ -38,10 +119,10 @@ const LoginPage: React.FC = () => {
               {error && <Alert variant="danger">{error}</Alert>}
               <Form.Group className="mb-3">
                 <Form.Control
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                 />
               </Form.Group>
