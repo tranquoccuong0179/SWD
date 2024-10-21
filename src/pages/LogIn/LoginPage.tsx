@@ -105,7 +105,7 @@ const LoginPage: React.FC = () => {
         <Row className="justify-content-center">
           <Col>
             <div className="auth-tabs" style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-              <Button variant="light" style={{ marginRight: '10px' }}>LOGIN</Button>
+              <Button className='tab active' variant="light" style={{ marginRight: '10px' }}>LOGIN</Button>
               <Link to="/register" className="btn btn-light">REGISTER</Link>
             </div>
             <Form className="auth-form" onSubmit={handleLogin}>

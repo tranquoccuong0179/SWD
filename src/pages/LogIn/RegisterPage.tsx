@@ -6,30 +6,25 @@ import axios from 'axios'; // Added axios import
 import './Auth.css';
 
 interface FormData {
-  email: string;
+  
   username: string; // Added username field
   password: string;
   confirmPassword: string;
   fullName: string;
-  address: string;
-  country: string;
+  email: string;
+  phone: string;
   gender: string;
-  birthDate: string;
-  phoneNumber: string;
 }
 
 const RegisterPage: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
-    email: '',
     username: '', // Added username field
     password: '',
     confirmPassword: '',
     fullName: '',
-    address: '',
-    country: '',
+    email: '',
+    phone: '',
     gender: '',
-    birthDate: '',
-    phoneNumber: '',
   });
 
   const [phoneError, setPhoneError] = useState<string>('');
@@ -49,17 +44,14 @@ const RegisterPage: React.FC = () => {
     try {
       const genderValue = formData.gender === '0' ? 0 : 1;
 
-      const response = await axios.post('https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/SignUp', {
-        email: formData.email,
+      const response = await axios.post('https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/SignUp', {    
         username: formData.username, // Include username
         password: formData.password,
         confirmPassword: formData.confirmPassword, // Include confirmPassword
         fullName: formData.fullName,
-        address: formData.address,
-        country: formData.country,
+        email: formData.email,
+        phoneNumber: formData.phone,
         gender: genderValue,
-        birthDate: formData.birthDate,
-        phoneNumber: formData.phoneNumber
       });
       console.log(response.data);
       setSuccess('Registration successful! Redirecting to login...');
@@ -115,23 +107,14 @@ const RegisterPage: React.FC = () => {
       <Container className="auth-container">
         <Row className="justify-content-center">
           <Col md={12}>
-            <div className="auth-tabs">
-              <Link to="/login" className="tab">LOGIN</Link>
-              <div className="tab active">REGISTER</div>
+            <div className="auth-tabs" style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}> 
+              <Link to="/login" className="btn btn-light">LOGIN</Link>
+              <Button className='tab active' variant="light" style={{ marginRight: '10px' }}>REGISTER</Button>
             </div>
             {error && <Alert variant="danger">{error}</Alert>}
             {success && <Alert variant="success">{success}</Alert>}
             <Form className="auth-form" onSubmit={handleRegister}>
-              <Form.Group className="mb-3">
-                <Form.Control
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                />
-              </Form.Group>
+              
               <Form.Group className="mb-3">
                 <Form.Control
                     type="text"
@@ -183,23 +166,25 @@ const RegisterPage: React.FC = () => {
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Control
-                    type="text"
-                    name="address"
-                    placeholder="Address"
-                    value={formData.address}
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
                     onChange={handleInputChange}
                     required
                 />
-              </Form.Group>
+              </Form.Group>          
               <Form.Group className="mb-3">
                 <Form.Control
-                    type="text"
-                    name="country"
-                    placeholder="Country"
-                    value={formData.country}
-                    onChange={handleInputChange}
+                    type="tel"
+                    name="phoneNumber"
+                    placeholder="Phone Number"
+                    value={formData.phone}
+                    onChange={handlePhoneChange}
+                    isInvalid={!!phoneError}
                     required
                 />
+                {phoneError && <Form.Text className="text-danger">{phoneError}</Form.Text>}
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Select
@@ -213,28 +198,6 @@ const RegisterPage: React.FC = () => {
                   <option value="female">Female</option>
                   <option value="other">Other</option>
                 </Form.Select>
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Control
-                    type="date"
-                    name="birthDate"
-                    placeholder="Birth Date"
-                    value={formData.birthDate}
-                    onChange={handleInputChange}
-                    required
-                />
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Control
-                    type="tel"
-                    name="phoneNumber"
-                    placeholder="Phone Number"
-                    value={formData.phoneNumber}
-                    onChange={handlePhoneChange}
-                    isInvalid={!!phoneError}
-                    required
-                />
-                {phoneError && <Form.Text className="text-danger">{phoneError}</Form.Text>}
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Check type="checkbox" label="I have read and agree to the terms" required />

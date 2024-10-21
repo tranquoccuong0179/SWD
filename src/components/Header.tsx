@@ -30,7 +30,7 @@ const Header = () => {
                     <Link to="/Pricing">Thanh toán</Link>
                 </Menu.Item>
             </Menu>
-            <Link to="/Auth">
+            <Link to="/Register">
             <Button type="primary">Tạo tài khoản miễn phí</Button>
             </Link>
             
