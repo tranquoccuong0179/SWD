@@ -1,0 +1,121 @@
+/* CoursePage.css */
+.course-page {
+    font-family: 'Arial', sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.logo {
+    height: 40px;
+}
+
+.search-input {
+    width: 300px;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-menu a {
+    color: #333;
+    text-decoration: none;
+}
+
+.nav-menu a.active {
+    color: #1890ff;
+    font-weight: bold;
+}
+
+.content {
+    padding: 2rem 5%;
+}
+
+.breadcrumb {
+    margin-bottom: 1rem;
+}
+
+.course-filters {
+    margin: 1rem 0;
+}
+
+.course-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 3rem; /* Increase the gap for more spacing */
+}
+
+
+.course-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.course-image {
+    transition: all 0.3s ease;
+    width: 300px;
+    height: 170px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.course-meta {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 0;
+}
+
+.review-count {
+    margin-left: 0.5rem;
+    color: #888;
+}
+
+.course-details {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem; /* Make the text a bit smaller to fit */
+    color: #666;
+}
+
+.course-price {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    color: #28a745; /* Price color */
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 2rem 5%;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .search-input {
+        width: 100%;
+        margin: 1rem 0;
+    }
+
+    .nav-menu {
+        margin-bottom: 1rem;
+    }
+
+    .course-list {
+        grid-template-columns: 1fr;
+    }
+}
