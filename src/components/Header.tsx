@@ -6,7 +6,7 @@ const Header = () => {
     return (
         <header className="header">
             <div className="logo-container">
-                <img src="/logo.png" alt="Logo" className="logo" />
+                <img src="https://i.postimg.cc/xT0JJZbJ/physics-logo.jpg" alt="Logo" className="logo" />
             </div>
             <Input
                 placeholder="Bạn muốn học gì?"

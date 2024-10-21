@@ -73,8 +73,8 @@ const LoginPage: React.FC = () => {
           }
       );
       handleLoginSuccess(res.data);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      console.error('Google Sign-In failed:', err.response ? err.response.data : err);
       setError('Google Sign-In failed. Please try again.');
     }
   };

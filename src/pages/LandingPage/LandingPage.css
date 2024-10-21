@@ -41,8 +41,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
     padding: 0 5%;
+    background-image: url('https://i.postimg.cc/cJm4SxXF/pexels-iriser-1366957.jpg');
 }
 
 .hero-content {
@@ -287,7 +287,10 @@
 
 /* Hero section enhancements */
 .hero {
-    background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+    background-image: url('https://i.postimg.cc/9fYmPm9G/A-combination-of-Einstein-and-quantum-physics.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .hero h1 {
