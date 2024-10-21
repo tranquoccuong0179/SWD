@@ -1,4 +1,4 @@
-.container {
+/* .container {
     background-color: #fff;
     display: flex;
     width: 100%;
@@ -15,12 +15,7 @@
     }
 }
 
-.chapterIcon {
-    aspect-ratio: 1;
-    object-fit: contain;
-    object-position: center;
-    width: 50px;
-}
+
 
 @media (max-width: 991px) {
     .chapterIcon {
@@ -84,4 +79,15 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+} */
+
+.chapterIcon {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 50px;
+}
+
+.text-lg {
+    text-align: center;
 }

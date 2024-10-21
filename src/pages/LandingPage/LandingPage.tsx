@@ -3,6 +3,7 @@ import Header from '../../components/Header';
 import FeaturedCourses from './FeaturedCourses';
 import Testimonials from './Testimonials';
 import Footer from '../../components/Footer/Footer.tsx';
+import { Link } from 'react-router-dom';
 import './LandingPage.css';
 
 const { Content } = Layout;
@@ -20,8 +21,13 @@ const LandingPage = () => {
                             Học Vật Lý theo một cách mới với Manim AI Physics Visualizer. Nền tảng học trực tuyến và công cụ để tạo mô phỏng giúp bạn hiểu nhanh hơn.
                         </Paragraph>
                         <div className="hero-buttons">
+                            <Link to="/login">
                             <Button type="primary" size="large">Đăng nhập ngay</Button>
+                            </Link>
+                            <Link to="/register">
                             <Button size="large">Tạo tài khoản mới</Button>
+                            </Link>
+                            
                         </div>
                     </div>
                 </section>
@@ -45,7 +51,10 @@ const LandingPage = () => {
 
                 <section className="cta full-width">
                     <Title level={2}>Bắt đầu hành trình học Vật lý của bạn ngay hôm nay!</Title>
+                    <Link to="/register">
                     <Button type="primary" size="large">Đăng ký miễn phí</Button>
+                    </Link>
+                    
                 </section>
 
                 <Testimonials />

@@ -109,7 +109,7 @@ const ChapterContent: React.FC = () => {
                 </div>
                 <div className="md:w-8/12">
                     {/* Content for the selected lesson would go here */}
-                    <p className="text-lg"> {lessons.find(l => l.id === activeLesson)?.title}</p>
+                    <p className="text-lg font-bold text-center"> {lessons.find(l => l.id === activeLesson)?.title}</p>
                 </div>
             </div>
         </div>
