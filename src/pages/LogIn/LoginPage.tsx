@@ -31,6 +31,7 @@ const LoginPage: React.FC = () => {
     document.body.appendChild(script);
 
     script.onload = () => {
+      console.log('Google Sign-In script loaded'); // Debugging log
       window.google.accounts.id.initialize({
         client_id: '945895220472-lu73hfjtbhadpp3e6i6hbuanj4dap22s.apps.googleusercontent.com',
         callback: handleGoogleSignIn
@@ -53,7 +54,6 @@ const LoginPage: React.FC = () => {
           'https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/SignIn',
           { username, password }
       );
-
       handleLoginSuccess(response.data);
     } catch (err) {
       setError('Login failed. Please check your credentials and try again.');
@@ -62,14 +62,19 @@ const LoginPage: React.FC = () => {
 
   const handleGoogleSignIn = async (response: any) => {
     try {
-      // GeneralOAuthFlow Google OAuth endpoint
-      const res = await axios.post<LoginResponse>(
+      console.log('Google Sign-In response:', response);
+      const res = await axios.get<LoginResponse>(
           'https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/google-auth/login',
-          { token: response.credential, flowName: 'GeneralOAuthFlow' } // Pass flowName
+          {
+            params: {
+              token: response.credential,
+              flowName: 'GeneralOAuthFlow'
+            }
+          }
       );
-
       handleLoginSuccess(res.data);
     } catch (err) {
+      console.error('Google Sign-In failed:', err.response ? err.response.data : err);
       setError('Google Sign-In failed. Please try again.');
     }
   };
@@ -97,7 +102,7 @@ const LoginPage: React.FC = () => {
     );
 
     // Redirect to home page or dashboard
-    navigate('/dashboard');
+    navigate('/Home');
   };
 
   return (
