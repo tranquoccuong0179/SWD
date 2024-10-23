@@ -1,4 +1,7 @@
 import { Card, Rate } from 'antd';
+import { Typography } from 'antd';
+
+const { Title } = Typography;
 
 const courses = [
     {
@@ -33,7 +36,8 @@ const courses = [
 const FeaturedCourses = () => {
     return (
         <section className="featured-courses">
-            <h1 className='featured-courses-title mb-10'>Các chương phổ biến nhất</h1>
+            {/* <h1 className='featured-courses-title mb-10'>Các chương phổ biến nhất</h1> */}
+            <Title level={2} className='mb-5'>Các chương phổ biến nhất</Title>
             <div className="course-list">
                 {courses.map((course) => (
                     <Card

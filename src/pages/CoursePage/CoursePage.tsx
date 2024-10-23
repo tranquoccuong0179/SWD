@@ -11,7 +11,7 @@ const { Title, Paragraph, Text } = Typography;
 const CoursePage = () => {
     const courses = [
         { id: 1, title: 'Con lắc lò xo', description: 'Động con lắc lò xo để nghiên cứu dao động điều hòa và năng lượng học trong vật lý động lực học', image: 'https://thidaihoc.vn/wp-content/uploads/2021/07/con-lac-lo-xo-treo-thang-dung.jpg', price: 17.84, rating: 4.3, reviews: 18321, duration: '2 giờ 30 phút', lessons: 12, students: 1500 },
-        { id: 2, title: 'Con lắc đơn', description: 'Vở con lắc đơn, thành phần lực tác động và động học của vật', image: 'https://i.ytimg.com/vi/32C191fJRs8/sddefault.jpg', price: 8.99, rating: 3.9, reviews: 8321, duration: '1 giờ 45 phút', lessons: 8, students: 1200 },
+        { id: 2, title: 'Con lắc đơn', description: 'Vở con lắc đơn, thành phần lực tác động và động học của vật...', image: 'https://i.ytimg.com/vi/32C191fJRs8/sddefault.jpg', price: 8.99, rating: 3.9, reviews: 8321, duration: '1 giờ 45 phút', lessons: 8, students: 1200 },
         { id: 3, title: 'Dao động điều hòa', description: 'Dao động điều hòa được dùng trong đời sống và các hiện tượng vật lý để mô tả các chuyển động ...', image: 'https://blog.marathon.edu.vn/wp-content/uploads/2022/03/cac-dai-luong-dac-trung-cua-dao-dong-dieu-hoa.jpg', price: 11.70, rating: 4.2, reviews: 1231, duration: '3 giờ', lessons: 15, students: 1800 },
     ];
 
@@ -21,8 +21,8 @@ const CoursePage = () => {
 
             <Content className="content">
                 <Breadcrumb className="breadcrumb">
-                    <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
-                    <Breadcrumb.Item>Bài học</Breadcrumb.Item>
+                <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
+                <Breadcrumb.Item>Bài học</Breadcrumb.Item>
                 </Breadcrumb>
 
                 <Title level={1}>Khám phá các khóa học Vật lý</Title>
@@ -41,8 +41,8 @@ const CoursePage = () => {
                 <div className="course-list">
                     {courses.map(course => (
                         <Card key={course.id} hoverable className="course-card">
-                            <img alt={course.title} src={course.image} className="course-image" />
-                            <Title level={4}>{course.title}</Title>
+                            <img alt={course.title} src={course.image} className="course-image mb-2" />
+                            <Title level={4} className='mb-2'>{course.title}</Title>
                             <Paragraph ellipsis={{ rows: 2 }}>{course.description}</Paragraph>
                             <div className="course-meta">
                                 <Rate disabled defaultValue={course.rating} />

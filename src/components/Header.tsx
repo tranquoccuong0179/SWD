@@ -26,9 +26,9 @@ const Header = () => {
                 <Menu.Item key="contact">
                     <Link to="/Contact">Liên hệ</Link>
                 </Menu.Item>
-                <Menu.Item key="pricing">
+                {/* <Menu.Item key="pricing">
                     <Link to="/Pricing">Thanh toán</Link>
-                </Menu.Item>
+                </Menu.Item> */}
             </Menu>
             <Link to="/Register">
             <Button type="primary">Tạo tài khoản miễn phí</Button>

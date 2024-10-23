@@ -179,7 +179,7 @@ const RegisterPage: React.FC = () => {
                     type="tel"
                     name="phoneNumber"
                     placeholder="Phone Number"
-                    value={formData.phone}
+                    // value={formData.phone}
                     onChange={handlePhoneChange}
                     isInvalid={!!phoneError}
                     required

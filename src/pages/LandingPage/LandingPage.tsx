@@ -35,15 +35,15 @@ const LandingPage = () => {
                 <section className="features full-width">
                     <div className="feature">
                         <img className="feature-img"src="https://hiec.edu.vn/files/media/202108/x50icon_nckh-1545624254.png" alt="Phát triển tư duy" />
-                        <span>Phát triển tư duy</span>
+                        <span className='fw-bold'>Phát triển tư duy</span>
                     </div>
                     <div className="feature">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWv19Kig2wMEL2R2hUirC01-4JRc6vaeAOLw&s" alt="Hệ thống kiến thức" />
-                        <span>Hệ thống kiến thức</span>
+                        <span className='fw-bold'>Hệ thống kiến thức</span>
                     </div>
                     <div className="feature">
                         <img src="https://png.pngtree.com/png-clipart/20231206/original/pngtree-graph-red-flat-icon-isolated-economy-photo-png-image_13786567.png" alt="Đồ thị tập luyện" />
-                        <span>Đồ thị sáng tạo</span>
+                        <span className='fw-bold'>Đồ thị sáng tạo</span>
                     </div>
                 </section>
 

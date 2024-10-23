@@ -1,5 +1,6 @@
 import { Avatar, Card } from 'antd';
-
+import { Typography } from 'antd';
+const { Title } = Typography;
 const testimonials = [
     {
         id: 1,
@@ -34,13 +35,13 @@ const testimonials = [
 const Testimonials = () => {
     return (
         <section className="testimonials">
-            <h2>Họ nói gì về chúng tôi?</h2>
+            <Title level={2}>Người dùng nói gì về chúng tôi?</Title>
             <div className="testimonial-list">
                 {testimonials.map((testimonial) => (
                     <Card key={testimonial.id} className="testimonial-card">
                         <Avatar src={testimonial.avatar} size={64} />
-                        <h3>{testimonial.name}</h3>
-                        <h4>{testimonial.role}</h4>
+                        <h3 className='mb-2 fw-bold'>{testimonial.name}</h3>
+                        <h4 className='mb-2'>{testimonial.role}</h4>
                         <p>{testimonial.comment}</p>
                     </Card>
                 ))}
