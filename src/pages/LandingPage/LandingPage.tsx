@@ -4,12 +4,20 @@ import FeaturedCourses from './FeaturedCourses';
 import Testimonials from './Testimonials';
 import Footer from '../../components/Footer/Footer.tsx';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import './LandingPage.css';
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
 
+interface RootState {
+    USER: {
+      uid: string | null;
+    };
+  }
+
 const LandingPage = () => {
+    const id = useSelector((state: RootState) => state.USER.uid);
     return (
         <Layout className="landing-page">
             <Header />
@@ -18,17 +26,23 @@ const LandingPage = () => {
                     <div className="hero-content">
                         <Title level={1}>Nâng Tầm Trải Nghiệm Học Vật Lý Với Manim AI!</Title>
                         <Paragraph>
-                            Học Vật Lý theo một cách mới với Manim AI Physics Visualizer. Nền tảng học trực tuyến và công cụ để tạo mô phỏng giúp bạn hiểu nhanh hơn.
+                            Học Vật Lý theo một cách mới với Manim AI Physics Visualizer. Nền tảng học trực tuyến và công cụ để tạo mô phỏng giúp bạn hiểu và ghi nhớ kiến thức nhanh hơn.
                         </Paragraph>
-                        <div className="hero-buttons">
-                            <Link to="/login">
-                            <Button type="primary" size="large">Đăng nhập ngay</Button>
-                            </Link>
-                            <Link to="/register">
-                            <Button size="large">Tạo tài khoản mới</Button>
-                            </Link>
-                            
-                        </div>
+                            {id ? (
+                                <Link to='/newcourse'>
+                                    <Button type="primary" size="large">Trải nghiệm ngay!</Button>
+                                </Link>
+                                
+                                ) : (
+                                    <div className="hero-buttons">
+                                        <Link to="/login">
+                                        <Button type="primary" size="large">Đăng nhập ngay</Button>
+                                        </Link>
+                                        <Link to="/register">
+                                        <Button type="primary" size="large">Tạo tài khoản mới</Button>
+                                        </Link>       
+                                </div>
+                                )}
                     </div>
                 </section>
 
@@ -51,12 +65,17 @@ const LandingPage = () => {
 
                 <section className="cta full-width">
                     <Title level={2}>Bắt đầu hành trình học Vật lý của bạn ngay hôm nay!</Title>
-                    <Link to="/register">
-                    <Button type="primary" size="large">Đăng ký miễn phí</Button>
-                    </Link>
-                    
+                        {id ? (
+                                <Link to='/newcourse'>
+                                    <Button type="primary" size="large">Đến Trang Bài Học</Button>
+                                </Link>
+                            ) : (
+                                <Link to="/register">
+                                <Button type="primary" size="large">Đăng ký miễn phí</Button>
+                                </Link>
+                            )}
                 </section>
-
+                
                 <Testimonials />
 
                 <section className="stats full-width">

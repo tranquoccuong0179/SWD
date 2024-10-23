@@ -3,12 +3,20 @@ import { ClockCircleOutlined, BookOutlined, UserOutlined } from '@ant-design/ico
 import './CoursePage.css';
 import Footer from "../../components/Footer/Footer.tsx"
 import Header from "../../components/Header";
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
+interface RootState {
+    USER: {
+      uid: string | null;
+    };
+  }
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
 const CoursePage = () => {
+    const id = useSelector((state: RootState) => state.USER.uid);
     const courses = [
         { id: 1, title: 'Con lắc lò xo', description: 'Động con lắc lò xo để nghiên cứu dao động điều hòa và năng lượng học trong vật lý động lực học', image: 'https://thidaihoc.vn/wp-content/uploads/2021/07/con-lac-lo-xo-treo-thang-dung.jpg', price: 17.84, rating: 4.3, reviews: 18321, duration: '2 giờ 30 phút', lessons: 12, students: 1500 },
         { id: 2, title: 'Con lắc đơn', description: 'Vở con lắc đơn, thành phần lực tác động và động học của vật...', image: 'https://i.ytimg.com/vi/32C191fJRs8/sddefault.jpg', price: 8.99, rating: 3.9, reviews: 8321, duration: '1 giờ 45 phút', lessons: 8, students: 1200 },
@@ -55,7 +63,15 @@ const CoursePage = () => {
                             </div>
                             <div className="course-price">
                                 <Text strong>${course.price.toFixed(2)}</Text>
-                                <Button type="primary">Đăng ký ngay</Button>
+                                {id ? (
+                                    <Link to="/coursedetails">
+                                    <Button type="primary">Học ngay</Button>
+                                </Link>
+                                    ) : (
+                                        <Link to="/register">
+                                            <Button type="primary">Đăng ký ngay</Button>
+                                        </Link>
+                                    )}
                             </div>
                         </Card>
                     ))}

@@ -7,7 +7,7 @@ const courses = [
     {
         id: 1,
         title: 'Con lắc lò xo',
-        description: 'Động con lắc lò xo để nghiên cứu dao động điều hòa và năng lượng học trong vật lý động lực học',
+        description: 'Động con lắc lò xo để nghiên cứu dao động điều hòa và năng lượng học trong vật lý động lực học...',
         image: 'https://thidaihoc.vn/wp-content/uploads/2021/07/con-lac-lo-xo-treo-thang-dung.jpg',
         price: 17.84,
         rating: 4.3,
@@ -16,7 +16,7 @@ const courses = [
     {
         id: 2,
         title: 'Con lắc đơn',
-        description: 'Vở con lắc đơn, thành phần lực tác động và động học của vật',
+        description: 'Con lắc đơn là hệ thống gồm sợi dây không dãn, chiều dài, khối lượng không đáng kể, với một đầu gắn cố định...',
         image: 'https://i.ytimg.com/vi/32C191fJRs8/sddefault.jpg',
         price: 8.99,
         rating: 3.9,
@@ -25,7 +25,7 @@ const courses = [
     {
         id: 3,
         title: 'Dao động điều hòa',
-        description: 'Dao động điều hòa được dùng trong đời sống và các hiện tượng vật lý để mô tả các chuyển động ...',
+        description: 'Dao động điều hòa được dùng trong đời sống và các hiện tượng vật lý để mô tả các chuyển động...',
         image: 'https://blog.marathon.edu.vn/wp-content/uploads/2022/03/cac-dai-luong-dac-trung-cua-dao-dong-dieu-hoa.jpg',
         price: 11.70,
         rating: 4.2,

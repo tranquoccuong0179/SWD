@@ -3,16 +3,39 @@ import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { loginAccount } from '../../store/user/action';
+
 
 declare global {
   interface Window {
     google: any;
   }
 }
+interface AxiosResponse<T = any> {
+  data: T; // The actual response data is inside the 'data' property
+  status: number;
+  statusText: string;
+  headers: any;
+  config: any;
+  request?: any;
+}
+
 
 interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
+  token: {
+    accessToken: string;
+    refreshToken: string;
+  }
+  user: {
+    id: string;
+    email: string;
+    fullName: string;
+    userName: string;
+    gender: number;
+    phoneNumber: number;
+  }
+ 
 }
 
 const LoginPage: React.FC = () => {
@@ -21,6 +44,7 @@ const LoginPage: React.FC = () => {
   const [remember, setRemember] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
+  const dispatch= useDispatch()
 
   useEffect(() => {
     // Load the Google Sign-In API script
@@ -50,11 +74,12 @@ const LoginPage: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post<LoginResponse>(
+      const response = await axios.post<AxiosResponse>(
           'https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/SignIn',
           { username, password }
       );
-      handleLoginSuccess(response.data);
+      console.log("res1", response.data.data);
+      handleLoginSuccess(response.data.data);
     } catch (err) {
       setError('Login failed. Please check your credentials and try again.');
     }
@@ -72,6 +97,7 @@ const LoginPage: React.FC = () => {
             }
           }
       );
+      
       handleLoginSuccess(res.data);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
@@ -80,8 +106,11 @@ const LoginPage: React.FC = () => {
   };
 
   const handleLoginSuccess = (data: LoginResponse) => {
-    const { accessToken, refreshToken } = data;
-
+    
+    const { accessToken, refreshToken } = data?.token;
+    console.log("data", accessToken);
+    
+    dispatch(loginAccount(data?.user))
     // Store tokens
     localStorage.setItem('accessToken', accessToken);
     if (remember) {
@@ -89,6 +118,7 @@ const LoginPage: React.FC = () => {
     } else {
       sessionStorage.setItem('refreshToken', refreshToken);
     }
+
 
     // Set up axios interceptor for future authenticated requests
     axios.interceptors.request.use(

@@ -36,7 +36,7 @@
 }
 
 /* Hero section styles */
-.hero {
+/* .hero {
     height: 100vh;
     display: flex;
     align-items: center;
@@ -67,14 +67,174 @@
 
 .hero-buttons button {
     margin: 0 0.5rem;
+} */
+/* Hero section với glass morphism effect */
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5%;
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.3)
+    ), url('https://i.postimg.cc/9fYmPm9G/A-combination-of-Einstein-and-quantum-physics.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
 }
 
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+        circle at center,
+        transparent 0%,
+        rgba(0, 0, 0, 0.3) 100%
+    );
+}
+
+.hero-content {
+    max-width: 800px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    padding: 2.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(45deg, #fff 30%, #f0f0f0 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    /* -webkit-text-fill-color: transparent; */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+}
+
+.hero p {
+    color: #fff;
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    line-height: 1.6;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+.hero-buttons {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.hero-buttons button {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+}
+
+.hero-buttons button:first-child {
+    background: linear-gradient(45deg, #1890ff, #096dd9);
+    color: white;
+    box-shadow: 0 4px 15px rgba(24, 144, 255, 0.3);
+}
+
+.hero-buttons button:last-child {
+    background: rgba(255, 255, 255, 0.9);
+    color: #1890ff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hero-buttons button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Thêm animation cho hero content */
+.hero-content {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.8rem;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+    }
+
+    .hero-content {
+        padding: 2rem;
+        margin: 0 1rem;
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .hero-buttons button {
+        width: 100%;
+        padding: 0.8rem 1.5rem;
+    }
+}
+
+/* Thêm hover effect cho hero content */
+.hero-content:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+/* Tối ưu performance */
+@media (prefers-reduced-motion: reduce) {
+    .hero-content {
+        animation: none;
+    }
+    
+    .hero-content:hover {
+        transform: none;
+    }
+}
 .hero-features {
     display: flex;
     justify-content: center;
     gap: 2rem;
 }
-
+/******************************************************/
 .features {
     display: flex;
     justify-content: space-around;
