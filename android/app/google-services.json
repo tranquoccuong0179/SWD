@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "54904457472",
+    "project_id": "lab7-f0157",
+    "storage_bucket": "lab7-f0157.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:54904457472:android:2bf044f3db58a678a5cbe5",
+        "android_client_info": {
+          "package_name": "com.bottele"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-lT4YKGUwmVGwHqdZpZAlzLzJjWck4qA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
