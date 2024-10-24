@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import axios from 'axios'; // Added axios import
 import './Auth.css';
+import LoadingButton from '../../components/Button';
 
 interface FormData {
   
@@ -33,6 +34,7 @@ const RegisterPage: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -41,13 +43,18 @@ const RegisterPage: React.FC = () => {
       setError('Passwords do not match');
       return;
     }
+
+    setIsLoading(true);
+    setError('');
+    setSuccess('');
+
     try {
       const genderValue = formData.gender === '0' ? 0 : 1;
 
-      const response = await axios.post('https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/SignUp', {    
-        username: formData.username, // Include username
+      const response = await axios.post('https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/SignUp', {
+        username: formData.username,
         password: formData.password,
-        confirmPassword: formData.confirmPassword, // Include confirmPassword
+        confirmPassword: formData.confirmPassword,
         fullName: formData.fullName,
         email: formData.email,
         phoneNumber: formData.phone,
@@ -58,6 +65,8 @@ const RegisterPage: React.FC = () => {
       setTimeout(() => navigate('/Login'), 3000);
     } catch (err) {
       setError('Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -202,9 +211,13 @@ const RegisterPage: React.FC = () => {
               <Form.Group className="mb-3">
                 <Form.Check type="checkbox" label="I have read and agree to the terms" required />
               </Form.Group>
-              <Button variant="primary" type="submit" className="w-100">
+              <LoadingButton
+                  type="submit"
+                  isLoading={isLoading}
+                  className="w-100 btn btn-primary"
+              >
                 SIGN UP
-              </Button>
+              </LoadingButton>
             </Form>
           </Col>
         </Row>

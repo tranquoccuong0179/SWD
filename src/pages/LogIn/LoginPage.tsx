@@ -5,6 +5,7 @@ import './Auth.css';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { loginAccount } from '../../store/user/action';
+import LoadingButton from '../../components/Button';
 
 
 declare global {
@@ -45,6 +46,7 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
   const dispatch= useDispatch()
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     // Load the Google Sign-In API script
@@ -73,15 +75,19 @@ const LoginPage: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError('');
+
     try {
       const response = await axios.post<AxiosResponse>(
           'https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/SignIn',
           { username, password }
       );
-      console.log("res1", response.data.data);
       handleLoginSuccess(response.data.data);
     } catch (err) {
       setError('Login failed. Please check your credentials and try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -177,9 +183,13 @@ const LoginPage: React.FC = () => {
                     onChange={(e) => setRemember(e.target.checked)}
                 />
               </Form.Group>
-              <Button variant="primary" type="submit" className="w-100">
+              <LoadingButton
+                  type="submit"
+                  isLoading={isLoading}
+                  className="w-100 btn btn-primary"
+              >
                 SIGN IN
-              </Button>
+              </LoadingButton>
               <div className="text-center mt-3">
                 <Link to="/forgot">Forgot password?</Link>
               </div>
