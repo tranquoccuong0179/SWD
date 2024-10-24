@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import './LandingPage.css';
 import BackToTopButton from '../../components/BackToTop';
+import {UserOutlined} from "@ant-design/icons";
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -29,21 +30,26 @@ const LandingPage = () => {
                         <Paragraph>
                             Học Vật Lý theo một cách mới với Manim AI Physics Visualizer. Nền tảng học trực tuyến và công cụ để tạo mô phỏng giúp bạn hiểu và ghi nhớ kiến thức nhanh hơn.
                         </Paragraph>
-                            {id ? (
-                                <Link to='/newcourse'>
-                                    <Button type="primary" size="large">Trải nghiệm ngay!</Button>
+                        {id ? (
+                            <Link to='/newcourse'>
+                                <Button type="primary" size="large" className="hero-button">
+                                    Trải nghiệm ngay!
+                                </Button>
+                            </Link>
+                        ) : (
+                            <div className="hero-buttons">
+                                <Link to="/login">
+                                    <Button type="primary" size="large">
+                                        <UserOutlined /> Đăng nhập ngay
+                                    </Button>
                                 </Link>
-
-                                ) : (
-                                    <div className="hero-buttons">
-                                        <Link to="/login">
-                                        <Button type="primary" size="large">Đăng nhập ngay</Button>
-                                        </Link>
-                                        <Link to="/register">
-                                        <Button type="primary" size="large">Tạo tài khoản mới</Button>
-                                        </Link>
-                                </div>
-                                )}
+                                <Link to="/register">
+                                    <Button type="primary" size="large">
+                                        Tạo tài khoản mới
+                                    </Button>
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </section>
 
@@ -66,18 +72,18 @@ const LandingPage = () => {
 
                 <section className="cta full-width">
                     <Title level={2}>Bắt đầu hành trình học Vật lý của bạn ngay hôm nay!</Title>
-                        {id ? (
-                                <Link to='/newcourse'>
-                                    <Button type="primary" size="large">Đến Trang Bài Học</Button>
-                                </Link>
-                            ) : (
-                                <Link to="/register">
-                                <Button type="primary" size="large">Đăng ký miễn phí</Button>
-                                </Link>
-                            )}
+                    {id ? (
+                        <Link to='/newcourse'>
+                            <Button type="primary" size="large">Đến Trang Bài Học</Button>
+                        </Link>
+                    ) : (
+                        <Link to="/register">
+                            <Button type="primary" size="large">Đăng ký miễn phí</Button>
+                        </Link>
+                    )}
                 </section>
 
-                <Testimonials />
+                <Testimonials/>
 
                 <section className="stats full-width">
                     <div className="stat">
