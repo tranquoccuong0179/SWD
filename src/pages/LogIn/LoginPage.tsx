@@ -6,22 +6,22 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { loginAccount } from '../../store/user/action';
 import LoadingButton from '../../components/Button';
-
+import { AppDispatch } from '../../store/types';
 
 declare global {
   interface Window {
     google: any;
   }
 }
+
 interface AxiosResponse<T = any> {
-  data: T; // The actual response data is inside the 'data' property
+  data: T;
   status: number;
   statusText: string;
   headers: any;
   config: any;
   request?: any;
 }
-
 
 interface LoginResponse {
   token: {
@@ -36,7 +36,6 @@ interface LoginResponse {
     gender: number;
     phoneNumber: number;
   }
- 
 }
 
 const LoginPage: React.FC = () => {
@@ -45,32 +44,57 @@ const LoginPage: React.FC = () => {
   const [remember, setRemember] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
-  const dispatch= useDispatch()
+  const dispatch = useDispatch<AppDispatch>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // Configure axios defaults
   useEffect(() => {
-    // Load the Google Sign-In API script
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
+    axios.defaults.headers.common['Content-Type'] = 'application/json';
+    axios.defaults.headers.common['Accept'] = 'application/json';
+  }, []);
 
-    script.onload = () => {
-      console.log('Google Sign-In script loaded'); // Debugging log
-      window.google.accounts.id.initialize({
-        client_id: '945895220472-lu73hfjtbhadpp3e6i6hbuanj4dap22s.apps.googleusercontent.com',
-        callback: handleGoogleSignIn
-      });
-      window.google.accounts.id.renderButton(
-          document.getElementById('googleSignInButton'),
-          { theme: 'outline', size: 'large' }
-      );
+  useEffect(() => {
+    const loadGoogleSignIn = () => {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+
+      script.onload = () => {
+        try {
+          window.google.accounts.id.initialize({
+            client_id: '945895220472-lu73hfjtbhadpp3e6i6hbuanj4dap22s.apps.googleusercontent.com',
+            callback: handleGoogleSignIn,
+            ux_mode: 'popup', // Using popup to avoid redirect issues
+          });
+
+          window.google.accounts.id.renderButton(
+              document.getElementById('googleSignInButton'),
+              {
+                theme: 'outline',
+                size: 'large',
+                width: 250 // Set a specific width for better UI consistency
+              }
+          );
+        } catch (err) {
+          console.error('Error initializing Google Sign-In:', err);
+          setError('Failed to initialize Google Sign-In. Please try again later.');
+        }
+      };
+
+      script.onerror = () => {
+        console.error('Failed to load Google Sign-In script');
+        setError('Failed to load Google Sign-In. Please try again later.');
+      };
+
+      document.body.appendChild(script);
+      return () => {
+        const scriptElement = document.querySelector(`script[src="${script.src}"]`);
+        if (scriptElement) document.body.removeChild(scriptElement);
+      };
     };
 
-    return () => {
-      document.body.removeChild(script);
-    };
+    loadGoogleSignIn();
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -84,38 +108,61 @@ const LoginPage: React.FC = () => {
           { username, password }
       );
       handleLoginSuccess(response.data.data);
-    } catch (err) {
-      setError('Login failed. Please check your credentials and try again.');
+    } catch (err: any) {
+      const errorMessage = err.response?.data?.message || 'Login failed. Please check your credentials and try again.';
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleGoogleSignIn = async (response: any) => {
+    if (!response.credential) {
+      setError('Google Sign-In failed: No credentials received');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+
     try {
-      console.log('Google Sign-In response:', response);
       const res = await axios.get<LoginResponse>(
           'https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/google-auth/login',
           {
             params: {
               token: response.credential,
               flowName: 'GeneralOAuthFlow'
-            }
+            },
+            headers: {
+              'Accept': 'application/json',
+              'Access-Control-Allow-Origin': '*' // Note: The server must be configured to accept this
+            },
+            withCredentials: false // Important for CORS requests
           }
       );
-      
-      handleLoginSuccess(res.data);
-    } catch (err) {
-      setError('Google Sign-In failed. Please try again.');
+
+      if (res.data) {
+        handleLoginSuccess(res.data);
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (err: any) {
+      console.error('Google Sign-In Error:', err);
+      const errorMessage = err.response?.data?.message || 'Google Sign-In failed. Please try again.';
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleLoginSuccess = (data: LoginResponse) => {
-    
-    const { accessToken, refreshToken } = data?.token;
-    console.log("data", accessToken);
-    
-    dispatch(loginAccount(data?.user))
+    if (!data?.token?.accessToken) {
+      setError('Invalid login response: Missing access token');
+      return;
+    }
+
+    const { accessToken, refreshToken } = data.token;
+
     // Store tokens
     localStorage.setItem('accessToken', accessToken);
     if (remember) {
@@ -124,19 +171,27 @@ const LoginPage: React.FC = () => {
       sessionStorage.setItem('refreshToken', refreshToken);
     }
 
+    // Dispatch user data to Redux store with proper typing
+    dispatch(loginAccount({
+      id: data.user.id,
+      email: data.user.email,
+      fullName: data.user.fullName,
+      userName: data.user.userName,
+      gender: data.user.gender,
+      phoneNumber: data.user.phoneNumber
+    }));
 
-    // Set up axios interceptor for future authenticated requests
+    // Set up axios interceptor
     axios.interceptors.request.use(
         (config) => {
-          config.headers['Authorization'] = `Bearer ${accessToken}`;
+          if (config.headers) {
+            config.headers.Authorization = `Bearer ${accessToken}`;
+          }
           return config;
         },
-        (error) => {
-          return Promise.reject(error);
-        }
+        (error) => Promise.reject(error)
     );
 
-    // Redirect to home page or dashboard
     navigate('/Home');
   };
 
@@ -151,7 +206,15 @@ const LoginPage: React.FC = () => {
             <Form className="auth-form" onSubmit={handleLogin}>
               <h4 className="text-center mb-4">Sign in with:</h4>
               <div className="social-buttons text-center">
-                <div id="googleSignInButton" style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px' }}></div>
+                <div
+                    id="googleSignInButton"
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginBottom: '15px',
+                      minHeight: '40px' // Prevent layout shift
+                    }}
+                ></div>
               </div>
               <div className="divider text-center">
                 <span>or:</span>

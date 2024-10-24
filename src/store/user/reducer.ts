@@ -1,67 +1,4 @@
-// import { FETCH_USER, LOGIN_ACCOUNT, LOGOUT_USER } from "./action";
-
-// const initialState = {
-//   username: "",
-//   avatar: "",
-//   uid: "",
-//   refreshToken: "",
-// };
-
-// const reducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case LOGIN_ACCOUNT:
-//       // localStorage.setItem("refreshToken", action.payload.refreshToken);
-//       // localStorage.setItem("accessToken", action.payload.accessToken);
-//       //   localStorage.setItem("role", action.payload.roleName);
-//       // "Customer", "SalonOwner", "SalonEmployee"
-//       return {
-//         ...state,
-//         // token: action.payload.accessToken,
-//         username:
-//           action.payload?.userName,
-//         fullName: action.payload.fullName,
-//         uid: action.payload.id,
-//         phone: action.payload.phoneNumber
-//       };
-
-//     case FETCH_USER:
-//       localStorage.setItem("role", action.payload.roleName);
-//       return {
-//         ...state,
-//         // token: action.payload.accessToken,
-//         username:
-//           action.payload?.fullName,
-//         avatar:
-//           action.payload?.salonOwnerResponse?.img ||
-//           action.payload?.customerResponse?.img ||
-//           action.payload?.salonEmployeeResponse?.img,
-//         uid: action.payload.id,
-//         // idOwner: action.payload?.salonOwnerResponse?.id,
-//         // idCustomer: action.payload?.customerResponse?.id,
-//         // idEmployee: action.payload?.salonEmployeeResponse?.id,
-//         // refreshToken: action.payload.refreshToken,
-//       };
-//     case LOGOUT_USER:
-
-//       return {
-//         ...state,
-//         username:
-//           action.payload?.fullName,
-//         avatar:
-//           action.payload?.salonOwnerResponse?.img ||
-//           action.payload?.customerResponse?.img ||
-//           action.payload?.salonEmployeeResponse?.img,
-//         uid: action.payload.uid,
-
-//       };
-
-//     default:
-//       return state;
-//   }
-// };
-
-// export default reducer;
-
+import {LOGIN_FAILURE, LOGIN_SUCCESS, UserState} from '../types';
 import { FETCH_USER, LOGIN_ACCOUNT, LOGOUT_USER } from "./action";
 
 interface UserState {
@@ -121,13 +58,19 @@ type UserAction =
   | { type: typeof LOGOUT_USER; payload: LogoutPayload };
 
 const initialState: UserState = {
-  username: "",
-  avatar: "",
-  uid: "",
-  refreshToken: "",
+  id: '',
+  email: '',
+  fullName: '',
+  userName: '',
+  gender: 0,
+  phoneNumber: 0,
+  isAuthenticated: false
 };
 
+
 const reducer = (state = initialState, action: UserAction): UserState => {
+
+
   switch (action.type) {
     case LOGIN_ACCOUNT:
       return {
@@ -161,6 +104,17 @@ const reducer = (state = initialState, action: UserAction): UserState => {
           action.payload.salonEmployeeResponse?.img ||
           "",
         uid: action.payload.uid,
+      };
+
+    case LOGIN_SUCCESS:
+      return {
+        ...action.payload,
+        isAuthenticated: true
+      };
+    case LOGIN_FAILURE:
+      return {
+        ...initialState,
+        isAuthenticated: false
       };
 
     default:
