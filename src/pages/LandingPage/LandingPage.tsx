@@ -6,6 +6,7 @@ import Footer from '../../components/Footer/Footer.tsx';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import './LandingPage.css';
+import BackToTopButton from '../../components/BackToTop';
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -32,7 +33,7 @@ const LandingPage = () => {
                                 <Link to='/newcourse'>
                                     <Button type="primary" size="large">Trải nghiệm ngay!</Button>
                                 </Link>
-                                
+
                                 ) : (
                                     <div className="hero-buttons">
                                         <Link to="/login">
@@ -40,7 +41,7 @@ const LandingPage = () => {
                                         </Link>
                                         <Link to="/register">
                                         <Button type="primary" size="large">Tạo tài khoản mới</Button>
-                                        </Link>       
+                                        </Link>
                                 </div>
                                 )}
                     </div>
@@ -75,7 +76,7 @@ const LandingPage = () => {
                                 </Link>
                             )}
                 </section>
-                
+
                 <Testimonials />
 
                 <section className="stats full-width">
@@ -93,6 +94,7 @@ const LandingPage = () => {
                     </div>
                 </section>
             </Content>
+            <BackToTopButton />
             <Footer />
         </Layout>
     );
