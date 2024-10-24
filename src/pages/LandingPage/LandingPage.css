@@ -35,40 +35,6 @@
     margin-right: 2rem;
 }
 
-/* Hero section styles */
-/* .hero {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 5%;
-    background-image: url('https://i.postimg.cc/cJm4SxXF/pexels-iriser-1366957.jpg');
-}
-
-.hero-content {
-    max-width: 800px;
-    text-align: center;
-}
-
-.hero h1 {
-    font-size: 3.5rem;
-    margin-bottom: 1rem;
-}
-
-.hero p {
-    color: #666;
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-}
-
-.hero-buttons {
-    margin-top: 2rem;
-}
-
-.hero-buttons button {
-    margin: 0 0.5rem;
-} */
-/* Hero section với glass morphism effect */
 .hero {
     height: 100vh;
     display: flex;

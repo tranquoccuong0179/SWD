@@ -99,7 +99,6 @@ const LoginPage: React.FC = () => {
       );
       
       handleLoginSuccess(res.data);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError('Google Sign-In failed. Please try again.');
     }
