@@ -1,0 +1,93 @@
+/* .container {
+    background-color: #fff;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    color: #252641;
+    margin: 0 auto;
+    padding: 26px 21px 130px;
+}
+
+@media (max-width: 991px) {
+    .container {
+        max-width: 100%;
+        padding: 0 0 100px 20px;
+    }
+}
+
+
+
+@media (max-width: 991px) {
+    .chapterIcon {
+        margin-left: 9px;
+    }
+}
+
+.chapterTitle {
+    margin: 47px 18px 0 0;
+    font: 600 30px Poppins, sans-serif;
+}
+
+@media (max-width: 991px) {
+    .chapterTitle {
+        max-width: 100%;
+        margin: 40px 10px 0 0;
+    }
+}
+
+.lessonItem {
+    border-radius: 12px;
+    display: flex;
+    margin-top: 15px;
+    gap: 15px;
+    padding: 20px 25px;
+}
+
+@media (max-width: 991px) {
+    .lessonItem {
+        padding: 0 20px;
+    }
+}
+
+.lessonIcon {
+    font: 900 20px 'Font Awesome 5 Free', -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+.lessonTitle {
+    flex-grow: 1;
+    width: 363px;
+    flex-basis: auto;
+    font: 400 16px Poppins, sans-serif;
+}
+
+.activeLesson {
+    background-color: #3fc89e;
+    color: #fff;
+}
+
+.inactiveLesson {
+    background-color: rgba(32, 180, 134, 0.25);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+} */
+
+.chapterIcon {
+    aspect-ratio: 1;
+    object-fit: contain;
+    object-position: center;
+    width: 50px;
+}
+
+.text-lg {
+    text-align: center;
+}
