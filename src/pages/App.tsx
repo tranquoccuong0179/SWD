@@ -7,6 +7,7 @@ import RegisterPage from './LogIn/RegisterPage.tsx';
 import LandingPage from "./LandingPage/LandingPage.tsx";
 import CoursePage from "./CoursePage/CoursePage.tsx";
 import ChapterContent from "./CourseDetails/ChapterContent.tsx";
+import WalletDetails from "./Wallet/WalletDetails.tsx";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/Home" element={<LandingPage />} />
                 <Route path="/NewCourse" element={<CoursePage />} />
                 <Route path="/CourseDetails" element={<ChapterContent />} />
+                <Route path="/Wallet" element={<WalletDetails />} />
             </Routes>
         </BrowserRouter>
     );
