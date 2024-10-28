@@ -1,0 +1,63 @@
+.wallet-container {
+    margin-top: 50px;
+}
+
+.wallet-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wallet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    background-color: #f8f9fa;
+    padding: 15px;
+}
+
+.balance-text {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #007bff;
+    text-align: center;
+}
+
+.transaction-list {
+    margin-top: 15px;
+}
+
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.transaction-date {
+    color: #6c757d;
+}
+
+.transaction-desc {
+    flex-grow: 1;
+    padding-left: 10px;
+    color: #343a40;
+}
+
+.transaction-amount {
+    font-weight: bold;
+}
+
+.transaction-amount.positive {
+    color: #28a745;
+}
+
+.transaction-amount.negative {
+    color: #dc3545;
+}
+
+.loading-text,
+.error-text,
+.no-data-text {
+    text-align: center;
+    color: #6c757d;
+    margin-top: 20px;
+}
