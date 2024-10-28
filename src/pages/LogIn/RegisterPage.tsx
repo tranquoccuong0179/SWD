@@ -51,7 +51,7 @@ const RegisterPage: React.FC = () => {
     try {
       const genderValue = formData.gender === '0' ? 0 : 1;
 
-      const response = await axios.post('https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/SignUp', {
+      const response = await axios.post('https://manim-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net/api/auth/SignUp', {
         username: formData.username,
         password: formData.password,
         confirmPassword: formData.confirmPassword,

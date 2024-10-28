@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Container, Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import './Auth.css';
@@ -104,7 +104,7 @@ const LoginPage: React.FC = () => {
 
     try {
       const response = await axios.post<AxiosResponse>(
-          'https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/SignIn',
+          'https://mamin-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net/api/auth/SignIn',
           { username, password }
       );
       handleLoginSuccess(response.data.data);
@@ -127,7 +127,7 @@ const LoginPage: React.FC = () => {
 
     try {
       const res = await axios.get<LoginResponse>(
-          'https://mamin-api-hrbrffbrh3h6embb.canadacentral-01.azurewebsites.net/api/auth/google-auth/login',
+          'https://mamin-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net/api/auth/google-auth/login',
           {
             params: {
               token: response.credential,
@@ -171,7 +171,7 @@ const LoginPage: React.FC = () => {
       sessionStorage.setItem('refreshToken', refreshToken);
     }
 
-    // Dispatch user data to Redux store with proper typing
+    // Dispatch user data to Redux store
     dispatch(loginAccount({
       id: data.user.id,
       email: data.user.email,
