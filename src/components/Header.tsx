@@ -3,6 +3,7 @@ import { SearchOutlined, UserOutlined, LogoutOutlined, WalletOutlined } from '@a
 import { Link, useNavigate  } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Logout } from '../store/user/action';
+import logo from '../assets/logo.jpg'
 
 interface RootState {
   USER: {
@@ -59,6 +60,7 @@ const Header = () => {
       <div className="logo-container">
         <img 
           src="https://i.postimg.cc/xT0JJZbJ/physics-logo.jpg" 
+          // src={logo}
           alt="Logo" 
           className="logo" 
         />
@@ -78,7 +80,7 @@ const Header = () => {
           <Link to="/AboutUs">Về chúng tôi</Link>
         </Menu.Item>
         <Menu.Item key="blog">
-          <Link to="/NewCourse">Bài học</Link>
+          <Link to="/Subject">Môn học</Link>
         </Menu.Item>
         <Menu.Item key="contact">
           <Link to="/Contact">Liên hệ</Link>

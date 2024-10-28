@@ -37,7 +37,7 @@ const FeaturedCourses = () => {
     return (
         <section className="featured-courses">
             {/* <h1 className='featured-courses-title mb-10'>Các chương phổ biến nhất</h1> */}
-            <Title level={2} className='mb-5'>Các chương phổ biến nhất</Title>
+            <Title level={2} className='mb-5'>Các bài học phổ biến nhất</Title>
             <div className="course-list">
                 {courses.map((course) => (
                     <Card

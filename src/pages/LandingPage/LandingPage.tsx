@@ -73,8 +73,8 @@ const LandingPage = () => {
                 <section className="cta full-width">
                     <Title level={2}>Bắt đầu hành trình học Vật lý của bạn ngay hôm nay!</Title>
                     {id ? (
-                        <Link to='/newcourse'>
-                            <Button type="primary" size="large">Đến Trang Bài Học</Button>
+                        <Link to='/subject'>
+                            <Button type="primary" size="large">Đến Trang Môn Học</Button>
                         </Link>
                     ) : (
                         <Link to="/register">

@@ -29,7 +29,9 @@ const CoursePage = () => {
 
             <Content className="content">
                 <Breadcrumb className="breadcrumb">
-                <Breadcrumb.Item>Trang chủ</Breadcrumb.Item>
+                <Breadcrumb.Item href="/home">Trang chủ</Breadcrumb.Item>
+                <Breadcrumb.Item href="/subject">Môn học</Breadcrumb.Item>
+                <Breadcrumb.Item href="/chapter">Chương</Breadcrumb.Item>
                 <Breadcrumb.Item>Bài học</Breadcrumb.Item>
                 </Breadcrumb>
 
@@ -68,8 +70,8 @@ const CoursePage = () => {
                                     <Button type="primary">Học ngay</Button>
                                 </Link>
                                     ) : (
-                                        <Link to="/register">
-                                            <Button type="primary">Đăng ký ngay</Button>
+                                        <Link to="/login">
+                                            <Button type="primary">Đăng nhập</Button>
                                         </Link>
                                     )}
                             </div>
