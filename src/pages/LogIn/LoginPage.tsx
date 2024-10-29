@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { loginAccount } from '../../store/user/action';
 import LoadingButton from '../../components/Button';
 import { AppDispatch } from '../../store/types';
-import { GoogleOutlined, GooglePlusOutlined } from '@ant-design/icons';
+import { GooglePlusOutlined } from '@ant-design/icons';
 
 // Interface definitions
 interface LoginResponse {
@@ -28,7 +28,6 @@ interface LoginResponse {
 const API_BASE_URL = 'https://manim-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net';
 
 const LoginPage: React.FC = () => {
-  // State management
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [remember, setRemember] = useState<boolean>(false);
@@ -36,17 +35,14 @@ const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [googleAuthWindow, setGoogleAuthWindow] = useState<Window | null>(null);
 
-  // Hooks
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  // Configure axios defaults
   useEffect(() => {
     axios.defaults.headers.common['Content-Type'] = 'application/json';
     axios.defaults.headers.common['Accept'] = 'application/json';
   }, []);
 
-  // Google Auth Popup Handler
   const openGoogleAuthPopup = () => {
     const width = 500;
     const height = 600;
@@ -61,58 +57,56 @@ const LoginPage: React.FC = () => {
 
     if (popup) {
       setGoogleAuthWindow(popup);
-      // Check if popup was blocked
-      if (popup.closed || typeof popup.closed === 'undefined') {
-        setError('Popup was blocked by the browser. Please enable popups for this site.');
-      }
+      setTimeout(() => {
+        if (popup.closed || typeof popup.closed === 'undefined') {
+          setError('Popup was blocked by the browser. Please enable popups for this site.');
+        }
+      }, 500);
     } else {
       setError('Failed to open Google login popup. Please enable popups for this site.');
     }
   };
 
-  // Listen for messages from popup
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
-      // Verify origin for security
       if (event.origin !== API_BASE_URL) {
-        console.warn('Received message from unauthorized origin:', event.origin);
+        console.warn('Unauthorized message origin:', event.origin);
         return;
       }
 
-      // Check if we received data from the popup
-      if (event.data?.data) {
+      if (event.data?.data?.token?.accessToken && event.data?.data?.token?.refreshToken) {
         try {
           setIsLoading(true);
 
-          // Transform the received data to match LoginResponse interface
           const loginData: LoginResponse = {
             token: {
               accessToken: event.data.data.token.accessToken,
-              refreshToken: event.data.data.token.refreshToken
+              refreshToken: event.data.data.token.refreshToken,
             },
             user: {
               id: event.data.data.id || '',
               email: event.data.data.email,
               fullName: event.data.data.name,
-              userName: event.data.data.email.split('@')[0], // fallback username
+              userName: event.data.data.email.split('@')[0],
               gender: event.data.data.gender || 0,
-              phoneNumber: event.data.data.phoneNumber || 0
-            }
+              phoneNumber: event.data.data.phoneNumber || 0,
+            },
           };
 
-          // Close the popup window
           if (googleAuthWindow && !googleAuthWindow.closed) {
             googleAuthWindow.close();
           }
 
-          // Handle the login success
           handleLoginSuccess(loginData);
-        } catch (error: any) {
-          console.error('Error handling Google auth:', error);
+        } catch (error) {
+          console.error('Error processing Google auth message:', error);
           setError('Failed to complete Google authentication');
         } finally {
           setIsLoading(false);
         }
+      } else {
+        console.error('Unexpected message format:', event.data);
+        setError('Failed to complete Google authentication: Invalid data format');
       }
     };
 
@@ -120,7 +114,6 @@ const LoginPage: React.FC = () => {
     return () => window.removeEventListener('message', handleMessage);
   }, [googleAuthWindow]);
 
-  // Regular login handler
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -145,7 +138,6 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  // Handle successful login
   const handleLoginSuccess = (data: LoginResponse) => {
     if (!data?.token?.accessToken) {
       setError('Invalid login response: Missing access token');
@@ -154,7 +146,6 @@ const LoginPage: React.FC = () => {
 
     const { accessToken, refreshToken } = data.token;
 
-    // Store tokens based on "remember me" setting
     localStorage.setItem('accessToken', accessToken);
     if (remember) {
       localStorage.setItem('refreshToken', refreshToken);
@@ -162,7 +153,6 @@ const LoginPage: React.FC = () => {
       sessionStorage.setItem('refreshToken', refreshToken);
     }
 
-    // Set up axios interceptor for future requests
     axios.interceptors.request.use(
         (config) => {
           if (config.headers) {
@@ -173,17 +163,17 @@ const LoginPage: React.FC = () => {
         (error) => Promise.reject(error)
     );
 
-    // Dispatch user data to Redux store
-    dispatch(loginAccount({
-      id: data.user.id,
-      email: data.user.email,
-      fullName: data.user.fullName,
-      userName: data.user.userName,
-      gender: data.user.gender,
-      phoneNumber: data.user.phoneNumber
-    }));
+    dispatch(
+        loginAccount({
+          id: data.user.id,
+          email: data.user.email,
+          fullName: data.user.fullName,
+          userName: data.user.userName,
+          gender: data.user.gender,
+          phoneNumber: data.user.phoneNumber,
+        })
+    );
 
-    // Navigate to home page
     navigate('/Home');
   };
 
@@ -205,11 +195,6 @@ const LoginPage: React.FC = () => {
                     variant="outline-danger"
                     disabled={isLoading}
                 >
-                  {/*<img
-                      src="/google-icon.png"
-                      alt="Google"
-                      style={{ width: '20px', marginRight: '10px' }}
-                  />*/}
                   <GooglePlusOutlined className='google-icon' style={{ fontSize: '1.8rem', color: 'red', marginRight: '1rem' }}/>
                   Sign in with Google
                 </Button>
