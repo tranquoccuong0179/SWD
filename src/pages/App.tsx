@@ -10,6 +10,7 @@ import ChapterContent from "./CourseDetails/ChapterContent.tsx";
 import SubjectPage from './SubjectPage/SubjectPage.tsx';
 import ChapterPage from './ChapterPage/ChapterPage.tsx';
 import WalletDetails from "./LandingPage/WalletDetails.tsx";
+import ComingSoonPage from '../components/ComingSoon.tsx';
 
 
 function App() {
@@ -24,8 +25,11 @@ function App() {
                 <Route path="/Chapter" element={<ChapterPage />} />
                 <Route path="/NewCourse" element={<CoursePage />} />
                 <Route path="/CourseDetails" element={<ChapterContent />} />
+                <Route path="/Comingsoon" element={<ComingSoonPage />} />
 
                 <Route path="/Wallet" element={<WalletDetails />} />
+
+
             </Routes>
         </BrowserRouter>
     );

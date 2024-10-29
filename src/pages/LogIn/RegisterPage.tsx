@@ -147,6 +147,10 @@ const RegisterPage: React.FC = () => {
                   <Button
                       variant="outline-secondary"
                       onClick={togglePasswordVisibility}
+                      style={{
+                        border: '1px solid gray',
+                        borderRadius: '0 4px 4px 0'
+                      }}
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </Button>

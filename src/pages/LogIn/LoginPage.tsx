@@ -253,7 +253,7 @@ const LoginPage: React.FC = () => {
               <div className="social-buttons text-center">
                 <Button
                     onClick={openGoogleAuthPopup}
-                    className="w-100 mb-3 d-flex align-items-center justify-content-center"
+                    className="w-100 mb-3 d-flex align-items-center justify-content-center button-with-border"
                     variant="outline-danger"
                     disabled={isLoading}
                 >
