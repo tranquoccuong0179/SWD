@@ -1,5 +1,6 @@
 .landing-page {
     font-family: 'Arial', sans-serif;
+    min-height: 100vh;
 }
 
 /* Full-width sections */
@@ -573,4 +574,25 @@
     .testimonials {
         page-break-inside: avoid;
     }
+}
+
+.status {
+    padding: 2px 8px;
+    border-radius: 12px;
+    text-transform: capitalize;
+}
+
+.status.completed {
+    background-color: #e6f4ea;
+    color: #1e8e3e;
+}
+
+.status.pending {
+    background-color: #fef7e6;
+    color: #d4a639;
+}
+
+.status.failed {
+    background-color: #fce8e8;
+    color: #d93025;
 }

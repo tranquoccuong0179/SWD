@@ -9,7 +9,7 @@ import CoursePage from "./CoursePage/CoursePage.tsx";
 import ChapterContent from "./CourseDetails/ChapterContent.tsx";
 import SubjectPage from './SubjectPage/SubjectPage.tsx';
 import ChapterPage from './ChapterPage/ChapterPage.tsx';
-import WalletDetails from "./Wallet/WalletDetails.tsx";
+import WalletDetails from "./LandingPage/WalletDetails.tsx";
 
 
 function App() {
