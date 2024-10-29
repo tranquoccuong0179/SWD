@@ -9,12 +9,11 @@ import LoadingButton from '../../components/Button';
 import { AppDispatch } from '../../store/types';
 import { GooglePlusOutlined } from '@ant-design/icons';
 
-// Interface definitions
 interface LoginResponse {
   token: {
     accessToken: string;
     refreshToken: string;
-  }
+  };
   user: {
     id: string;
     email: string;
@@ -22,7 +21,7 @@ interface LoginResponse {
     userName: string;
     gender: number;
     phoneNumber: number;
-  }
+  };
 }
 
 const API_BASE_URL = 'https://manim-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net';
@@ -49,19 +48,19 @@ const LoginPage: React.FC = () => {
     const left = window.screenX + (window.outerWidth - width) / 2;
     const top = window.screenY + (window.outerHeight - height) / 2;
 
+    const popupUrl = `${API_BASE_URL}/api/auth/google-auth/login`;
+
     const popup = window.open(
-        `${API_BASE_URL}/api/auth/google-auth/login`,
+        popupUrl,
         'Google Login',
         `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`
     );
 
     if (popup) {
       setGoogleAuthWindow(popup);
-      setTimeout(() => {
-        if (popup.closed || typeof popup.closed === 'undefined') {
-          setError('Popup was blocked by the browser. Please enable popups for this site.');
-        }
-      }, 500);
+      if (popup.closed || typeof popup.closed === 'undefined') {
+        setError('Popup was blocked by the browser. Please enable popups for this site.');
+      }
     } else {
       setError('Failed to open Google login popup. Please enable popups for this site.');
     }
@@ -69,12 +68,13 @@ const LoginPage: React.FC = () => {
 
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
-      if (event.origin !== API_BASE_URL) {
-        console.warn('Unauthorized message origin:', event.origin);
+      const allowedOrigin = 'https://manim-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net';
+
+      if (event.origin !== allowedOrigin) {
         return;
       }
 
-      if (event.data?.data?.token?.accessToken && event.data?.data?.token?.refreshToken) {
+      if (event.data?.data) {
         try {
           setIsLoading(true);
 
@@ -98,15 +98,11 @@ const LoginPage: React.FC = () => {
           }
 
           handleLoginSuccess(loginData);
-        } catch (error) {
-          console.error('Error processing Google auth message:', error);
+        } catch (error: any) {
           setError('Failed to complete Google authentication');
         } finally {
           setIsLoading(false);
         }
-      } else {
-        console.error('Unexpected message format:', event.data);
-        setError('Failed to complete Google authentication: Invalid data format');
       }
     };
 
@@ -182,8 +178,12 @@ const LoginPage: React.FC = () => {
         <Row className="justify-content-center">
           <Col>
             <div className="auth-tabs" style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-              <Button className='tab active' variant="light" style={{ marginRight: '20px' }}>LOGIN</Button>
-              <Link to="/register" className="btn btn-light">REGISTER</Link>
+              <Button className="tab active" variant="light" style={{ marginRight: '20px' }}>
+                LOGIN
+              </Button>
+              <Link to="/register" className="btn btn-light">
+                REGISTER
+              </Link>
             </div>
             <Form className="auth-form" onSubmit={handleLogin}>
               <h4 className="text-center mb-4">Sign in with:</h4>
@@ -195,7 +195,7 @@ const LoginPage: React.FC = () => {
                     variant="outline-danger"
                     disabled={isLoading}
                 >
-                  <GooglePlusOutlined className='google-icon' style={{ fontSize: '1.8rem', color: 'red', marginRight: '1rem' }}/>
+                  <GooglePlusOutlined className="google-icon" style={{ fontSize: '1.8rem', color: 'red', marginRight: '1rem' }} />
                   Sign in with Google
                 </Button>
               </div>
@@ -227,19 +227,10 @@ const LoginPage: React.FC = () => {
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Check
-                    type="checkbox"
-                    label="Remember me"
-                    checked={remember}
-                    onChange={(e) => setRemember(e.target.checked)}
-                />
+                <Form.Check type="checkbox" label="Remember me" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
               </Form.Group>
 
-              <LoadingButton
-                  type="submit"
-                  isLoading={isLoading}
-                  className="w-100 btn btn-primary"
-              >
+              <LoadingButton type="submit" isLoading={isLoading} className="w-100 btn btn-primary">
                 SIGN IN
               </LoadingButton>
 
