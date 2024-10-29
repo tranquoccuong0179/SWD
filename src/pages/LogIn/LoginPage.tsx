@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { loginAccount } from '../../store/user/action';
 import LoadingButton from '../../components/Button';
 import { AppDispatch } from '../../store/types';
+import { GoogleOutlined, GooglePlusOutlined } from '@ant-design/icons';
 
 // Interface definitions
 interface LoginResponse {
@@ -191,7 +192,7 @@ const LoginPage: React.FC = () => {
         <Row className="justify-content-center">
           <Col>
             <div className="auth-tabs" style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-              <Button className='tab active' variant="light" style={{ marginRight: '10px' }}>LOGIN</Button>
+              <Button className='tab active' variant="light" style={{ marginRight: '20px' }}>LOGIN</Button>
               <Link to="/register" className="btn btn-light">REGISTER</Link>
             </div>
             <Form className="auth-form" onSubmit={handleLogin}>
@@ -201,7 +202,7 @@ const LoginPage: React.FC = () => {
                 <Button
                     onClick={openGoogleAuthPopup}
                     className="w-100 mb-3 d-flex align-items-center justify-content-center"
-                    variant="outline-dark"
+                    variant="outline-danger"
                     disabled={isLoading}
                 >
                   {/*<img
@@ -209,6 +210,7 @@ const LoginPage: React.FC = () => {
                       alt="Google"
                       style={{ width: '20px', marginRight: '10px' }}
                   />*/}
+                  <GooglePlusOutlined className='google-icon' style={{ fontSize: '1.8rem', color: 'red', marginRight: '1rem' }}/>
                   Sign in with Google
                 </Button>
               </div>

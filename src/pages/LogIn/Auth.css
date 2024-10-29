@@ -1,3 +1,7 @@
+.container {
+  width: 120% !important;
+}
+
 .auth-container {
   max-width: 500px;
   margin: 50px auto;
@@ -44,6 +48,53 @@
   font-size: 16px;
   border: 1px solid #ced4da;
   border-radius: 4px;
+}
+
+/* Styles mới cho Input Group */
+.input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  width: 100%;
+}
+
+.input-group .form-control {
+  position: relative;
+  flex: 1 1 auto;
+  width: 1%;
+  min-width: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input-group .btn-outline-secondary {
+  padding: 0 12px;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-left: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  width: 46px; /* Thêm chiều rộng cố định cho button */
+}
+
+.input-group .btn-outline-secondary:hover {
+  background-color: #f8f9fa;
+}
+
+.input-group .btn-outline-secondary:focus {
+  box-shadow: none;
+  border-color: #80bdff;
+}
+
+.input-group .btn-outline-secondary svg {
+  width: 16px;
+  height: 16px;
 }
 
 .btn {

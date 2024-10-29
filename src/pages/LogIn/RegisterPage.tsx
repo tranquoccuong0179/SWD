@@ -118,7 +118,7 @@ const RegisterPage: React.FC = () => {
           <Col md={12}>
             <div className="auth-tabs" style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}> 
               <Link to="/login" className="btn btn-light">LOGIN</Link>
-              <Button className='tab active' variant="light" style={{ marginRight: '10px' }}>REGISTER</Button>
+              <Button className='tab active' variant="light" style={{ marginLeft: '20px' }}>REGISTER</Button>
             </div>
             {error && <Alert variant="danger">{error}</Alert>}
             {success && <Alert variant="success">{success}</Alert>}
