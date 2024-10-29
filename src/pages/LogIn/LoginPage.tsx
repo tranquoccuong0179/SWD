@@ -26,6 +26,42 @@ interface LoginResponse {
 
 const API_BASE_URL = 'https://manim-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net';
 
+const setCookie = (name: string, value: string, options: {
+  expires?: number;
+  secure?: boolean;
+  sameSite?: 'strict' | 'lax' | 'none';
+  path?: string;
+}) => {
+  let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
+
+  if (options.expires) {
+    const expirationDate = new Date();
+    expirationDate.setDate(expirationDate.getDate() + options.expires);
+    cookieString += `; expires=${expirationDate.toUTCString()}`;
+  }
+
+  if (options.secure) cookieString += '; secure';
+  if (options.sameSite) cookieString += `; samesite=${options.sameSite}`;
+  if (options.path) cookieString += `; path=${options.path}`;
+
+  document.cookie = cookieString;
+};
+
+const getCookie = (name: string): string | null => {
+  const cookies = document.cookie.split(';');
+  for (let cookie of cookies) {
+    const [cookieName, cookieValue] = cookie.split('=').map(c => c.trim());
+    if (cookieName === name) {
+      return decodeURIComponent(cookieValue);
+    }
+  }
+  return null;
+};
+
+const deleteCookie = (name: string) => {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+};
+
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -40,7 +76,37 @@ const LoginPage: React.FC = () => {
   useEffect(() => {
     axios.defaults.headers.common['Content-Type'] = 'application/json';
     axios.defaults.headers.common['Accept'] = 'application/json';
+    axios.defaults.withCredentials = true;
   }, []);
+
+  const setCookies = (data: LoginResponse) => {
+    setCookie('accessToken', data.token.accessToken, {
+      expires: 1,
+      secure: true,
+      sameSite: 'strict',
+      path: '/'
+    });
+
+    if (remember) {
+      setCookie('refreshToken', data.token.refreshToken, {
+        expires: 30,
+        secure: true,
+        sameSite: 'strict',
+        path: '/'
+      });
+    } else {
+      setCookie('refreshToken', data.token.refreshToken, {
+        secure: true,
+        sameSite: 'strict',
+        path: '/'
+      });
+    }
+  };
+
+  /*const clearCookies = () => {
+    deleteCookie('accessToken');
+    deleteCookie('refreshToken');
+  };*/
 
   const openGoogleAuthPopup = () => {
     const width = 500;
@@ -140,19 +206,15 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    const { accessToken, refreshToken } = data.token;
-
-    localStorage.setItem('accessToken', accessToken);
-    if (remember) {
-      localStorage.setItem('refreshToken', refreshToken);
-    } else {
-      sessionStorage.setItem('refreshToken', refreshToken);
-    }
+    setCookies(data);
 
     axios.interceptors.request.use(
         (config) => {
           if (config.headers) {
-            config.headers.Authorization = `Bearer ${accessToken}`;
+            const token = getCookie('accessToken');
+            if (token) {
+              config.headers.Authorization = `Bearer ${token}`;
+            }
           }
           return config;
         },
