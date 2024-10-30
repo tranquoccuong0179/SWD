@@ -99,7 +99,7 @@ const LandingPage = () => {
                         <Paragraph>Hài lòng</Paragraph>
                     </div>
                 </section>
-                <AdminDashboard/>
+                {/* <AdminDashboard/> */}
             </Content>
             <BackToTopButton />
             <Footer />

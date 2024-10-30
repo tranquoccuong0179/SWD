@@ -35,18 +35,13 @@ const CoursePage = () => {
                 <Breadcrumb.Item>Bài học</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Title level={1}>Khám phá các khóa học Vật lý</Title>
+                <Title level={1}>Chương 1: Dao Động Cơ</Title>
                 <Paragraph>
-                    Tìm hiểu về các khái niệm vật lý phức tạp thông qua các bài giảng tương tác và mô phỏng trực quan.
+                    {/* Tìm hiểu về các khái niệm vật lý phức tạp thông qua các bài giảng tương tác và mô phỏng trực quan. */}
+                    Giới thiệu các khái niệm và phương trình cơ bản về dao động điều hòa, con lắc, giúp hiểu rõ hơn về chuyển động lặp lại trong tự nhiên.
                 </Paragraph>
 
-                <div className="course-filters">
-                    <Tag color="blue">Tất cả</Tag>
-                    <Tag>Cơ học</Tag>
-                    <Tag>Điện từ học</Tag>
-                    <Tag>Nhiệt học</Tag>
-                    <Tag>Quang học</Tag>
-                </div>
+                
 
                 <div className="course-list">
                     {courses.map(course => (

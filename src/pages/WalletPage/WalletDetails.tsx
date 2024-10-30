@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Button, Modal, Form, Input, Table } from 'antd';
 import { Wallet, CreditCard, History, GraduationCap, TrendingUp, Clock } from 'lucide-react';
 import Header from '../../components/Header/Header.tsx';
 import "./IntergratedWallet.css";
-import axios from "axios";
+
 
 interface WalletData {
     userId: string;
@@ -278,13 +279,15 @@ const IntegratedWallet: React.FC = () => {
                 visible={showCheckoutModal}
                 onCancel={() => setShowCheckoutModal(false)}
                 footer={null}
-                width={600}
+                width={1100}
+                centered={true}
             >
                 {checkoutUrl && (
                     <iframe
                         src={checkoutUrl}
                         title="Checkout"
-                        className="w-full h-96"
+                        className="w-full"
+                        style={{ height: "80vh", minHeight: "650px" }}
                         frameBorder="0"
                     />
                 )}

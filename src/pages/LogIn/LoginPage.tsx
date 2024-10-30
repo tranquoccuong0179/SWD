@@ -284,10 +284,8 @@ const LoginPage: React.FC = () => {
           </div>
           <Form className="auth-form" onSubmit={handleLogin}>
             <h4 className="text-center mb-4">Sign in with:</h4>
-            <div className="divider text-center">
-              <span>or:</span>
-            </div>
-            <div className="social-buttons text-center">
+            
+            <div className="social-buttons text-center mb-3">
               {/* <Button
                     onClick={openGoogleAuthPopup}
                     className="w-100 mb-3 d-flex align-items-center justify-content-center button-with-border"
@@ -305,6 +303,10 @@ const LoginPage: React.FC = () => {
             </div>
             {error && <Alert variant="danger">{error}</Alert>}
 
+            <div className="divider text-center">
+              <span>or:</span>
+            </div>
+            
             <Form.Group className="mb-3">
               <Form.Control
                 type="text"
