@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Modal, Form, Input, Table } from 'antd';
-import { Wallet, CreditCard, History, GraduationCap, TrendingUp, Clock } from 'lucide-react';
+import { Layout, Button, Modal, Form, Input, Table } from 'antd';
+import { Wallet, CreditCard } from 'lucide-react';
 import Header from '../../components/Header/Header.tsx';
-import "./IntergratedWallet.css";
+
+const { Content } = Layout;
 
 interface WalletData {
     userId: string;
@@ -24,7 +25,10 @@ interface WalletData {
 
 const BASE_API_URL = 'https://manim-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net';
 
-const getAuthToken = () => localStorage.getItem('accessToken');
+const getAuthToken = () => {
+    const accessToken = localStorage.getItem('accessToken');
+    return accessToken;
+};
 
 const IntegratedWallet: React.FC = () => {
     const [walletData, setWalletData] = useState<WalletData>({
@@ -42,19 +46,27 @@ const IntegratedWallet: React.FC = () => {
     const handleAddFunds = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+
         try {
             const token = getAuthToken();
             if (!token) return;
-            const response = await fetch(`${BASE_API_URL}/api/wallet/create?balance=${amount}`, {
+
+            const headers: HeadersInit = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+
+            const url = `${BASE_API_URL}/api/wallet/create?balance=${amount}`;
+
+            const response = await fetch(url, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers,
             });
+
             const data = await response.json();
-            if (data?.checkoutUrl) {
-                setCheckoutUrl(data.checkoutUrl);
+
+            if (data && data.checkoutUrl) {  // Changed 'paymentUrl' to 'checkoutUrl'
+                setCheckoutUrl(data.checkoutUrl); // Updated to use 'checkoutUrl' here
                 setShowAddFunds(false);
                 setShowCheckoutModal(true);
             }
@@ -63,6 +75,13 @@ const IntegratedWallet: React.FC = () => {
         } finally {
             setLoading(false);
             setAmount('');
+        }
+    };
+
+
+    const handleCheckoutUrlClick = () => {
+        if (checkoutUrl) {
+            window.location.href = checkoutUrl;
         }
     };
 
@@ -75,190 +94,107 @@ const IntegratedWallet: React.FC = () => {
 
     const transactionColumns = [
         {
-            title: 'Mô tả',
+            title: 'Description',
             dataIndex: 'description',
             key: 'description',
-            render: (text: string) => (
-                <div className="font-medium text-gray-800">{text}</div>
-            ),
         },
         {
-            title: 'Số tiền',
+            title: 'Amount',
             dataIndex: 'amount',
             key: 'amount',
-            render: (amount: number) => (
-                <div className={`font-medium ${amount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {formatCurrency(amount)}
-                </div>
-            ),
+            render: (amount: number) => formatCurrency(amount),
         },
         {
-            title: 'Ngày',
+            title: 'Date',
             dataIndex: 'date',
             key: 'date',
-            render: (date: string) => (
-                <div className="flex items-center gap-2 text-gray-600">
-                    <Clock size={16} />
-                    {date}
-                </div>
-            ),
         },
         {
-            title: 'Trạng thái',
+            title: 'Status',
             dataIndex: 'status',
             key: 'status',
-            render: (status: string) => {
-                const statusConfig = {
-                    COMPLETED: { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200' },
-                    PENDING: { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200' },
-                    FAILED: { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200' }
-                };
-                const config = statusConfig[status] || statusConfig.PENDING;
-                return (
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${config.bg} ${config.text} ${config.border}`}>
-                        {status === 'COMPLETED' && '✓ '}
-                        {status === 'FAILED' && '✕ '}
-                        {status === 'PENDING' && '⋯ '}
-                        {status}
-                    </span>
-                );
-            },
+            render: (status: string) => (
+                <span className={`status ${status.toLowerCase()}`}>{status}</span>
+            ),
         },
     ];
 
     const courseColumns = [
         {
-            title: 'Tên khóa học',
+            title: 'Course Name',
             dataIndex: 'name',
             key: 'name',
-            render: (text: string) => (
-                <div className="font-medium text-gray-800">{text}</div>
-            ),
         },
         {
-            title: 'Giá',
+            title: 'Price',
             dataIndex: 'price',
             key: 'price',
-            render: (price: number) => (
-                <div className="font-medium text-gray-800">{formatCurrency(price)}</div>
-            ),
+            render: (price: number) => formatCurrency(price),
         },
     ];
 
     return (
-        <div className='body-content' style={{
-            display: 'block'
-        }}>
+        <Layout className="landing-page">
             <Header />
-        <div className="min-h-screen bg-gray-50">
-
-
-            {/* Main Content */}
-            <div className="max-w-20xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Wallet Header Card */}
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-                    <div className="p-6 sm:p-8">
-                        <div className="flex justify-between items-center mb-8">
-                            <div className="flex items-center gap-4">
-                                <div className="bg-blue-50 p-3 rounded-xl">
-                                    <Wallet className="text-blue-600 h-6 w-6" />
+            <Content>
+                <div className="py-8 bg-gray-50">
+                    <div className="max-w-4xl mx-auto px-4">
+                        <div className="bg-white rounded-lg shadow-lg">
+                            <div className="p-4 border-b">
+                                <div className="flex justify-between items-center">
+                                    <div className="flex items-center space-x-2">
+                                        <Wallet className="text-blue-600" size={24} />
+                                        <h2 className="text-xl font-semibold m-0">Ví của tôi</h2>
+                                    </div>
+                                    <Button
+                                        type="primary"
+                                        onClick={() => setShowAddFunds(true)}
+                                        icon={<CreditCard size={18} />}
+                                    >
+                                        Nạp tiền
+                                    </Button>
                                 </div>
-                                <h1 className="text-2xl font-bold text-gray-800">Ví của tôi</h1>
                             </div>
-                            <Button
-                                type="primary"
-                                onClick={() => setShowAddFunds(true)}
-                                className="flex items-center gap-2 h-10 px-4 bg-blue-600 hover:bg-blue-700"
-                                icon={<CreditCard className="h-4 w-4" />}
-                            >
-                                Nạp tiền
-                            </Button>
-                        </div>
 
-                        {/* Balance Card */}
-                        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl p-8 mb-8">
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="bg-white/20 p-2 rounded-lg">
-                                    <TrendingUp className="text-white h-5 w-5" />
+                            <div className="p-6">
+                                <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 mb-6">
+                                    <p className="text-white/80 text-sm uppercase mb-2">Số dư khả dụng</p>
+                                    <h3 className="text-white text-3xl font-bold m-0">
+                                        {formatCurrency(walletData.balance)}
+                                    </h3>
                                 </div>
-                                <p className="text-white/90 font-medium">Số dư khả dụng</p>
                             </div>
-                            <h2 className="text-4xl font-bold text-white mb-2">
-                                {formatCurrency(walletData.balance)}
-                            </h2>
-                        </div>
 
-                        {/* Quick Stats */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
-                                <p className="text-gray-600 text-sm mb-2">Tổng giao dịch</p>
-                                <p className="text-2xl font-bold text-gray-800">{walletData.transactions.length}</p>
+                            <div className="p-6">
+                                <h3 className="text-xl font-semibold">Lịch sử giao dịch</h3>
+                                <Table
+                                    dataSource={walletData.transactions}
+                                    columns={transactionColumns}
+                                    rowKey="id"
+                                    pagination={{ pageSize: 5 }}
+                                />
                             </div>
-                            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
-                                <p className="text-gray-600 text-sm mb-2">Khóa học đã mua</p>
-                                <p className="text-2xl font-bold text-gray-800">{walletData.purchasedCourses.length}</p>
-                            </div>
-                            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
-                                <p className="text-gray-600 text-sm mb-2">Giao dịch gần nhất</p>
-                                <p className="text-2xl font-bold text-gray-800">
-                                    {walletData.transactions[0]?.date || 'Chưa có'}
-                                </p>
-                            </div>
-                        </div>
 
-                        {/* Transactions Section */}
-                        <div className="mb-8">
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="bg-gray-100 p-2 rounded-lg">
-                                    <History className="text-gray-600 h-5 w-5" />
-                                </div>
-                                <h2 className="text-xl font-bold text-gray-800">Lịch sử giao dịch</h2>
+                            <div className="p-6">
+                                <h3 className="text-xl font-semibold">Khóa học đã mua</h3>
+                                <Table
+                                    dataSource={walletData.purchasedCourses}
+                                    columns={courseColumns}
+                                    rowKey="id"
+                                    pagination={{ pageSize: 5 }}
+                                />
                             </div>
-                            <Table
-                                dataSource={walletData.transactions}
-                                columns={transactionColumns}
-                                rowKey="id"
-                                pagination={{ pageSize: 5 }}
-                                className="custom-table"
-                            />
-                        </div>
-
-                        {/* Courses Section */}
-                        <div>
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="bg-gray-100 p-2 rounded-lg">
-                                    <GraduationCap className="text-gray-600 h-5 w-5" />
-                                </div>
-                                <h2 className="text-xl font-bold text-gray-800">Khóa học đã mua</h2>
-                            </div>
-                            <Table
-                                dataSource={walletData.purchasedCourses}
-                                columns={courseColumns}
-                                rowKey="id"
-                                pagination={{ pageSize: 5 }}
-                                className="custom-table"
-                            />
                         </div>
                     </div>
                 </div>
-            </div>
+            </Content>
 
-            {/* Add Funds Modal */}
             <Modal
-                title={
-                    <div className="flex items-center gap-3">
-                        <CreditCard className="text-blue-600 h-5 w-5" />
-                        <span className="font-bold">Nạp tiền vào ví</span>
-                    </div>
-                }
+                title="Nạp tiền vào ví"
                 open={showAddFunds}
                 onCancel={() => setShowAddFunds(false)}
                 footer={[
-                    <Button
-                        key="cancel"
-                        onClick={() => setShowAddFunds(false)}
-                        className="px-4 h-9"
-                    >
+                    <Button key="cancel" onClick={() => setShowAddFunds(false)}>
                         Hủy
                     </Button>,
                     <Button
@@ -266,15 +202,13 @@ const IntegratedWallet: React.FC = () => {
                         type="primary"
                         onClick={handleAddFunds}
                         loading={loading}
-                        className="px-4 h-9 bg-blue-600 hover:bg-blue-700"
                     >
                         Xác nhận thanh toán
                     </Button>
                 ]}
-                className="modern-modal"
             >
-                <Form onSubmit={handleAddFunds} className="py-6">
-                    <Form.Item label="Số tiền muốn nạp" className="mb-0">
+                <Form onSubmit={handleAddFunds}>
+                    <Form.Item label="Số tiền muốn nạp">
                         <Input
                             type="number"
                             min="0"
@@ -284,47 +218,34 @@ const IntegratedWallet: React.FC = () => {
                             placeholder="Nhập số tiền"
                             required
                             disabled={loading}
-                            className="h-10 text-lg"
                         />
                     </Form.Item>
                 </Form>
             </Modal>
 
-            {/* Checkout Modal */}
             <Modal
-                title={
-                    <div className="flex items-center gap-3">
-                        <CreditCard className="text-blue-600 h-5 w-5" />
-                        <span className="font-bold">Thanh toán</span>
-                    </div>
-                }
+                title="Thanh toán"
                 open={showCheckoutModal}
                 onCancel={() => setShowCheckoutModal(false)}
                 footer={[
-                    <Button
-                        key="cancel"
-                        onClick={() => setShowCheckoutModal(false)}
-                        className="px-4 h-9"
-                    >
+                    <Button key="cancel" onClick={() => setShowCheckoutModal(false)}>
                         Đóng
                     </Button>
                 ]}
-                width={800}
-                className="modern-modal"
+                width={800} // Increased width for the modal
             >
-                <div className="py-6">
-                    <p className="text-gray-600 mb-6">Tiến hành thanh toán bên dưới:</p>
-                    {checkoutUrl && (
-                        <iframe
-                            src={checkoutUrl}
-                            className="w-full h-[600px] rounded-lg border border-gray-200"
-                            title="Checkout"
-                        />
-                    )}
-                </div>
+                <p>Tiến hành thanh toán bên dưới:</p>
+                {checkoutUrl && (
+                    <iframe
+                        src={checkoutUrl}
+                        style={{ width: '100%', height: '600px', border: 'none' }} // Increased iframe height
+                        title="Checkout"
+                    ></iframe>
+                )}
             </Modal>
-        </div>
-        </div>
+
+
+        </Layout>
     );
 };
 
