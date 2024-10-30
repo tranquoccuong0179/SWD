@@ -61,18 +61,20 @@ import styles from './ChapterContent.module.css';
 interface Lesson {
     id: number;
     title: string;
+    content: string;
 }
 
 const lessons: Lesson[] = [
-    { id: 1, title: "DAO ĐỘNG ĐIỀU HÒA" },
-    { id: 2, title: "CON LẮC LÒ XO" },
-    { id: 3, title: "CON LẮC ĐƠN" },
-    { id: 4, title: "DAO ĐỘNG TẮT DẦN - DAO ĐỘNG C..." },
-    { id: 5, title: "TỔNG HỢP HAI DAO ĐỘNG ĐIỀU HÒA..." },
-    { id: 6, title: "THỰC HÀNH: KHẢO SÁT THỰC NGHIỆ..." },
-    { id: 7, title: "BÀI 7" },
-    { id: 8, title: "BÀI 8" },
-    // ... other lessons
+    { id: 1, title: "CON LẮC LÒ XO", content: 'coming soon' },
+    { id: 2, title: "CON LẮC ĐƠN", content: 'coming soon' },
+    { id: 3, title: "Coming Soon", content: 'coming soon' },
+    { id: 4, title: "Coming Soon", content: 'coming soon' },
+    { id: 5, title: "Coming Soon", content: 'coming soon' },
+    { id: 6, title: "Coming Soon", content: 'coming soon' },
+    { id: 7, title: "Coming Soon", content: 'coming soon' },
+    { id: 8, title: "Coming Soon", content: 'coming soon' },
+    { id: 9, title: "Coming Soon", content: 'coming soon' },
+    { id: 10, title: "Coming Soon", content: 'coming soon' },
 ];
 
 const ChapterContent: React.FC = () => {
