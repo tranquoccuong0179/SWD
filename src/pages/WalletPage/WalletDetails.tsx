@@ -45,7 +45,7 @@ const IntegratedWallet: React.FC = () => {
         try {
             const token = getAuthToken();
             if (!token) return;
-            const response = await fetch(`${BASE_API_URL}/create?balance=${amount}`, {
+            const response = await fetch(`${BASE_API_URL}/api/wallet/create?balance=${amount}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
