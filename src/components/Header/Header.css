@@ -1,0 +1,86 @@
+/* Main header layout */
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    width: 100%;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Logo styling */
+.logo-container {
+    flex: 0 1 auto;
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 40px;
+    height: auto;
+    margin-right: 10px;
+}
+
+/* Search bar styling */
+.search-input {
+    flex: 1;
+    max-width: 400px;
+    margin: 0 20px;
+}
+
+/* Navigation menu styling */
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-menu .ant-menu-item {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.nav-menu .ant-menu-item a {
+    color: #4a4a4a;
+    text-decoration: none;
+}
+
+.nav-menu .ant-menu-item a:hover {
+    color: #1890ff;
+}
+
+/* User action buttons */
+.user-icon-button {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    color: #4a4a4a;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    .search-input {
+        max-width: 200px;
+        margin: 0 10px;
+    }
+
+    .nav-menu {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-input {
+        display: none;
+    }
+}

@@ -2,7 +2,7 @@ import { Layout, Button, Card, Typography, Breadcrumb } from 'antd';
 import { BookOutlined, UserOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import './SubjectPage.css';
 import Footer from "../../components/Footer/Footer.tsx";
-import Header from "../../components/Header";
+import Header from "../../components/Header/Header.tsx";
 import { Link } from 'react-router-dom';
 import { useRef } from 'react';
 

@@ -20,16 +20,12 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/Home" element={<LandingPage />} />
-
                 <Route path="/Subject" element={<SubjectPage />} />
                 <Route path="/Chapter" element={<ChapterPage />} />
                 <Route path="/NewCourse" element={<CoursePage />} />
                 <Route path="/CourseDetails" element={<ChapterContent />} />
                 <Route path="/Comingsoon" element={<ComingSoonPage />} />
-
                 <Route path="/Wallet" element={<WalletDetails />} />
-
-
             </Routes>
         </BrowserRouter>
     );

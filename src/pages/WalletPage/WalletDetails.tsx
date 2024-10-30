@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form, Input, Table } from 'antd';
 import { Wallet, CreditCard, History, GraduationCap, TrendingUp, Clock } from 'lucide-react';
-import Header from '../../components/Header';
+import Header from '../../components/Header/Header.tsx';
+import "./IntergratedWallet.css";
 
 interface WalletData {
     userId: string;
@@ -150,8 +151,8 @@ const IntegratedWallet: React.FC = () => {
         }}>
             <Header />
         <div className="min-h-screen bg-gray-50">
-            
-            
+
+
             {/* Main Content */}
             <div className="max-w-20xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {/* Wallet Header Card */}
@@ -253,8 +254,8 @@ const IntegratedWallet: React.FC = () => {
                 open={showAddFunds}
                 onCancel={() => setShowAddFunds(false)}
                 footer={[
-                    <Button 
-                        key="cancel" 
+                    <Button
+                        key="cancel"
                         onClick={() => setShowAddFunds(false)}
                         className="px-4 h-9"
                     >
@@ -300,8 +301,8 @@ const IntegratedWallet: React.FC = () => {
                 open={showCheckoutModal}
                 onCancel={() => setShowCheckoutModal(false)}
                 footer={[
-                    <Button 
-                        key="cancel" 
+                    <Button
+                        key="cancel"
                         onClick={() => setShowCheckoutModal(false)}
                         className="px-4 h-9"
                     >
@@ -322,42 +323,6 @@ const IntegratedWallet: React.FC = () => {
                     )}
                 </div>
             </Modal>
-
-            <style jsx global>{`
-                .custom-table .ant-table {
-                    background: transparent;
-                }
-                .custom-table .ant-table-thead > tr > th {
-                    background: #f9fafb;
-                    font-weight: 600;
-                    color: #4b5563;
-                    border-bottom: 1px solid #e5e7eb;
-                }
-                .custom-table .ant-table-tbody > tr > td {
-                    border-bottom: 1px solid #e5e7eb;
-                }
-                .custom-table .ant-table-tbody > tr:hover > td {
-                    background: #f9fafb;
-                }
-                .modern-modal .ant-modal-content {
-                    padding: 0;
-                    border-radius: 16px;
-                    overflow: hidden;
-                }
-                .modern-modal .ant-modal-header {
-                    padding: 20px 24px;
-                    border-bottom: 1px solid #e5e7eb;
-                    margin: 0;
-                }
-                .modern-modal .ant-modal-body {
-                    padding: 0 24px;
-                }
-                .modern-modal .ant-modal-footer {
-                    padding: 16px 24px;
-                    border-top: 1px solid #e5e7eb;
-                    margin-top: 0;
-                }
-            `}</style>
         </div>
         </div>
     );

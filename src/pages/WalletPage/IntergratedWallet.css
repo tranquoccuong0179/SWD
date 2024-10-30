@@ -1,0 +1,206 @@
+/* Basic Reset */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    line-height: 1.6;
+}
+
+/* Container for full-screen layout */
+.body-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header Styling */
+header {
+    background: #1d4ed8;
+    padding: 1rem;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+}
+
+.wallet-header-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Wallet Header */
+.wallet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wallet-header h1 {
+    font-size: 1.8rem;
+    color: #111827;
+}
+
+.wallet-icon {
+    background-color: #e0f2fe;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wallet-icon svg {
+    color: #1d4ed8;
+}
+
+/* Balance Card */
+.balance-card {
+    background: linear-gradient(135deg, #1d4ed8, #4338ca);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    color: white;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.balance-card h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.quick-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.stat-card p {
+    color: #6b7280;
+}
+
+.stat-card .stat-value {
+    color: #111827;
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+/* Table Section */
+.table-section {
+    margin-bottom: 2rem;
+}
+
+.table-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 1rem;
+}
+
+.table-icon {
+    background: #f3f4f6;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+.custom-table .ant-table {
+    background: transparent;
+}
+
+.custom-table .ant-table-thead > tr > th {
+    background: #f9fafb;
+    color: #4b5563;
+    font-weight: 600;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.custom-table .ant-table-tbody > tr > td {
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem;
+}
+
+.custom-table .ant-table-tbody > tr:hover > td {
+    background: #f3f4f6;
+}
+
+/* Modals */
+.ant-modal-content {
+    border-radius: 1rem;
+}
+
+.ant-modal-header {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ant-modal-footer {
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Button */
+.primary-button {
+    background-color: #1d4ed8;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.primary-button:hover {
+    background-color: #1e40af;
+}
+
+/* Status Tag */
+.status-tag {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 1rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.status-completed {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-failed {
+    background-color: #fee2e2;
+    color: #991b1b;
+}

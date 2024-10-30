@@ -58,9 +58,9 @@ const getCookie = (name: string): string | null => {
   return null;
 };
 
-const deleteCookie = (name: string) => {
+/*const deleteCookie = (name: string) => {
   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-};
+};*/
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -102,11 +102,6 @@ const LoginPage: React.FC = () => {
       });
     }
   };
-
-  /*const clearCookies = () => {
-    deleteCookie('accessToken');
-    deleteCookie('refreshToken');
-  };*/
 
   const openGoogleAuthPopup = () => {
     const width = 500;

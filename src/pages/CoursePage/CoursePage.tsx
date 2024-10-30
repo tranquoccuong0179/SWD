@@ -2,7 +2,7 @@ import { Layout, Button, Card, Rate, Tag, Typography, Breadcrumb } from 'antd';
 import { ClockCircleOutlined, BookOutlined, UserOutlined } from '@ant-design/icons';
 import './CoursePage.css';
 import Footer from "../../components/Footer/Footer.tsx"
-import Header from "../../components/Header";
+import Header from "../../components/Header/Header.tsx";
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 

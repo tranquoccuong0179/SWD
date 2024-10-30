@@ -2,8 +2,8 @@ import { Button, Input, Menu, Dropdown  } from 'antd';
 import { SearchOutlined, UserOutlined, LogoutOutlined, WalletOutlined } from '@ant-design/icons';
 import { Link, useNavigate  } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Logout } from '../store/user/action';
-import logo from '../assets/logo.jpg'
+import { Logout } from '../../store/user/action.ts';
+import "./Header.css";
 
 interface RootState {
   USER: {

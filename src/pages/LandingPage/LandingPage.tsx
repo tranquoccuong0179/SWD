@@ -1,5 +1,5 @@
 import { Layout, Button, Typography } from 'antd';
-import Header from '../../components/Header';
+import Header from '../../components/Header/Header.tsx';
 import FeaturedCourses from './FeaturedCourses';
 import Testimonials from './Testimonials';
 import Footer from '../../components/Footer/Footer.tsx';
@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import './LandingPage.css';
 import BackToTopButton from '../../components/BackToTop';
 import {UserOutlined} from "@ant-design/icons";
-
+import AdminDashboard from '../AdminDashboard/AdminDashboard.tsx';  // Adjust the import path as needed
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
 
@@ -99,6 +99,7 @@ const LandingPage = () => {
                         <Paragraph>Hài lòng</Paragraph>
                     </div>
                 </section>
+                <AdminDashboard/>
             </Content>
             <BackToTopButton />
             <Footer />
