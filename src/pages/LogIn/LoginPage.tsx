@@ -26,41 +26,26 @@ interface LoginResponse {
 
 const API_BASE_URL = 'https://manim-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net';
 
-const setCookie = (name: string, value: string, options: {
-  expires?: number;
-  secure?: boolean;
-  sameSite?: 'strict' | 'lax' | 'none';
-  path?: string;
-}) => {
-  let cookieString = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
+// Storage utility functions
+const setTokens = (accessToken: string, refreshToken: string, remember: boolean) => {
+  localStorage.setItem('accessToken', accessToken);
 
-  if (options.expires) {
-    const expirationDate = new Date();
-    expirationDate.setDate(expirationDate.getDate() + options.expires);
-    cookieString += `; expires=${expirationDate.toUTCString()}`;
+  if (remember) {
+    localStorage.setItem('refreshToken', refreshToken);
+  } else {
+    // For non-remembered sessions, store in sessionStorage instead
+    sessionStorage.setItem('refreshToken', refreshToken);
   }
-
-  if (options.secure) cookieString += '; secure';
-  if (options.sameSite) cookieString += `; samesite=${options.sameSite}`;
-  if (options.path) cookieString += `; path=${options.path}`;
-
-  document.cookie = cookieString;
 };
 
-const getCookie = (name: string): string | null => {
-  const cookies = document.cookie.split(';');
-  for (let cookie of cookies) {
-    const [cookieName, cookieValue] = cookie.split('=').map(c => c.trim());
-    if (cookieName === name) {
-      return decodeURIComponent(cookieValue);
-    }
-  }
-  return null;
+const getAccessToken = (): string | null => {
+  return localStorage.getItem('accessToken');
 };
 
-/*const deleteCookie = (name: string) => {
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-};*/
+const getRefreshToken = (): string | null => {
+  // Check sessionStorage first, then localStorage
+  return sessionStorage.getItem('refreshToken') || localStorage.getItem('refreshToken');
+};
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -78,28 +63,12 @@ const LoginPage: React.FC = () => {
     axios.defaults.headers.common['Accept'] = 'application/json';
   }, []);
 
-  const setCookies = (data: LoginResponse) => {
-    setCookie('accessToken', data.token.accessToken, {
-      expires: 1,
-      secure: true,
-      sameSite: 'strict',
-      path: '/'
-    });
-
-    if (remember) {
-      setCookie('refreshToken', data.token.refreshToken, {
-        expires: 30,
-        secure: true,
-        sameSite: 'strict',
-        path: '/'
-      });
-    } else {
-      setCookie('refreshToken', data.token.refreshToken, {
-        secure: true,
-        sameSite: 'strict',
-        path: '/'
-      });
-    }
+  const handleStorage = (data: LoginResponse) => {
+    setTokens(
+        data.token.accessToken,
+        data.token.refreshToken,
+        remember
+    );
   };
 
   const openGoogleAuthPopup = () => {
@@ -200,12 +169,12 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    setCookies(data);
+    handleStorage(data);
 
     axios.interceptors.request.use(
         (config) => {
           if (config.headers) {
-            const token = getCookie('accessToken');
+            const token = getAccessToken();
             if (token) {
               config.headers.Authorization = `Bearer ${token}`;
             }
@@ -283,7 +252,12 @@ const LoginPage: React.FC = () => {
               </Form.Group>
 
               <Form.Group className="mb-3">
-                <Form.Check type="checkbox" label="Remember me" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
+                <Form.Check
+                    type="checkbox"
+                    label="Remember me"
+                    checked={remember}
+                    onChange={(e) => setRemember(e.target.checked)}
+                />
               </Form.Group>
 
               <LoadingButton type="submit" isLoading={isLoading} className="w-100 btn btn-primary">

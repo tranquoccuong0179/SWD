@@ -3,6 +3,7 @@ import { Button, Modal, Form, Input, Table } from 'antd';
 import { Wallet, CreditCard, History, GraduationCap, TrendingUp, Clock } from 'lucide-react';
 import Header from '../../components/Header/Header.tsx';
 import "./IntergratedWallet.css";
+import axios from "axios";
 
 interface WalletData {
     userId: string;
@@ -22,13 +23,13 @@ interface WalletData {
     }>;
 }
 
-const BASE_API_URL = 'https://manim-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net/api/wallet';
-
+const BASE_API_URL = 'https://manim-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net/api/wallet/';
 
 const getAuthToken = () => localStorage.getItem('accessToken');
 
 const IntegratedWallet: React.FC = () => {
-    const [walletData, setWalletData] = useState<WalletData>({
+    // State hooks
+    const [walletData] = useState<WalletData>({
         userId: '',
         balance: 0,
         transactions: [],
@@ -40,25 +41,37 @@ const IntegratedWallet: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
 
-    const handleAddFunds = async (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log("Add Funds button clicked");  // Debugging log
+
+    // Format number as Vietnamese currency (VND)
+    const formatCurrency = (amount: number) => new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    }).format(amount);
+
+    // Handle adding funds to wallet
+    const handleAddFunds = async (values: { amount: string }) => {
+        console.log("Add Funds button clicked"); // Debugging log
         setLoading(true);
+
         try {
             const token = getAuthToken();
-            console.log("Token:", token);  // Check if the token is retrieved
-            if (!token) return;
-            const response = await fetch(`${BASE_API_URL}/create?balance=${amount}`, {
-                method: 'POST',
+            if (!token) {
+                console.error("No auth token found");
+                return;
+            }
+
+            const response = await axios.post(`${BASE_API_URL}/create`, null, {
+                params: { balance: values.amount },
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
-                },
+                }
             });
-            const data = await response.json();
-            console.log("API Response:", data);  // Log the API response
-            if (data?.checkoutUrl) {
-                setCheckoutUrl(data.checkoutUrl);
+
+            console.log("API Response:", response.data); // Debugging log
+
+            if (response.data?.checkoutUrl) {
+                setCheckoutUrl(response.data.checkoutUrl);
                 setShowAddFunds(false);
                 setShowCheckoutModal(true);
             }
@@ -70,21 +83,13 @@ const IntegratedWallet: React.FC = () => {
         }
     };
 
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('vi-VN', {
-            style: 'currency',
-            currency: 'VND'
-        }).format(amount);
-    };
-
+    // Table columns for transactions
     const transactionColumns = [
         {
             title: 'Mô tả',
             dataIndex: 'description',
             key: 'description',
-            render: (text: string) => (
-                <div className="font-medium text-gray-800">{text}</div>
-            ),
+            render: (text: string) => <div className="font-medium text-gray-800">{text}</div>
         },
         {
             title: 'Số tiền',
@@ -102,8 +107,7 @@ const IntegratedWallet: React.FC = () => {
             key: 'date',
             render: (date: string) => (
                 <div className="flex items-center gap-2 text-gray-600">
-                    <Clock size={16} />
-                    {date}
+                    <Clock size={16} /> {date}
                 </div>
             ),
         },
@@ -130,36 +134,29 @@ const IntegratedWallet: React.FC = () => {
         },
     ];
 
+    // Table columns for purchased courses
     const courseColumns = [
         {
             title: 'Tên khóa học',
             dataIndex: 'name',
             key: 'name',
-            render: (text: string) => (
-                <div className="font-medium text-gray-800">{text}</div>
-            ),
+            render: (text: string) => <div className="font-medium text-gray-800">{text}</div>
         },
         {
             title: 'Giá',
             dataIndex: 'price',
             key: 'price',
-            render: (price: number) => (
-                <div className="font-medium text-gray-800">{formatCurrency(price)}</div>
-            ),
+            render: (price: number) => <div className="font-medium text-gray-800">{formatCurrency(price)}</div>
         },
     ];
 
     return (
-        <div className='body-content' style={{
-            display: 'block'
-        }}>
+        <div className='body-content'>
             <Header />
             <div className="min-h-screen bg-gray-50">
-
-
-                {/* Main Content */}
                 <div className="max-w-20xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                    {/* Wallet Header Card */}
+
+                    {/* Wallet Header */}
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
                         <div className="p-6 sm:p-8">
                             <div className="flex justify-between items-center mb-8">
@@ -246,88 +243,52 @@ const IntegratedWallet: React.FC = () => {
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {/* Add Funds Modal */}
-                <Modal
-                    title={
-                        <div className="flex items-center gap-3">
-                            <CreditCard className="text-blue-600 h-5 w-5" />
-                            <span className="font-bold">Nạp tiền vào ví</span>
-                        </div>
-                    }
-                    open={showAddFunds}
-                    onCancel={() => setShowAddFunds(false)}
-                    footer={[
+            {/* Add Funds Modal */}
+            <Modal
+                title="Nạp tiền vào ví"
+                visible={showAddFunds}
+                onCancel={() => setShowAddFunds(false)}
+                footer={null}
+            >
+                <Form onFinish={handleAddFunds}>
+                    <Form.Item label="Số tiền" name="amount">
+                        <Input
+                            type="number"
+                            placeholder="Nhập số tiền muốn nạp"
+                        />
+                    </Form.Item>
+                    <Form.Item>
                         <Button
-                            key="cancel"
-                            onClick={() => setShowAddFunds(false)}
-                            className="px-4 h-9"
-                        >
-                            Hủy
-                        </Button>,
-                        <Button
-                            key="submit"
                             type="primary"
-                            onClick={handleAddFunds}  // This should be bound to handleAddFunds
+                            htmlType="submit"
                             loading={loading}
-                            className="px-4 h-9 bg-blue-600 hover:bg-blue-700"
+                            className="w-full"
                         >
                             Xác nhận thanh toán
                         </Button>
-                    ]}
-                    className="modern-modal"
-                >
-                    <Form onSubmit={handleAddFunds} className="py-6">
-                        <Form.Item label="Số tiền muốn nạp" className="mb-0">
-                            <Input
-                                type="number"
-                                min="0"
-                                step="1000"
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
-                                placeholder="Nhập số tiền"
-                                required
-                                disabled={loading}
-                                className="h-10 text-lg"
-                            />
-                        </Form.Item>
-                    </Form>
-                </Modal>
+                    </Form.Item>
+                </Form>
+            </Modal>
 
-                {/* Checkout Modal */}
-                <Modal
-                    title={
-                        <div className="flex items-center gap-3">
-                            <CreditCard className="text-blue-600 h-5 w-5" />
-                            <span className="font-bold">Thanh toán</span>
-                        </div>
-                    }
-                    open={showCheckoutModal}
-                    onCancel={() => setShowCheckoutModal(false)}
-                    footer={[
-                        <Button
-                            key="cancel"
-                            onClick={() => setShowCheckoutModal(false)}
-                            className="px-4 h-9"
-                        >
-                            Đóng
-                        </Button>
-                    ]}
-                    width={800}
-                    className="modern-modal"
-                >
-                    <div className="py-6">
-                        <p className="text-gray-600 mb-6">Tiến hành thanh toán bên dưới:</p>
-                        {checkoutUrl && (
-                            <iframe
-                                src={checkoutUrl}
-                                className="w-full h-[600px] rounded-lg border border-gray-200"
-                                title="Checkout"
-                            />
-                        )}
-                    </div>
-                </Modal>
-            </div>
+            {/* Checkout Modal */}
+            <Modal
+                title="Thanh toán"
+                visible={showCheckoutModal}
+                onCancel={() => setShowCheckoutModal(false)}
+                footer={null}
+                width={600}
+            >
+                {checkoutUrl && (
+                    <iframe
+                        src={checkoutUrl}
+                        title="Checkout"
+                        className="w-full h-96"
+                        frameBorder="0"
+                    />
+                )}
+            </Modal>
         </div>
     );
 };
