@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux';
 import { loginAccount } from '../../store/user/action';
 import LoadingButton from '../../components/Button';
 import { AppDispatch } from '../../store/types';
-import { GooglePlusOutlined } from '@ant-design/icons';
 import { GoogleLogin } from '@react-oauth/google';
 import { accountService } from '../../services/accountServices';
 
@@ -28,162 +27,16 @@ interface LoginResponse {
 
 const API_BASE_URL = 'https://manim-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net';
 
-// Storage utility functions
-// const setTokens = (accessToken: string, refreshToken: string, remember: boolean) => {
-//   localStorage.setItem('accessToken', accessToken);
-
-//   if (remember) {
-//     localStorage.setItem('refreshToken', refreshToken);
-//   } else {
-//     // For non-remembered sessions, store in sessionStorage instead
-//     sessionStorage.setItem('refreshToken', refreshToken);
-//   }
-// };
-
-const getAccessToken = (): string | null => {
-  return localStorage.getItem('accessToken');
-};
-
-const getRefreshToken = (): string | null => {
-  // Check sessionStorage first, then localStorage
-  return sessionStorage.getItem('refreshToken') || localStorage.getItem('refreshToken');
-};
-
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [remember, setRemember] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [googleAuthWindow, setGoogleAuthWindow] = useState<Window | null>(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  // useEffect(() => {
-  //   axios.defaults.headers.common['Content-Type'] = 'application/json';
-  //   axios.defaults.headers.common['Accept'] = 'application/json';
-  // }, []);
-
-  // const handleStorage = (data: LoginResponse) => {
-  //   setTokens(
-  //     data.token.accessToken,
-  //     data.token.refreshToken,
-  //     remember
-  //   );
-  // };
-
-  // const openGoogleAuthPopup = () => {
-  //   const width = 500;
-  //   const height = 600;
-  //   const left = window.screenX + (window.outerWidth - width) / 2;
-  //   const top = window.screenY + (window.outerHeight - height) / 2;
-
-  //   const popupUrl = `${API_BASE_URL}/api/auth/google-auth/login`;
-
-  //   const popup = window.open(
-  //     popupUrl,
-  //     'Google Login',
-  //     `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`
-  //   );
-
-  //   if (popup) {
-  //     setGoogleAuthWindow(popup);
-  //     if (popup.closed || typeof popup.closed === 'undefined') {
-  //       setError('Popup was blocked by the browser. Please enable popups for this site.');
-  //     }
-  //   } else {
-  //     setError('Failed to open Google login popup. Please enable popups for this site.');
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   const handleMessage = async (event: MessageEvent) => {
-  //     const allowedOrigin = 'https://manim-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net';
-
-  //     if (event.origin !== allowedOrigin) {
-  //       return;
-  //     }
-
-  //     if (event.data?.data) {
-  //       try {
-  //         setIsLoading(true);
-
-  //         const loginData: LoginResponse = {
-  //           token: {
-  //             accessToken: event.data.data.token.accessToken,
-  //             refreshToken: event.data.data.token.refreshToken,
-  //           },
-  //           user: {
-  //             id: event.data.data.id || '',
-  //             email: event.data.data.email,
-  //             fullName: event.data.data.name,
-  //             userName: event.data.data.email.split('@')[0],
-  //             gender: event.data.data.gender || 0,
-  //             phoneNumber: event.data.data.phoneNumber || 0,
-  //           },
-  //         };
-
-  //         if (googleAuthWindow && !googleAuthWindow.closed) {
-  //           googleAuthWindow.close();
-  //         }
-
-  //         handleLoginSuccess(loginData);
-  //       } catch (error: any) {
-  //         setError('Failed to complete Google authentication');
-  //       } finally {
-  //         setIsLoading(false);
-  //       }
-  //     }
-  //   };
-
-  //   window.addEventListener('message', handleMessage);
-  //   return () => window.removeEventListener('message', handleMessage);
-  // }, [googleAuthWindow]);
-
-  // const handleLogin = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setIsLoading(true);
-  //   setError('');
-  //   try {
-  //     const response = await axios.post<LoginResponse>(
-  //       `${API_BASE_URL}/api/auth/SignIn`,
-  //       { username, password }
-  //     );
-  //     console.log("sss", response.data);
-
-  //     if (response.data) {
-  //       console.log("demo");
-
-  //       // setTokens(
-  //       //   response.data.token.accessToken,
-  //       //   response.data.token.refreshToken,
-  //       //   remember
-  //       // );
-  //       // localStorage.setItem('accessToken', response.data.token.accessToken);
-  //       // localStorage.setItem('refreshToken', response.data.token.refreshToken);
-  //       dispatch(
-  //         loginAccount({
-  //           id: response.data.user.id,
-  //           email: response.data.user.email,
-  //           fullName: response.data.user.fullName,
-  //           userName: response.data.user.userName,
-  //           gender: response.data.user.gender,
-  //           phoneNumber: response.data.user.phoneNumber,
-  //         })
-  //       );
-  //       navigate("/Home")
-  //       // handleLoginSuccess(response.data.data);
-  //     } else {
-  //       throw new Error('Invalid response format');
-  //     }
-  //   } catch (err: any) {
-  //     const errorMessage = err.response?.data?.message || 'Login failed. Please check your credentials and try again.';
-  //     setError(errorMessage);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -233,12 +86,6 @@ const LoginPage: React.FC = () => {
     } else {
       accountService.fetchUser().then((res) => {
         console.log("dd", res);
-        // setTokens(
-        //   res.data?.token?.accessToken,
-        //   res?.data?.token?.refreshToken,
-        //   remember
-        // );
-        // let token = res?.data?.name;
         navigate("/home")
       }).catch((err) => {
         console.log("s");
@@ -248,26 +95,6 @@ const LoginPage: React.FC = () => {
 
       })
     }
-
-    // handleStorage(data);
-
-    // axios.interceptors.request.use(
-    //   (config) => {
-    //     if (config.headers) {
-    //       const token = getAccessToken();
-    //       if (token) {
-    //         config.headers.Authorization = `Bearer ${token}`;
-    //       }
-    //     }
-    //     return config;
-    //   },
-    //   (error) => Promise.reject(error)
-    // );
-
-
-
-
-    // navigate('/Home');
   };
 
   return (
