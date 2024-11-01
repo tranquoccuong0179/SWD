@@ -1,6 +1,6 @@
 import { Layout, Button, Card, Rate, Tag, Typography, Breadcrumb } from 'antd';
 import { ClockCircleOutlined, BookOutlined, UserOutlined } from '@ant-design/icons';
-import './CoursePage.css';
+import './TopicPage.css';
 import Footer from "../../components/Footer/Footer.tsx"
 import Header from "../../components/Header/Header.tsx";
 import { useSelector } from 'react-redux';
@@ -15,7 +15,7 @@ interface RootState {
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
-const CoursePage = () => {
+const TopicPage = () => {
     const id = useSelector((state: RootState) => state.USER.uid);
     const courses = [
         { id: 1, title: 'Con lắc lò xo', description: 'Động con lắc lò xo để nghiên cứu dao động điều hòa và năng lượng học trong vật lý động lực học', image: 'https://thidaihoc.vn/wp-content/uploads/2021/07/con-lac-lo-xo-treo-thang-dung.jpg', price: 17.84, rating: 4.3, reviews: 18321, duration: '2 giờ 30 phút', lessons: 12, students: 1500 },
@@ -79,4 +79,4 @@ const CoursePage = () => {
     );
 };
 
-export default CoursePage;
+export default TopicPage;

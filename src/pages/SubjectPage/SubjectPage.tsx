@@ -34,7 +34,7 @@ const SubjectPage = () => {
 
             <Content className="content">
                 <Breadcrumb className="breadcrumb">
-                    <Breadcrumb.Item href="/home">Trang chủ</Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to="/home">Trang chủ</Link></Breadcrumb.Item>
                     <Breadcrumb.Item>Môn học</Breadcrumb.Item>
                 </Breadcrumb>
 

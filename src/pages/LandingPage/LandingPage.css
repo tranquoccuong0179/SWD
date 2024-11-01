@@ -1,6 +1,7 @@
 .landing-page {
     font-family: 'Arial', sans-serif;
     min-height: 100vh;
+    width: 100vw;
 }
 
 /* Full-width sections */
@@ -42,10 +43,8 @@
     align-items: center;
     justify-content: center;
     padding: 0 5%;
-    background-image: linear-gradient(
-        rgba(0, 0, 0, 0.2),
-        rgba(0, 0, 0, 0.3)
-    ), url('https://i.postimg.cc/9fYmPm9G/A-combination-of-Einstein-and-quantum-physics.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2),
+            rgba(0, 0, 0, 0.3)), url('https://i.postimg.cc/9fYmPm9G/A-combination-of-Einstein-and-quantum-physics.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -59,11 +58,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(
-        circle at center,
-        transparent 0%,
-        rgba(0, 0, 0, 0.3) 100%
-    );
+    background: radial-gradient(circle at center,
+            transparent 0%,
+            rgba(0, 0, 0, 0.3) 100%);
 }
 
 .hero-content {
@@ -145,6 +142,7 @@
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -191,16 +189,18 @@
     .hero-content {
         animation: none;
     }
-    
+
     .hero-content:hover {
         transform: none;
     }
 }
+
 .hero-features {
     display: flex;
     justify-content: center;
     gap: 2rem;
 }
+
 /******************************************************/
 .features {
     display: flex;
@@ -405,7 +405,7 @@
 }
 
 .header:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .nav-menu .ant-menu-item:hover {
@@ -421,7 +421,7 @@
 }
 
 .hero h1 {
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .hero-buttons button {
@@ -430,7 +430,7 @@
 
 .hero-buttons button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .feature {
@@ -448,7 +448,8 @@
 }
 
 .feature span {
-    margin-top: 5px; /* Tạo khoảng cách giữa hình ảnh và chữ */
+    margin-top: 5px;
+    /* Tạo khoảng cách giữa hình ảnh và chữ */
     text-align: center;
 }
 
@@ -463,7 +464,7 @@
 
 .course-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .course-card .ant-card-cover img {
@@ -485,7 +486,7 @@
 
 .testimonial-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .testimonial-card .ant-avatar {
@@ -540,8 +541,15 @@
 
 /* Animations */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .hero-content,
@@ -564,6 +572,7 @@
 
 /* Print styles */
 @media print {
+
     .header,
     .footer {
         display: none;

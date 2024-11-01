@@ -63,9 +63,9 @@ export const loginAccount = (
   data: UserData
 ): ThunkAction<void, RootState, unknown, any> => {
   return async (dispatch: Dispatch) => {
-    console.log("1", data);
-    dispatch(LOGIN(data)); // Dispatch the LOGIN action with user data
-    // If needed, handle additional asynchronous logic here
+    
+    dispatch(LOGIN(data));
+
   };
 };
 

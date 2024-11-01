@@ -9,6 +9,8 @@ import {
     ArrowUpOutlined
 } from '@ant-design/icons';
 import './AdminDashboard.css';
+import '../LandingPage/LandingPage.css'
+import Header from '../../components/Header/Header';
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
@@ -130,8 +132,11 @@ const studentData = [
 
 const AdminDashboard = () => {
     return (
+        <div>
+        <Layout className="landing-page">
+        <Header/> 
         <div className="admin-dashboard">
-            {/* Header Section */}
+            
             <div className="dashboard-header">
                 <div>
                     <Title level={2}>Dashboard</Title>
@@ -248,6 +253,8 @@ const AdminDashboard = () => {
                     </TabPane>
                 </Tabs>
             </Card>
+        </div>
+        </Layout>
         </div>
     );
 };

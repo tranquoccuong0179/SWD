@@ -1,6 +1,6 @@
-import { Button, Input, Menu, Dropdown  } from 'antd';
+import { Button, Input, Menu, Dropdown } from 'antd';
 import { SearchOutlined, UserOutlined, LogoutOutlined, WalletOutlined } from '@ant-design/icons';
-import { Link, useNavigate  } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Logout } from '../../store/user/action.ts';
 import "./Header.css";
@@ -19,7 +19,9 @@ const Header = () => {
   const handleLogout = () => {
     dispatch(Logout());
     localStorage.removeItem('accessToken');
-    window.location.href = '/home'; 
+    localStorage.removeItem('fullName');
+    localStorage.removeItem('id');
+    window.location.href = '/home';
   };
 
   const handleWalletClick = () => {
@@ -62,20 +64,20 @@ const Header = () => {
   return (
     <header className="header">
       <div className="logo-container">
-        <img 
-          src="https://i.postimg.cc/xT0JJZbJ/physics-logo.jpg" 
+        <img
+          src="https://i.postimg.cc/xT0JJZbJ/physics-logo.jpg"
           // src={logo}
-          alt="Logo" 
-          className="logo" 
+          alt="Logo"
+          className="logo"
         />
       </div>
-      
+
       <Input
         placeholder="Bạn muốn học gì?"
         prefix={<SearchOutlined />}
         className="search-input"
       />
-      
+
       <Menu mode="horizontal" className="nav-menu">
         <Menu.Item key="home">
           <Link to="/Home">Trang chủ</Link>
@@ -90,20 +92,21 @@ const Header = () => {
           <Link to="/Contact">Liên hệ</Link>
         </Menu.Item>
       </Menu>
-      
-      {id ? (
+
+      {/* {id ? ( */}
+      {localStorage?.getItem('id') ? (
         <Dropdown
-        menu={{ items: userMenuItems }}
-        placement="bottomRight"
-        arrow
-        trigger={['click']}
-      >
-        <Button 
-          type="text"
-          icon={<UserOutlined />}
-          className="user-icon-button"
-        />
-      </Dropdown>
+          menu={{ items: userMenuItems }}
+          placement="bottomRight"
+          arrow
+          trigger={['click']}
+        >
+          <Button
+            type="text"
+            icon={<UserOutlined />}
+            className="user-icon-button"
+          />
+        </Dropdown>
       ) : (
         <Link to="/login">
           <Button type="primary">Đăng Nhập</Button>

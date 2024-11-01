@@ -10,7 +10,7 @@ const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
 const chapters = [
-    { id: 1, title: 'Chương 1: Dao Động Cơ', description: 'Giới thiệu các khái niệm và phương trình cơ bản về dao động điều hòa, con lắc, giúp hiểu rõ hơn về chuyển động lặp lại trong tự nhiên.', image: 'https://btec.fpt.edu.vn/wp-content/uploads/2024/01/dao-dong-co-hoc-la-gi.jpg.webp', lessons: 21, students: 5000, link: 'NewCourse' },
+    { id: 1, title: 'Chương 1: Dao Động Cơ', description: 'Giới thiệu các khái niệm và phương trình cơ bản về dao động điều hòa, con lắc, giúp hiểu rõ hơn về chuyển động lặp lại trong tự nhiên.', image: 'https://btec.fpt.edu.vn/wp-content/uploads/2024/01/dao-dong-co-hoc-la-gi.jpg.webp', lessons: 21, students: 5000, link: 'topic' },
     { id: 2, title: 'Chương 2: Sóng Cơ và Sóng Âm', description: 'Chương đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon' },
     { id: 3, title: 'Chương 3: Dòng Điện Xoay Chiều', description: 'Chương đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon' },
     { id: 4, title: 'Chương 4: Dao Động và Sóng Điện Từ', description: 'Chương đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon' },
@@ -34,8 +34,8 @@ const ChapterPage = () => {
 
             <Content className="content">
                 <Breadcrumb className="breadcrumb">
-                    <Breadcrumb.Item href="/home">Trang chủ</Breadcrumb.Item>
-                    <Breadcrumb.Item href="/subject">Môn học</Breadcrumb.Item>
+                <Breadcrumb.Item><Link to="/home">Trang chủ</Link></Breadcrumb.Item>
+                <Breadcrumb.Item><Link to="/subject">Môn học</Link></Breadcrumb.Item>
                     <Breadcrumb.Item>Chương</Breadcrumb.Item>
                 </Breadcrumb>
 

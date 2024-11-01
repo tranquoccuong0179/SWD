@@ -8,7 +8,6 @@ import { useSelector } from 'react-redux';
 import './LandingPage.css';
 import BackToTopButton from '../../components/BackToTop';
 import {UserOutlined} from "@ant-design/icons";
-import AdminDashboard from '../AdminDashboard/AdminDashboard.tsx';  // Adjust the import path as needed
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
 

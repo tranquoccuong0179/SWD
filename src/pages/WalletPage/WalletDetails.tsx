@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Modal, Form, Input, Table } from 'antd';
+import { Button, Modal, Form, Input, Table, Layout } from 'antd';
 import { Wallet, CreditCard, History, GraduationCap, TrendingUp, Clock } from 'lucide-react';
 import Header from '../../components/Header/Header.tsx';
 import "./IntergratedWallet.css";
@@ -152,8 +152,9 @@ const IntegratedWallet: React.FC = () => {
     ];
 
     return (
-        <div className='body-content'>
+        <Layout className="landing-page">
             <Header />
+        <div className='body-content'>
             <div className="min-h-screen bg-gray-50">
                 <div className="max-w-20xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -293,6 +294,7 @@ const IntegratedWallet: React.FC = () => {
                 )}
             </Modal>
         </div>
+        </Layout>
     );
 };
 

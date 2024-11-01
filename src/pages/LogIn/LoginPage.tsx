@@ -23,6 +23,7 @@ interface LoginResponse {
     userName: string;
     gender: number;
     phoneNumber: number;
+    // role: string;
   };
 }
 
@@ -184,6 +185,7 @@ const LoginPage: React.FC = () => {
   //     setIsLoading(false);
   //   }
   // };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -208,9 +210,16 @@ const LoginPage: React.FC = () => {
             phoneNumber: responseData.user.phoneNumber,
           })
         );
+        // if(responseData.user.role==='admin'){
+        //   navigate('/admin')
+        // }
+        
   
         localStorage.setItem('accessToken', responseData.token.accessToken);
         localStorage.setItem('refreshToken', responseData.token.refreshToken);
+        localStorage.setItem('fullName', responseData.user.fullName);
+        localStorage.setItem('id', responseData.user.id);
+        // localStorage.setItem('role',responseData.user.role)
         navigate("/Home");
       } else {
         throw new Error('Invalid response format');
@@ -245,7 +254,6 @@ const LoginPage: React.FC = () => {
 
       }).finally((err) => {
         console.log(err);
-
       })
     }
 
@@ -263,10 +271,6 @@ const LoginPage: React.FC = () => {
     //   },
     //   (error) => Promise.reject(error)
     // );
-
-
-
-
     // navigate('/Home');
   };
 
