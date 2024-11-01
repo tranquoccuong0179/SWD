@@ -1,5 +1,5 @@
 import { Button, Input, Menu, Dropdown } from 'antd';
-import { SearchOutlined, UserOutlined, LogoutOutlined, WalletOutlined } from '@ant-design/icons';
+import { SearchOutlined, UserOutlined, LogoutOutlined, WalletOutlined, AreaChartOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Logout } from '../../store/user/action.ts';
@@ -50,7 +50,7 @@ const Header = () => {
     // },
     {
       key: 'wallet',
-      icon: localStorage?.getItem('role') === 'AdminSystem' ? <UserOutlined /> : <WalletOutlined />,
+      icon: localStorage?.getItem('role') === 'AdminSystem' ? <AreaChartOutlined /> : <WalletOutlined />,
       label: localStorage?.getItem('role') === 'AdminSystem' ? 'Dashboard' : 'Ví của tôi',
       onClick: handleWalletClick
     },

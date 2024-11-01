@@ -49,13 +49,13 @@ const SubjectPage = () => {
                     <div className="subject-list" ref={listRef}>
                         {subject.map(subject => (
                             <Card key={subject?.id} hoverable className="subject-card">
-                                <img alt={subject?.name} src={subject?.image} className="subject-image mb-2" />
-                                <Title level={4} className='mb-2'>{subject?.title}</Title>
+                                <img alt={subject?.title} src={subject?.image} className="subject-image mb-2" />
+                                <Title level={4} className='mb-2'>{subject?.name}</Title>
                                 <Paragraph ellipsis={{ rows: 2 }}>{subject?.description}</Paragraph>
-                                <div className="subject-details">
+                                {/* <div className="subject-details">
                                     <Text><BookOutlined /> {subject?.lessons} bài học</Text>
                                     <Text><UserOutlined /> {subject?.students?.toLocaleString()} học viên</Text>
-                                </div>
+                                </div> */}
                                 <div className="subject-button">
                                     <Link to={`/Subject/${subject?.id}`}>
                                         <Button type="primary">Khám phá ngay</Button>

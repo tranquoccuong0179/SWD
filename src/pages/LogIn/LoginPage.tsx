@@ -11,7 +11,6 @@ import { AppDispatch } from '../../store/types';
 import { GoogleLogin } from '@react-oauth/google';
 import { accountService } from '../../services/accountServices';
 import { Layout } from 'antd';
-import AuthPic from '../../assets/authpic.jpg'
 
 interface LoginResponse {
   token: {
@@ -54,8 +53,8 @@ const LoginPage: React.FC = () => {
 
       // Adjusted based on possible data nesting
       const responseData = response.data.data || response.data;
-      console.log("s", response.data);
-      console.log("s1", responseData.role);
+      console.log("DATA:", response.data);
+      console.log("ROLE:", responseData.role);
 
       if (responseData && responseData.user) {
         dispatch(
@@ -74,7 +73,7 @@ const LoginPage: React.FC = () => {
           localStorage.setItem('fullName', responseData.user.fullName);
           localStorage.setItem('id', responseData.user.id);
           localStorage.setItem('role', responseData.role)
-          console.log("ss33");
+          // console.log("ss33");
           navigate('/admin')
         } else {
           localStorage.setItem('accessToken', responseData.token.accessToken);

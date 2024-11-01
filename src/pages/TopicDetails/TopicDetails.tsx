@@ -29,12 +29,12 @@ const ChapterContent: React.FC = () => {
     return (
         <Layout className="landing-page">
             <Header />
-            <div className="container mx-auto px-4 p-4">
+            <div className="container mx-auto px-4 p-24">
                 <Breadcrumb className="breadcrumb">
                     <Breadcrumb.Item ><Link to={"/home"}>Trang chủ</Link></Breadcrumb.Item>
                     <Breadcrumb.Item ><Link to={"/subject"}>Môn học</Link></Breadcrumb.Item>
                     <Breadcrumb.Item ><Link to={"/chapter"}>Chương</Link></Breadcrumb.Item>
-                    <Breadcrumb.Item ><Link to={"/newcourse"}>Bài học</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item ><Link to={"/topic"}>Bài học</Link></Breadcrumb.Item>
                     <Breadcrumb.Item >{lessons.find(l => l.id === activeLesson)?.title}</Breadcrumb.Item>
                 </Breadcrumb>
                 {/* <p className='text-3xl font-bold'>CHƯƠNG</p> */}

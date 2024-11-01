@@ -29,7 +29,8 @@ const LandingPage = () => {
                         <Paragraph>
                             Học Vật Lý theo một cách mới với Manim AI Physics Visualizer. Nền tảng học trực tuyến và công cụ để tạo mô phỏng giúp bạn hiểu và ghi nhớ kiến thức nhanh hơn.
                         </Paragraph>
-                        {id ? (
+                        {/* {id ? ( */}
+                        {localStorage?.getItem('id') ? (
                             <Link to='/subject'>
                                 <Button type="primary" size="large" className="hero-button">
                                     Trải nghiệm ngay!
@@ -71,7 +72,8 @@ const LandingPage = () => {
 
                 <section className="cta full-width">
                     <Title level={2}>Bắt đầu hành trình học Vật lý của bạn ngay hôm nay!</Title>
-                    {id ? (
+                    {/* {id ? ( */}
+                    {localStorage?.getItem('id') ? (
                         <Link to='/subject'>
                             <Button type="primary" size="large">Đến Trang Môn Học</Button>
                         </Link>
