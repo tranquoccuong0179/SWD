@@ -23,6 +23,7 @@ function App() {
                 <Route path="/Home" element={<LandingPage />} />
                 <Route path="/Subject" element={<SubjectPage />} />
                 <Route path="/Chapter" element={<ChapterPage />} />
+                <Route path="/Subject/:id" element={<ChapterPage />} />
                 <Route path="/Topic" element={<TopicPage />} />
                 <Route path="/TopicDetails" element={<TopicDetails />} />
                 <Route path="/Comingsoon" element={<ComingSoonPage />} />

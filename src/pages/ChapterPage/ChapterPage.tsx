@@ -3,8 +3,9 @@ import { BookOutlined, UserOutlined, LeftOutlined, RightOutlined } from '@ant-de
 import './ChapterPage.css';
 import Footer from "../../components/Footer/Footer.tsx";
 import Header from "../../components/Header/Header.tsx";
-import { Link } from 'react-router-dom';
-import { useRef } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { subjectService } from '../../services/subjectServices.ts';
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -14,12 +15,20 @@ const chapters = [
     { id: 2, title: 'Chương 2: Sóng Cơ và Sóng Âm', description: 'Chương đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon' },
     { id: 3, title: 'Chương 3: Dòng Điện Xoay Chiều', description: 'Chương đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon' },
     { id: 4, title: 'Chương 4: Dao Động và Sóng Điện Từ', description: 'Chương đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon' },
-    { id: 5, title: 'Coming Soon', description: 'Chương đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon'  },
+    { id: 5, title: 'Coming Soon', description: 'Chương đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon' },
 ];
 
 const ChapterPage = () => {
     const listRef = useRef<HTMLDivElement>(null);
-
+    const [chapter,setChapter] = useState([])
+    const { id } = useParams()
+    useEffect(() => {
+        subjectService.getSubjectId(id || '').then((res)=>{
+            console.log("ss1",chapter);
+            
+            setChapter(res.data.chapters)
+        })
+    }, [id])
     const scrollLeft = () => {
         listRef.current?.scrollBy({ left: -300, behavior: 'smooth' });
     };
@@ -34,8 +43,8 @@ const ChapterPage = () => {
 
             <Content className="content">
                 <Breadcrumb className="breadcrumb">
-                <Breadcrumb.Item><Link to="/home">Trang chủ</Link></Breadcrumb.Item>
-                <Breadcrumb.Item><Link to="/subject">Môn học</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to="/home">Trang chủ</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to="/subject">Môn học</Link></Breadcrumb.Item>
                     <Breadcrumb.Item>Chương</Breadcrumb.Item>
                 </Breadcrumb>
 

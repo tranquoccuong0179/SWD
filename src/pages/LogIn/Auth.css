@@ -1,7 +1,14 @@
 .container {
   width: 100% !important;
 }
-
+.imageSetup {
+  /* background-image: url(../../assets/authpic.jpg); */
+  /* background-image: url(https://cdn-gkbkl.nitrocdn.com/EahsqmkNZSarsOQvgGaWKiasFdUDbxev/assets/images/optimized/rev-a96de8d/www.oloid.ai/wp-content/uploads/2023/01/AI-benefits.jpg); */
+  background-image: url(https://files.oaiusercontent.com/file-uwH5FCyjpmk9XMfL2R4uLEzL?se=2024-11-01T11%3A10%3A47Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D5443250a-6d6f-4168-bb87-6b1c8cc4c137.webp&sig=zy17GrIf2GMoICeV5pBewTUI/IYQOsTT9BO6cZ5JHL0%3D);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 .auth-container {
   max-width: 500px;
   margin: 50px auto;

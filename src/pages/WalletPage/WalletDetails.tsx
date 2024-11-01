@@ -23,7 +23,7 @@ interface WalletData {
     }>;
 }
 
-const BASE_API_URL = 'https://manim-api-ffh6c8ewbehjc0hn.canadacentral-01.azurewebsites.net';
+const BASE_API_URL = 'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net';
 
 const getAuthToken = () => localStorage.getItem('accessToken');
 
@@ -246,7 +246,7 @@ const IntegratedWallet: React.FC = () => {
             <Header />
         <div className='body-content'>
             <div className="min-h-screen bg-gray-50">
-                <div className="max-w-20xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="max-w-20xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
                     {/* Wallet Header */}
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
                         <div className="p-6 sm:p-8">

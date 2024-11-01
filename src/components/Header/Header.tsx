@@ -25,7 +25,12 @@ const Header = () => {
   };
 
   const handleWalletClick = () => {
-    navigate('/wallet');
+    if (localStorage?.getItem('role') === 'AdminSystem') {
+      navigate('/admin')
+    } else {
+      navigate('/wallet');
+    }
+
   };
 
   const handleTrollClick = () => {
@@ -45,8 +50,8 @@ const Header = () => {
     // },
     {
       key: 'wallet',
-      icon: <WalletOutlined />,
-      label: 'Ví của tôi',
+      icon: localStorage?.getItem('role') === 'AdminSystem' ? <UserOutlined /> : <WalletOutlined />,
+      label: localStorage?.getItem('role') === 'AdminSystem' ? 'Dashboard' : 'Ví của tôi',
       onClick: handleWalletClick
     },
     {
