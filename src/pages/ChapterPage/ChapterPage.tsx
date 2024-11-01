@@ -5,30 +5,59 @@ import Footer from "../../components/Footer/Footer.tsx";
 import Header from "../../components/Header/Header.tsx";
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-import { subjectService } from '../../services/subjectServices.ts';
+import axios from 'axios'; // Make sure to install axios if not already installed
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
-const chapters = [
-    { id: 1, title: 'Chương 1: Dao Động Cơ', description: 'Giới thiệu các khái niệm và phương trình cơ bản về dao động điều hòa, con lắc, giúp hiểu rõ hơn về chuyển động lặp lại trong tự nhiên.', image: 'https://btec.fpt.edu.vn/wp-content/uploads/2024/01/dao-dong-co-hoc-la-gi.jpg.webp', lessons: 21, students: 5000, link: 'topic' },
-    { id: 2, title: 'Chương 2: Sóng Cơ và Sóng Âm', description: 'Chương đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon' },
-    { id: 3, title: 'Chương 3: Dòng Điện Xoay Chiều', description: 'Chương đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon' },
-    { id: 4, title: 'Chương 4: Dao Động và Sóng Điện Từ', description: 'Chương đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon' },
-    { id: 5, title: 'Coming Soon', description: 'Chương đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon' },
-];
+// Define an interface for the Chapter structure
+interface Chapter {
+    id: number;
+    title: string;
+    description: string;
+    image: string;
+    lessons: number;
+    students: number;
+}
 
 const ChapterPage = () => {
     const listRef = useRef<HTMLDivElement>(null);
-    const [chapter,setChapter] = useState([])
-    const { id } = useParams()
+    const [chapters, setChapters] = useState<Chapter[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    const { id } = useParams();
+
     useEffect(() => {
-        subjectService.getSubjectId(id || '').then((res)=>{
-            console.log("ss1",chapter);
-            
-            setChapter(res.data.chapters)
-        })
-    }, [id])
+        const fetchChapters = async () => {
+            try {
+                // Replace with your actual API endpoint
+                const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/subjects/${id}/chapters`);
+
+                // Transform the data to match your existing structure
+                const transformedChapters = response.data.map((chapter: any) => ({
+                    id: chapter.id,
+                    title: chapter.title,
+                    description: chapter.description,
+                    image: chapter.imageUrl || 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg',
+                    lessons: chapter.lessonCount || 0,
+                    students: chapter.studentCount || 0,
+                    link: `topic/${chapter.id}` // Adjust link generation as needed
+                }));
+
+                setChapters(transformedChapters);
+                setLoading(false);
+            } catch (err) {
+                console.error('Error fetching chapters:', err);
+                setError('Failed to load chapters');
+                setLoading(false);
+            }
+        };
+
+        if (id) {
+            fetchChapters();
+        }
+    }, [id]);
+
     const scrollLeft = () => {
         listRef.current?.scrollBy({ left: -300, behavior: 'smooth' });
     };
@@ -36,6 +65,30 @@ const ChapterPage = () => {
     const scrollRight = () => {
         listRef.current?.scrollBy({ left: 300, behavior: 'smooth' });
     };
+
+    if (loading) {
+        return (
+            <Layout className="chapter-page">
+                <Header />
+                <Content className="content">
+                    <Title level={2}>Loading Chapters...</Title>
+                </Content>
+                <Footer />
+            </Layout>
+        );
+    }
+
+    if (error) {
+        return (
+            <Layout className="chapter-page">
+                <Header />
+                <Content className="content">
+                    <Title level={2}>Error: {error}</Title>
+                </Content>
+                <Footer />
+            </Layout>
+        );
+    }
 
     return (
         <Layout className="chapter-page">
@@ -65,7 +118,15 @@ const ChapterPage = () => {
                     <div className="subject-list" ref={listRef}>
                         {chapters.map(chapter => (
                             <Card key={chapter.id} hoverable className="subject-card">
-                                <img alt={chapter.title} src={chapter.image} className="subject-image mb-2" />
+                                <img
+                                    alt={chapter.title}
+                                    src={chapter.image}
+                                    className="subject-image mb-2"
+                                    onError={(e) => {
+                                        const imgElement = e.target as HTMLImageElement;
+                                        imgElement.src = 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg';
+                                    }}
+                                />
                                 <Title level={4} className='mb-2'>{chapter.title}</Title>
                                 <Paragraph ellipsis={{ rows: 2 }}>{chapter.description}</Paragraph>
                                 <div className="subject-details">

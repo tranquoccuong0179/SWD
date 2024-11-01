@@ -10,14 +10,6 @@ import { subjectService } from '../../services/subjectServices.ts';
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
-// const subjects = [
-//     { id: 1, title: 'Toán học', description: 'Khám phá các khái niệm cơ bản và nâng cao trong toán học.', image: 'https://ischool.vn/wp-content/uploads/2023/07/phuong-phap-hoc-toan-hieu-qua-thumb.jpeg', lessons: 20, students: 5000, link: 'comingsoon' },
-//     { id: 2, title: 'Vật lý', description: 'Hiểu các nguyên lý và ứng dụng trong đời sống thực tiễn.', image: 'https://genk.mediacdn.vn/zoom/700_438/2016/20-nha-khoa-hoc-noi-tieng-the-gioi-0-1476195757480.jpg', lessons: 15, students: 4200, link: 'Chapter' },
-//     { id: 3, title: 'Hóa học', description: 'Tìm hiểu về các phản ứng và cấu tạo của chất.', image: 'https://lh6.googleusercontent.com/proxy/EKOc9XdfZM5EMx0f7OO-B9pxVBnHIhRHReYi1ncXWYyyEYO9cr0nq4-SLqrpKfYGoZY6NSUX_BTDLiThBS9ixjYnRTMEEtODWRXvZUpGWDE5mMQjDIGIIU4fwIxP', lessons: 18, students: 3500, link: 'comingsoon' },
-//     { id: 4, title: 'Sinh học', description: 'Khám phá cấu trúc và chức năng của các hệ sinh học trong cơ thể.', image: 'https://duhocinec.com/wp-content/uploads/2020/03/Sinh-hoc-PSB-1.jpg', lessons: 14, students: 3000, link: 'comingsoon' },
-//     { id: 5, title: 'Coming Soon', description: 'Môn học đang được phát triển, hãy đợi nhé.', image: 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg', lessons: '??', students: '??', link: 'comingsoon' },
-// ];
-
 const SubjectPage = () => {
     const listRef = useRef<HTMLDivElement>(null);
     const [page, setPage] = useState(1)
