@@ -1,31 +1,75 @@
-import { Layout, Breadcrumb, Row, Col } from 'antd';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Header from '../../components/Header/Header';
+import { Layout, Button, Card, Rate, Tag, Typography, Breadcrumb, Row, Col } from 'antd';
+import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import '../LandingPage/LandingPage.css';
-import Title from 'antd/es/typography/Title';
-interface Lesson {
+
+interface TopicDetails {
     id: number;
+    chapterId: number;
+    chapterName: string;
+    problems: [];
     title: string;
     content: string;
+    topicName: string;
 }
 
-const lessons: Lesson[] = [
-    { id: 1, title: "CON LẮC LÒ XO", content: 'coming soon' },
-    { id: 2, title: "CON LẮC ĐƠN", content: 'coming soon' },
-    { id: 3, title: "Coming Soon", content: 'coming soon' },
-    { id: 4, title: "Coming Soon", content: 'coming soon' },
-    { id: 5, title: "Coming Soon", content: 'coming soon' },
-    { id: 6, title: "Coming Soon", content: 'coming soon' },
-    { id: 7, title: "Coming Soon", content: 'coming soon' },
-    { id: 8, title: "Coming Soon", content: 'coming soon' },
-    { id: 9, title: "Coming Soon", content: 'coming soon' },
-    { id: 10, title: "Coming Soon", content: 'coming soon' },
-];
+const { Content } = Layout;
+const { Title, Paragraph, Text } = Typography;
 
-const ChapterContent: React.FC = () => {
+const TopicDetailsPage = () => {
+    const listRef = useRef<HTMLDivElement>(null);
+    const [topicDetails, setTopicDetails] = useState([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    const [content,setContent] = useState({})
+    // const { id } = useParams();
+    const { id } = useParams();//
+    // const subjectId = id ? parseInt(id.replace(':', '')) : null;
     const [activeLesson, setActiveLesson] = React.useState(1);
 
+    useEffect(() => {
+        const fetchTopicDetails = async () => {
+            try {
+                // Lấy id từ URL và bỏ dấu ':' nếu có
+                if (!id) {
+                    setError('Missing subject ID');
+                    setLoading(false);
+                    return;
+                }
+
+                const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems`);
+
+                console.log("API Response:", response.data);
+                console.log("TopicId:", id);
+                const transformedTopicDetails = response.data.data.items
+                    .map((topicDetails: any) => ({
+                        id: topicDetails.id,
+                        topicId: topicDetails.topicId,
+                        topicName: topicDetails.topicName,
+                        description: topicDetails.description,
+                        name: topicDetails.name,
+                    }))
+                    .filter(topicDetails => topicDetails.topicId === id);//
+
+                setTopicDetails(transformedTopicDetails);
+                setLoading(false);
+            } catch (err) {
+                console.error('Error fetching topic details:', err);
+                setError('Failed to load topic details');
+                setLoading(false);
+            }
+        };
+
+        fetchTopicDetails();
+    }, [id]); // Dependency array vẫn giữ id để khi URL thay đổi sẽ fetch lại
+    console.log("sss", topicDetails);
+    const handleChange =(e)=>{
+        setActiveLesson(e.id)
+        setContent(e)
+    }
     return (
         <Layout className="landing-page">
             <Header />
@@ -35,26 +79,26 @@ const ChapterContent: React.FC = () => {
                     <Breadcrumb.Item ><Link to={"/subject"}>Môn học</Link></Breadcrumb.Item>
                     <Breadcrumb.Item ><Link to={"/chapter"}>Chương</Link></Breadcrumb.Item>
                     <Breadcrumb.Item ><Link to={"/topic"}>Bài học</Link></Breadcrumb.Item>
-                    <Breadcrumb.Item >{lessons.find(l => l.id === activeLesson)?.title}</Breadcrumb.Item>
+                    <Breadcrumb.Item >{topicDetails?.topicName}</Breadcrumb.Item>
                 </Breadcrumb>
                 {/* <p className='text-3xl font-bold'>CHƯƠNG</p> */}
                 <Row>
                     <Col md={4}><Title level={3}>Bài toán:</Title></Col>
-                    <Col md={20}><Title level={2}>  {lessons.find(l => l.id === activeLesson)?.title}</Title></Col>
+                    <Col md={20}><Title level={2}>{topicDetails[0]?.topicName}</Title></Col>
                 </Row>
                 {/* PROBLEMS COL*/}
                 <div className="flex flex-col md:flex-row">
                     <div className="md:w-2/12 pr-4">
                         <nav>
-                            {lessons.map((lesson) => (
+                            {topicDetails.map((e) => (
                                 <button
-                                    key={lesson.id}
-                                    onClick={() => setActiveLesson(lesson.id)}
-                                    className={`w-full text-left p-2 mb-2 rounded ${activeLesson === lesson.id
+                                    key={e.id}
+                                    onClick={()=>handleChange(e)}
+                                    className={`w-full text-left p-2 mb-2 rounded ${activeLesson === e.id
                                         ? 'bg-green-500 text-white'
                                         : 'bg-green-100 text-gray-800 hover:bg-green-200'
                                         }`}>
-                                    {lesson.title}
+                                    {e?.name}
                                 </button>
                             ))}
                         </nav>
@@ -64,7 +108,7 @@ const ChapterContent: React.FC = () => {
                         <div className="bg-gray-50 rounded-lg shadow-sm p-6 min-h-[500px] border border-gray-200">
                             <div className="prose max-w-none">
                                 {/* Actual lesson content will go here */}
-                                {lessons.find(l => l.id === activeLesson)?.content}
+                                {content?.description}
                             </div>
                         </div>
                     </div>
@@ -73,5 +117,4 @@ const ChapterContent: React.FC = () => {
         </Layout>
     );
 };
-
-export default ChapterContent;
+export default TopicDetailsPage;
