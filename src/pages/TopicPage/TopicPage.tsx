@@ -10,7 +10,7 @@ import { Link, useParams } from 'react-router-dom';
 
 interface Topic {
     id: number;
-    title: string;
+    name: string;
     description: string;
     image: string;
     lessons: number;
@@ -47,7 +47,7 @@ const TopicPage = () => {
                 const transformedTopics = response.data.data.items
                     .map((topic: any) => ({
                         id: topic.id,
-                        title: topic.title,
+                        name: topic.name,
                         description: topic.description,
                         image: topic.imageUrl || 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg',
                         lessons: topic.lessonCount || 0,
@@ -132,7 +132,7 @@ const TopicPage = () => {
                         {topics.map(topic => (
                             <Card key={topic.id} hoverable className="subject-card">
                                 <img
-                                    alt={topic.title}
+                                    alt={topic.name}
                                     src={topic.image}
                                     className="subject-image mb-2"
                                     onError={(e) => {
@@ -140,7 +140,7 @@ const TopicPage = () => {
                                         imgElement.src = 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg';
                                     }}
                                 />
-                                <Title level={4} className='mb-2'>{topic.title}</Title>
+                                <Title level={4} className='mb-2'>{topic.name}</Title>
                                 <Paragraph ellipsis={{ rows: 2 }}>{topic.description}</Paragraph>
                                 {/* <div className="topic-details">
                                     <Text><BookOutlined /> {topic.lessons} bài học</Text>

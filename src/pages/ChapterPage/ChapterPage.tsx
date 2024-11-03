@@ -47,6 +47,7 @@ const ChapterPage = () => {
                 const transformedChapters = response.data.data.items
                     .map((chapter: any) => ({
                         id: chapter.id,
+                        name: chapter.name,
                         title: chapter.title,
                         description: chapter.description,
                         image: chapter.imageUrl || 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg',
@@ -139,7 +140,7 @@ const ChapterPage = () => {
                                         imgElement.src = 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg';
                                     }}
                                 />
-                                <Title level={4} className='mb-2'>{chapter.title}</Title>
+                                <Title level={4} className='mb-2'>{chapter.name}</Title>
                                 <Paragraph ellipsis={{ rows: 2 }}>{chapter.description}</Paragraph>
                                 {/* <div className="chapter-details">
                                     <Text><BookOutlined /> {chapter.lessons} bài học</Text>

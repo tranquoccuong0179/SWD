@@ -1,23 +1,14 @@
 import React from 'react';
 import Header from '../../components/Header/Header';
-import { Layout, Button, Card, Rate, Tag, Typography, Breadcrumb, Row, Col } from 'antd';
+import { Layout, Button, Breadcrumb, Typography } from 'antd';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import Footer from "../../components/Footer/Footer.tsx";
 import '../LandingPage/LandingPage.css';
 
-interface TopicDetails {
-    id: number;
-    chapterId: number;
-    chapterName: string;
-    problems: [];
-    title: string;
-    content: string;
-    topicName: string;
-}
-
 const { Content } = Layout;
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 
 const TopicDetailsPage = () => {
     const listRef = useRef<HTMLDivElement>(null);
@@ -25,15 +16,19 @@ const TopicDetailsPage = () => {
     const [parameters, setParameters] = useState([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [content, setContent] = useState({})
-    const [contentParameter, setContentParameter] = useState([])
-    const { id } = useParams();//
-    const [activeLesson, setActiveLesson] = React.useState(1)
+    const [content, setContent] = useState({});
+    const [contentParameter, setContentParameter] = useState([]);
+    const { id } = useParams();
+    const [activeLesson, setActiveLesson] = useState(1);
+    const [selectedParameters, setSelectedParameters] = useState([
+        { parameterId: '', value: 0 },
+        { parameterId: '', value: 0 }
+    ]);
+    const [problemId, setProblemId] = useState(''); // Thêm problemId
 
     useEffect(() => {
         const fetchTopicDetails = async () => {
             try {
-                // Lấy id từ URL và bỏ dấu ':' nếu có
                 if (!id) {
                     setError('Missing subject ID');
                     setLoading(false);
@@ -41,19 +36,8 @@ const TopicDetailsPage = () => {
                 }
 
                 const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems`);
-
-                console.log("API Response:", response.data);
-                console.log("TopicId:", id);
                 const transformedTopicDetails = response.data.data.items
-                    .map((topicDetails: any) => ({
-                        id: topicDetails.id,
-                        topicId: topicDetails.topicId,
-                        topicName: topicDetails.topicName,
-                        description: topicDetails.description,
-                        name: topicDetails.name,
-                    }))
-                    .filter(topicDetails => topicDetails.topicId === id);//
-
+                    .filter(topic => topic.topicId === id);
                 setTopicDetails(transformedTopicDetails);
                 setLoading(false);
             } catch (err) {
@@ -62,27 +46,17 @@ const TopicDetailsPage = () => {
                 setLoading(false);
             }
         };
+
         const fetchParameters = async () => {
             try {
-                // Lấy id từ URL và bỏ dấu ':' nếu có
                 if (!id) {
                     setError('Missing subject ID');
                     setLoading(false);
                     return;
                 }
                 const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/parameter`);
-                console.log("API Response2:", response.data);
-                console.log("TopicId:", id);
                 const transformedParameters = response.data.data.items
-                    .map((Parameters: any) => ({
-                        id: Parameters.id,
-                        name: Parameters.name,
-                        unit: Parameters.unit,
-                        symbol: Parameters.symbol,
-                        topicId: Parameters.topicId,
-                        topicName: Parameters.topicName,
-                    }))
-                    .filter(Parameters => Parameters.topicId === id);//
+                    .filter(parameter => parameter.topicId === id);
                 setParameters(transformedParameters);
                 setLoading(false);
             } catch (err) {
@@ -91,79 +65,148 @@ const TopicDetailsPage = () => {
                 setLoading(false);
             }
         };
+
         fetchTopicDetails();
         fetchParameters();
-    }, [id]); // Dependency array vẫn giữ id để khi URL thay đổi sẽ fetch lại
-    console.log("sss", topicDetails);
+    }, [id]);
 
+    const handleChange = (e) => {
+        setActiveLesson(e.id);
+        setContent(e);
+        const data = parameters.filter((i) => i.topicId === id);
+        setContentParameter(data);
+    };
 
+    const handleSelectChange = (index, value) => {
+        const newParameters = [...selectedParameters];
+        newParameters[index].parameterId = value; // Cập nhật parameterId
+        setSelectedParameters(newParameters);
+    };
 
+    const handleInputChange = (index, value) => {
+        const newParameters = [...selectedParameters];
+        newParameters[index].value = value; // Cập nhật giá trị
+        setSelectedParameters(newParameters);
+    };
 
-    const handleChange = (e: any) => {
-        setActiveLesson(e.id)
-        setContent(e)
-        const data = parameters?.filter((i) => i?.topicId === id)
-        setContentParameter(data)
-        console.log("ds", data);
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`, {
+                problemId: problemId, // ID bài toán
+                postPPVMs: selectedParameters
+            });
 
-    }
-    console.log("ssd", contentParameter);
+            if (response.status === 200) {
+                console.log('Response from API:', response.data);
+                // Xử lý phản hồi từ API ở đây
+            }
+        } catch (error) {
+            console.error('Error sending data:', error);
+        }
+    };
 
     return (
         <Layout className="landing-page">
             <Header />
             <div className="container mx-auto px-4 p-24">
                 <Breadcrumb className="breadcrumb">
-                    <Breadcrumb.Item ><Link to={"/home"}>Trang chủ</Link></Breadcrumb.Item>
-                    <Breadcrumb.Item ><Link to={"/subject"}>Môn học</Link></Breadcrumb.Item>
-                    <Breadcrumb.Item ><Link to={"/chapter"}>Chương</Link></Breadcrumb.Item>
-                    <Breadcrumb.Item ><Link to={"/topic"}>Bài học</Link></Breadcrumb.Item>
-                    <Breadcrumb.Item >{topicDetails[0]?.topicName}</Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to={"/home"}>Trang chủ</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to={"/subject"}>Môn học</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to={"/chapter"}>Chương</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to={"/topic"}>Bài học</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item>{topicDetails[0]?.topicName}</Breadcrumb.Item>
                 </Breadcrumb>
-                <Row>
-                    <Col md={4}><Title level={3}>Bài toán:</Title></Col>
-                    <Col md={20}><Title level={2}>Bài: {topicDetails[0]?.topicName}</Title></Col>
-                </Row>
-                {/* PROBLEMS COL*/}
+
                 <div className="flex flex-col md:flex-row">
-                    <div className="md:w-2/12 pr-4">
+                    <div className="md:w-2/12 p-2 font-semibold text-2xl mb-2">Bài toán:</div>
+                    <div className="md:w-10/12 p-2 font-bold text-3xl mb-2">Bài: {topicDetails[0]?.topicName}</div>
+                </div>
+
+                <div className="flex flex-col md:flex-row">
+                    <div className="md:w-2/12">
                         <nav>
                             {topicDetails.map((e) => (
                                 <button
                                     key={e.id}
                                     onClick={() => handleChange(e)}
-                                    className={`w-full text-left p-2 mb-2 rounded ${activeLesson === e.id
-                                        ? 'bg-green-500 text-white'
-                                        : 'bg-green-100 text-gray-800 hover:bg-green-200'
-                                        }`}>
+                                    className={`w-full text-left text-base p-2 mb-2 rounded text-center ${activeLesson === e.id ? 'bg-blue-500 text-white' : 'bg-blue-100 text-gray-800 hover:bg-blue-200'}`}>
                                     {e?.name}
                                 </button>
                             ))}
                         </nav>
-                        <div className="bg-gray-50 rounded-lg shadow-sm p-3 min-h-[180px] border border-gray-200">
-                        <div className="parameter-content text-left p-1 text-black font-bold mb-2">
-                                    Các tham số: {contentParameter?.map((e) => {
-                                    return <p>{e?.name} {e?.symbol} ({e?.unit})</p>
-                                })}</div>
+                        <div className="p-2 font-semibold text-xl mt-2 mb-2">Các tham số:</div>
+                        <div className="bg-gray-50 rounded-lg shadow-sm p-3 min-h-[100px] border border-gray-200">
+                            <div className="parameter-content text-left text-base text-center p-1 text-black font-medium">
+                                {contentParameter?.map((e) => {
+                                    return <p key={e.id}>{e?.name} {e?.symbol} ({e?.unit})</p>
+                                })}
+                            </div>
                         </div>
                     </div>
                     <div className="md:w-10/12">
-                        {/* TOPIC CONTENTS */}
-                        <div className="bg-gray-50 rounded-lg shadow-sm p-3 min-h-[500px] border border-gray-200 ml-2 mr-2">
+                        <div className="bg-gray-50 rounded-lg shadow-sm p-4 min-h-[500px] border border-gray-200 ml-10 mr-10">
                             <div className="prose max-w-none">
-                                {/* PROBLEM DESCRIPTION */}
-                                <div className="problem-description text-left p-3 bg-green-100 text-black font-bold rounded-md mb-2">Bài toán: {content?.description}</div>
-                                {/* PARAMETER */}
-                                <div className="parameter-content text-left p-1 text-black font-bold mb-2">
-                                    {contentParameter?.map((e) => {
-                                    return <p>{e?.name} {e?.symbol} ({e?.unit})</p>
-                                })}</div>
-
+                                <div className="problem-description text-left p-4 bg-blue-100 text-black text-lg font-bold rounded-md">
+                                    Bài toán: {content?.description}
+                                </div>
+                                <div className="input-question text-left p-4 text-black text-lg font-medium mb-3">
+                                    Nhập các tham số để tính toán:
+                                </div>
+                                <div className="parameter-inputs">
+                                    <div className="mb-6">
+                                        <label className="block text-left text-base font-medium text-black mb-2" htmlFor="input1">Tham số 1:</label>
+                                        <div className="flex items-center space-x-2">
+                                            <select
+                                                id="type1"
+                                                className="p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
+                                                onChange={(e) => handleSelectChange(0, e.target.value)}
+                                            >
+                                                {contentParameter?.map((e) => (
+                                                    <option key={e.id} value={e.id}>
+                                                        {e?.name} {e?.symbol} ({e?.unit})
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <input
+                                                id="input1"
+                                                type="number"
+                                                className="block w-full p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
+                                                placeholder="Nhập tham số 1"
+                                                onChange={(e) => handleInputChange(0, e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="mb-6">
+                                        <label className="block text-left text-base font-medium text-black mb-2" htmlFor="input2">Tham số 2:</label>
+                                        <div className="flex items-center space-x-2">
+                                            <select
+                                                id="type2"
+                                                className="p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
+                                                onChange={(e) => handleSelectChange(1, e.target.value)}
+                                            >
+                                                {contentParameter?.map((e) => (
+                                                    <option key={e.id} value={e.id}>
+                                                        {e?.name} {e?.symbol} ({e?.unit})
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <input
+                                                id="input2"
+                                                type="number"
+                                                className="block w-full p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
+                                                placeholder="Nhập tham số 2"
+                                                onChange={(e) => handleInputChange(1, e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                    <Button type="primary w-40 h-10 text-lg font-semibold p-3" onClick={handleSubmit}>Gửi</Button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <Footer />
         </Layout>
     );
 };

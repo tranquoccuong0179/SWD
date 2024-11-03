@@ -26,8 +26,8 @@ function App() {
                 {/* <Route path="/Chapter" element={<ChapterPage />} /> */}
                 <Route path="/Subject/:id" element={<ChapterPage />} />
                 {/* <Route path="/Topic" element={<TopicPage />} /> */}
-                <Route path="/Chapter/:id" element={<TopicPage />} />     
-                <Route path="/TopicDetails" element={<TopicDetails />} />
+                <Route path="/Chapter/:id" element={<TopicPage />} />
+                {/* <Route path="/TopicDetails" element={<TopicDetails />} /> */}
                 <Route path="/Topic/:id" element={<TopicDetails />} />
                 
                 <Route path="/Comingsoon" element={<ComingSoonPage />} />
