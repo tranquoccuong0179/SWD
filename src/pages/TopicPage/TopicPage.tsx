@@ -147,7 +147,7 @@ const TopicPage = () => {
                                     <Text><UserOutlined /> {topic.students.toLocaleString()} học viên</Text>
                                 </div> */}
                                 <div className="topic-button">
-                                    <Link to={`/topic/${topic.id}}`}>
+                                    <Link to={`/topic/${topic.id}`}>
                                         <Button type="primary">Khám phá ngay</Button>
                                     </Link>
                                 </div>
