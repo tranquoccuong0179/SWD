@@ -35,28 +35,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle, Pencil, Trash2, BookOpen } from 'lucide-react';
 
 const CourseManagement = () => {
-    // Sample initial data
     const [courses, setCourses] = useState([
-        { id: 1, name: 'Physics 101', description: 'Introduction to Physics', status: 'active' },
-        { id: 2, name: 'Physics 102', description: 'Advanced Physics', status: 'active' }
+        { id: 1, name: 'Physics 101', price: '50 USD' },
+        { id: 2, name: 'Physics 102', price: '70 USD' }
     ]);
 
     const [chapters, setChapters] = useState([
-        { id: 1, courseId: 1, name: 'Chapter 1: Mechanics', content: 'Introduction to mechanics', order: 1 },
-        { id: 2, courseId: 1, name: 'Chapter 2: Thermodynamics', content: 'Basic thermodynamics', order: 2 }
+        { id: 1, courseId: 1, name: 'Chapter 1: Mechanics', order: 1 },
+        { id: 2, courseId: 1, name: 'Chapter 2: Thermodynamics', order: 2 }
     ]);
 
-    // State for forms
     const [isAddCourseOpen, setIsAddCourseOpen] = useState(false);
     const [isAddChapterOpen, setIsAddChapterOpen] = useState(false);
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [selectedChapter, setSelectedChapter] = useState(null);
 
-    // Form states
-    const [courseForm, setCourseForm] = useState({ name: '', description: '', status: 'active' });
-    const [chapterForm, setChapterForm] = useState({ courseId: '', name: '', content: '', order: 1 });
+    const [courseForm, setCourseForm] = useState({ name: '', price: '' });
+    const [chapterForm, setChapterForm] = useState({ courseId: '', name: '', order: 1 });
 
-    // Course CRUD operations
     const handleAddCourse = () => {
         const newCourse = {
             id: courses.length + 1,
@@ -64,7 +60,7 @@ const CourseManagement = () => {
         };
         setCourses([...courses, newCourse]);
         setIsAddCourseOpen(false);
-        setCourseForm({ name: '', description: '', status: 'active' });
+        setCourseForm({ name: '', price: '' });
     };
 
     const handleUpdateCourse = () => {
@@ -74,7 +70,7 @@ const CourseManagement = () => {
         setCourses(updatedCourses);
         setIsAddCourseOpen(false);
         setSelectedCourse(null);
-        setCourseForm({ name: '', description: '', status: 'active' });
+        setCourseForm({ name: '', price: '' });
     };
 
     const handleDeleteCourse = (courseId) => {
@@ -82,7 +78,6 @@ const CourseManagement = () => {
         setChapters(chapters.filter(chapter => chapter.courseId !== courseId));
     };
 
-    // Chapter CRUD operations
     const handleAddChapter = () => {
         const newChapter = {
             id: chapters.length + 1,
@@ -91,7 +86,7 @@ const CourseManagement = () => {
         };
         setChapters([...chapters, newChapter]);
         setIsAddChapterOpen(false);
-        setChapterForm({ courseId: '', name: '', content: '', order: 1 });
+        setChapterForm({ courseId: '', name: '', order: 1 });
     };
 
     const handleUpdateChapter = () => {
@@ -101,7 +96,7 @@ const CourseManagement = () => {
         setChapters(updatedChapters);
         setIsAddChapterOpen(false);
         setSelectedChapter(null);
-        setChapterForm({ courseId: '', name: '', content: '', order: 1 });
+        setChapterForm({ courseId: '', name: '', order: 1 });
     };
 
     const handleDeleteChapter = (chapterId) => {
@@ -141,27 +136,12 @@ const CourseManagement = () => {
                                             />
                                         </div>
                                         <div className="grid gap-2">
-                                            <Label htmlFor="description">Description</Label>
+                                            <Label htmlFor="price">Price</Label>
                                             <Input
-                                                id="description"
-                                                value={courseForm.description}
-                                                onChange={(e) => setCourseForm({ ...courseForm, description: e.target.value })}
+                                                id="price"
+                                                value={courseForm.price}
+                                                onChange={(e) => setCourseForm({ ...courseForm, price: e.target.value })}
                                             />
-                                        </div>
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="status">Status</Label>
-                                            <Select
-                                                value={courseForm.status}
-                                                onValueChange={(value) => setCourseForm({ ...courseForm, status: value })}
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select status" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="active">Active</SelectItem>
-                                                    <SelectItem value="inactive">Inactive</SelectItem>
-                                                </SelectContent>
-                                            </Select>
                                         </div>
                                     </div>
                                     <DialogFooter>
@@ -177,8 +157,7 @@ const CourseManagement = () => {
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Name</TableHead>
-                                        <TableHead>Description</TableHead>
-                                        <TableHead>Status</TableHead>
+                                        <TableHead>Price</TableHead>
                                         <TableHead>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -186,14 +165,7 @@ const CourseManagement = () => {
                                     {courses.map((course) => (
                                         <TableRow key={course.id}>
                                             <TableCell>{course.name}</TableCell>
-                                            <TableCell>{course.description}</TableCell>
-                                            <TableCell>
-                        <span className={`px-2 py-1 rounded-full text-xs ${
-                            course.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {course.status}
-                        </span>
-                                            </TableCell>
+                                            <TableCell>{course.price}</TableCell>
                                             <TableCell>
                                                 <div className="flex gap-2">
                                                     <Button
@@ -252,7 +224,7 @@ const CourseManagement = () => {
                                                 <SelectContent>
                                                     {courses.map((course) => (
                                                         <SelectItem key={course.id} value={course.id.toString()}>
-                                                            {course.name}
+                                                            {course.name} ({course.price})
                                                         </SelectItem>
                                                     ))}
                                                 </SelectContent>
@@ -264,14 +236,6 @@ const CourseManagement = () => {
                                                 id="name"
                                                 value={chapterForm.name}
                                                 onChange={(e) => setChapterForm({ ...chapterForm, name: e.target.value })}
-                                            />
-                                        </div>
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="content">Content</Label>
-                                            <Input
-                                                id="content"
-                                                value={chapterForm.content}
-                                                onChange={(e) => setChapterForm({ ...chapterForm, content: e.target.value })}
                                             />
                                         </div>
                                         <div className="grid gap-2">
@@ -297,45 +261,48 @@ const CourseManagement = () => {
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Course</TableHead>
-                                        <TableHead>Name</TableHead>
-                                        <TableHead>Content</TableHead>
+                                        <TableHead>Chapter</TableHead>
                                         <TableHead>Order</TableHead>
                                         <TableHead>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {chapters.map((chapter) => (
-                                        <TableRow key={chapter.id}>
-                                            <TableCell>
-                                                {courses.find(course => course.id === chapter.courseId)?.name}
-                                            </TableCell>
-                                            <TableCell>{chapter.name}</TableCell>
-                                            <TableCell>{chapter.content}</TableCell>
-                                            <TableCell>{chapter.order}</TableCell>
-                                            <TableCell>
-                                                <div className="flex gap-2">
-                                                    <Button
-                                                        variant="outline"
-                                                        size="icon"
-                                                        onClick={() => {
-                                                            setSelectedChapter(chapter);
-                                                            setChapterForm(chapter);
-                                                            setIsAddChapterOpen(true);
-                                                        }}
-                                                    >
-                                                        <Pencil className="h-4 w-4" />
-                                                    </Button>
-                                                    <Button
-                                                        variant="destructive"
-                                                        size="icon"
-                                                        onClick={() => handleDeleteChapter(chapter.id)}
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </div>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                    {chapters.map((chapter) => {
+                                        const course = courses.find((c) => c.id === chapter.courseId);
+                                        return (
+                                            <TableRow key={chapter.id}>
+                                                <TableCell>{course ? `${course.name} (${course.price})` : 'Unknown Course'}</TableCell>
+                                                <TableCell>{chapter.name}</TableCell>
+                                                <TableCell>{chapter.order}</TableCell>
+                                                <TableCell>
+                                                    <div className="flex gap-2">
+                                                        <Button
+                                                            variant="outline"
+                                                            size="icon"
+                                                            onClick={() => {
+                                                                setSelectedChapter(chapter);
+                                                                setChapterForm({
+                                                                    courseId: chapter.courseId.toString(),
+                                                                    name: chapter.name,
+                                                                    order: chapter.order,
+                                                                });
+                                                                setIsAddChapterOpen(true);
+                                                            }}
+                                                        >
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
+                                                        <Button
+                                                            variant="destructive"
+                                                            size="icon"
+                                                            onClick={() => handleDeleteChapter(chapter.id)}
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
                                 </TableBody>
                             </Table>
                         </CardContent>
