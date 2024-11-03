@@ -5,12 +5,11 @@ import Footer from "../../components/Footer/Footer.tsx";
 import Header from "../../components/Header/Header.tsx";
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-import axios from 'axios'; // Make sure to install axios if not already installed
+import axios from 'axios';
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
-// Define an interface for the Chapter structure
 interface Chapter {
     id: number;
     title: string;
@@ -18,6 +17,7 @@ interface Chapter {
     image: string;
     lessons: number;
     students: number;
+    subjectId: number; //
 }
 
 const ChapterPage = () => {
@@ -25,24 +25,38 @@ const ChapterPage = () => {
     const [chapters, setChapters] = useState<Chapter[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const { id } = useParams();
+    // const { id } = useParams();
+    const { id } = useParams();//
+    // const subjectId = id ? parseInt(id.replace(':', '')) : null;
 
     useEffect(() => {
         const fetchChapters = async () => {
             try {
-                // Replace with your actual API endpoint
-                const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/subjects/${id}/chapters`);
+                // Lấy id từ URL và bỏ dấu ':' nếu có
+                if (!id) {
+                    setError('Missing subject ID');
+                    setLoading(false);
+                    return;
+                }
 
-                // Transform the data to match your existing structure
-                const transformedChapters = response.data.map((chapter: any) => ({
-                    id: chapter.id,
-                    title: chapter.title,
-                    description: chapter.description,
-                    image: chapter.imageUrl || 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg',
-                    lessons: chapter.lessonCount || 0,
-                    students: chapter.studentCount || 0,
-                    link: `topic/${chapter.id}` // Adjust link generation as needed
-                }));
+                const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/chapters`);
+
+                console.log("API Response:", response.data);
+
+                // Transform và filter chapters theo subjectId
+                const transformedChapters = response.data.data.items
+                    .map((chapter: any) => ({
+                        id: chapter.id,
+                        title: chapter.title,
+                        description: chapter.description,
+                        image: chapter.imageUrl || 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg',
+                        lessons: chapter.lessonCount || 0,
+                        students: chapter.studentCount || 0,
+                        subjectId: chapter.subjectId,
+                        subjectName: chapter.subjectName,
+                        // link: `topic/${chapter.id}`
+                    }))
+                    .filter(chapter => chapter.subjectId === id);//
 
                 setChapters(transformedChapters);
                 setLoading(false);
@@ -53,10 +67,8 @@ const ChapterPage = () => {
             }
         };
 
-        if (id) {
-            fetchChapters();
-        }
-    }, [id]);
+        fetchChapters();
+    }, [id]); // Dependency array vẫn giữ id để khi URL thay đổi sẽ fetch lại
 
     const scrollLeft = () => {
         listRef.current?.scrollBy({ left: -300, behavior: 'smooth' });
@@ -101,12 +113,12 @@ const ChapterPage = () => {
                     <Breadcrumb.Item>Chương</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Title level={1}>Khám phá các chương của môn Vật Lý</Title>
+                <Title level={1}>Khám phá các chương của môn {chapters[0]?.subjectName}</Title>
                 <Paragraph>
                     Hãy chọn chương mà bạn muốn học nhé.
                 </Paragraph>
-                <div className="course-filters">
-                    <Tag color="blue">Tất cả</Tag>
+                <div className="course-filters mb-4">
+                    {/* <Tag color="blue">Tất cả</Tag> */}
                     <Tag>Cơ học</Tag>
                     <Tag>Điện từ học</Tag>
                     <Tag>Nhiệt học</Tag>
@@ -115,7 +127,7 @@ const ChapterPage = () => {
 
                 <div className="chapter-container">
                     <Button className="scroll-button left" icon={<LeftOutlined />} onClick={scrollLeft} />
-                    <div className="subject-list" ref={listRef}>
+                    <div className="chapter-list" ref={listRef}>
                         {chapters.map(chapter => (
                             <Card key={chapter.id} hoverable className="subject-card">
                                 <img
@@ -129,12 +141,12 @@ const ChapterPage = () => {
                                 />
                                 <Title level={4} className='mb-2'>{chapter.title}</Title>
                                 <Paragraph ellipsis={{ rows: 2 }}>{chapter.description}</Paragraph>
-                                <div className="subject-details">
+                                {/* <div className="chapter-details">
                                     <Text><BookOutlined /> {chapter.lessons} bài học</Text>
                                     <Text><UserOutlined /> {chapter.students.toLocaleString()} học viên</Text>
-                                </div>
-                                <div className="subject-button">
-                                    <Link to={`/${chapter.link}`}>
+                                </div> */}
+                                <div className="chapter-button">
+                                    <Link to={`/chapter/${chapter.id}`}>
                                         <Button type="primary">Khám phá ngay</Button>
                                     </Link>
                                 </div>

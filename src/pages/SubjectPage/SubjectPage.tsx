@@ -24,8 +24,8 @@ const SubjectPage = () => {
     };
     useEffect(() => {
         subjectService.getSubject(page, size, null, null).then((res) => {
-            console.log("s", res);
-            
+            console.log("SUBJECT:", res);
+
             setSubject(res?.data?.data?.items)
         })
     }, [])
@@ -49,15 +49,15 @@ const SubjectPage = () => {
                     <div className="subject-list" ref={listRef}>
                         {subject.map(subject => (
                             <Card key={subject?.id} hoverable className="subject-card">
-                                <img alt={subject?.title} src={subject?.image} className="subject-image mb-2" />
+                                <img alt={subject?.title} src={subject?.image || 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg'} className="subject-image mb-2" />
                                 <Title level={4} className='mb-2'>{subject?.name}</Title>
                                 <Paragraph ellipsis={{ rows: 2 }}>{subject?.description}</Paragraph>
                                 {/* <div className="subject-details">
-                                    <Text><BookOutlined /> {subject?.lessons} bài học</Text>
-                                    <Text><UserOutlined /> {subject?.students?.toLocaleString()} học viên</Text>
-                                </div> */}
+                                        <Text><BookOutlined /> {subject?.lessons} bài học</Text>
+                                        <Text><UserOutlined /> {subject?.students?.toLocaleString()} học viên</Text>
+                                    </div> */}
                                 <div className="subject-button">
-                                    <Link to={`/Subject/${subject?.id}`}>
+                                    <Link to={`/subject/${subject.id}`}>
                                         <Button type="primary">Khám phá ngay</Button>
                                     </Link>
                                 </div>

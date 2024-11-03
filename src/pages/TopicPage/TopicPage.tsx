@@ -1,77 +1,160 @@
 import { Layout, Button, Card, Rate, Tag, Typography, Breadcrumb } from 'antd';
-import { ClockCircleOutlined, BookOutlined, UserOutlined } from '@ant-design/icons';
+import { ClockCircleOutlined, BookOutlined, UserOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import './TopicPage.css';
 import Footer from "../../components/Footer/Footer.tsx"
 import Header from "../../components/Header/Header.tsx";
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 
-interface RootState {
-    USER: {
-      uid: string | null;
-    };
-  }
+interface Topic {
+    id: number;
+    title: string;
+    description: string;
+    image: string;
+    lessons: number;
+    students: number;
+    chapterId: number; //
+}
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
 
 const TopicPage = () => {
-    const id = useSelector((state: RootState) => state.USER.uid);
-    const courses = [
-        { id: 1, title: 'Con lắc lò xo', description: 'Động con lắc lò xo để nghiên cứu dao động điều hòa và năng lượng học trong vật lý động lực học', image: 'https://thidaihoc.vn/wp-content/uploads/2021/07/con-lac-lo-xo-treo-thang-dung.jpg', price: 17.84, rating: 4.3, reviews: 18321, duration: '2 giờ 30 phút', lessons: 12, students: 1500 },
-        { id: 2, title: 'Con lắc đơn', description: 'Vở con lắc đơn, thành phần lực tác động và động học của vật...', image: 'https://i.ytimg.com/vi/32C191fJRs8/sddefault.jpg', price: 8.99, rating: 3.9, reviews: 8321, duration: '1 giờ 45 phút', lessons: 8, students: 1200 },
-        { id: 3, title: 'Dao động điều hòa', description: 'Dao động điều hòa được dùng trong đời sống và các hiện tượng vật lý để mô tả các chuyển động ...', image: 'https://blog.marathon.edu.vn/wp-content/uploads/2022/03/cac-dai-luong-dac-trung-cua-dao-dong-dieu-hoa.jpg', price: 11.70, rating: 4.2, reviews: 1231, duration: '3 giờ', lessons: 15, students: 1800 },
-    ];
+    const listRef = useRef<HTMLDivElement>(null);
+    const [topics, setTopics] = useState<Topic[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    // const { id } = useParams();
+    const { id } = useParams();//
+    // const subjectId = id ? parseInt(id.replace(':', '')) : null;
+
+    useEffect(() => {
+        const fetchTopics = async () => {
+            try {
+                // Lấy id từ URL và bỏ dấu ':' nếu có
+                if (!id) {
+                    setError('Missing subject ID');
+                    setLoading(false);
+                    return;
+                }
+
+                const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/topics`);
+
+                console.log("API Response:", response.data);
+                console.log("ChapterId:", id);
+                const transformedTopics = response.data.data.items
+                    .map((topic: any) => ({
+                        id: topic.id,
+                        title: topic.title,
+                        description: topic.description,
+                        image: topic.imageUrl || 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg',
+                        lessons: topic.lessonCount || 0,
+                        students: topic.studentCount || 0,
+                        chapterId: topic.chapterId,
+                        chapterName: topic.chapterName,
+                        // link: `topic/${chapter.id}`
+                    }))
+                    .filter(topic => topic.chapterId === id);//
+
+                setTopics(transformedTopics);
+                setLoading(false);
+            } catch (err) {
+                console.error('Error fetching topics:', err);
+                setError('Failed to load topics');
+                setLoading(false);
+            }
+        };
+
+        fetchTopics();
+    }, [id]); // Dependency array vẫn giữ id để khi URL thay đổi sẽ fetch lại
+
+    const scrollLeft = () => {
+        listRef.current?.scrollBy({ left: -300, behavior: 'smooth' });
+    };
+
+    const scrollRight = () => {
+        listRef.current?.scrollBy({ left: 300, behavior: 'smooth' });
+    };
+
+    if (loading) {
+        return (
+            <Layout className="topic-page">
+                <Header />
+                <Content className="content">
+                    <Title level={2}>Loading Topics...</Title>
+                </Content>
+                <Footer />
+            </Layout>
+        );
+    }
+
+    if (error) {
+        return (
+            <Layout className="topic-page">
+                <Header />
+                <Content className="content">
+                    <Title level={2}>Error: {error}</Title>
+                </Content>
+                <Footer />
+            </Layout>
+        );
+    }
 
     return (
-        <Layout className="course-page">
+        <Layout className="topic-page">
             <Header />
 
             <Content className="content">
                 <Breadcrumb className="breadcrumb">
-                <Breadcrumb.Item href="/home">Trang chủ</Breadcrumb.Item>
-                <Breadcrumb.Item href="/subject">Môn học</Breadcrumb.Item>
-                <Breadcrumb.Item href="/chapter">Chương</Breadcrumb.Item>
-                <Breadcrumb.Item>Bài học</Breadcrumb.Item>
+                    <Breadcrumb.Item href="/home">Trang chủ</Breadcrumb.Item>
+                    <Breadcrumb.Item href="/subject">Môn học</Breadcrumb.Item>
+                    <Breadcrumb.Item href="/chapter">Chương</Breadcrumb.Item>
+                    <Breadcrumb.Item>Bài học</Breadcrumb.Item>
                 </Breadcrumb>
 
-                <Title level={1}>Chương 1: Dao Động Cơ</Title>
+                <Title level={1}>{topics[0]?.chapterName}</Title>
                 <Paragraph>
-                    {/* Tìm hiểu về các khái niệm vật lý phức tạp thông qua các bài giảng tương tác và mô phỏng trực quan. */}
                     Giới thiệu các khái niệm và phương trình cơ bản về dao động điều hòa, con lắc, giúp hiểu rõ hơn về chuyển động lặp lại trong tự nhiên.
                 </Paragraph>
+                <div className="course-filters mb-4">
+                    {/* <Tag color="blue">Tất cả</Tag> */}
+                    <Tag>Dao động điều hòa</Tag>
+                    <Tag>Con lắc lò xo</Tag>
+                    <Tag>Con lắc đơn</Tag>
+                    <Tag>Dao động cưỡng bức - Dao động tắt dần</Tag>
+                </div>
 
-                
-
-                <div className="course-list">
-                    {courses.map(course => (
-                        <Card key={course.id} hoverable className="course-card">
-                            <img alt={course.title} src={course.image} className="course-image mb-2" />
-                            <Title level={4} className='mb-2'>{course.title}</Title>
-                            <Paragraph ellipsis={{ rows: 2 }}>{course.description}</Paragraph>
-                            <div className="course-meta">
-                                <Rate disabled defaultValue={course.rating} />
-                                <Text className="review-count">({course.reviews.toLocaleString()})</Text>
-                            </div>
-                            <div className="course-details">
-                                <Text><ClockCircleOutlined /> {course.duration}</Text>
-                                <Text><BookOutlined /> {course.lessons} bài học</Text>
-                                <Text><UserOutlined /> {course.students.toLocaleString()} học viên</Text>
-                            </div>
-                            <div className="course-price">
-                                <Text strong>${course.price.toFixed(2)}</Text>
-                                {id ? (
-                                    <Link to="/coursedetails">
-                                    <Button type="primary">Học ngay</Button>
-                                </Link>
-                                    ) : (
-                                        <Link to="/login">
-                                            <Button type="primary">Đăng nhập</Button>
-                                        </Link>
-                                    )}
-                            </div>
-                        </Card>
-                    ))}
+                <div className="topic-container">
+                    <Button className="scroll-button left" icon={<LeftOutlined />} onClick={scrollLeft} />
+                    <div className="topic-list" ref={listRef}>
+                        {topics.map(topic => (
+                            <Card key={topic.id} hoverable className="subject-card">
+                                <img
+                                    alt={topic.title}
+                                    src={topic.image}
+                                    className="subject-image mb-2"
+                                    onError={(e) => {
+                                        const imgElement = e.target as HTMLImageElement;
+                                        imgElement.src = 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg';
+                                    }}
+                                />
+                                <Title level={4} className='mb-2'>{topic.title}</Title>
+                                <Paragraph ellipsis={{ rows: 2 }}>{topic.description}</Paragraph>
+                                {/* <div className="topic-details">
+                                    <Text><BookOutlined /> {topic.lessons} bài học</Text>
+                                    <Text><UserOutlined /> {topic.students.toLocaleString()} học viên</Text>
+                                </div> */}
+                                <div className="topic-button">
+                                    <Link to={`/topic/${topic.id}}`}>
+                                        <Button type="primary">Khám phá ngay</Button>
+                                    </Link>
+                                </div>
+                            </Card>
+                        ))}
+                    </div>
+                    <Button className="scroll-button right" icon={<RightOutlined />} onClick={scrollRight} />
                 </div>
             </Content>
             <Footer />

@@ -1,5 +1,4 @@
-/* CoursePage.css */
-.course-page {
+/* .topic-page {
     font-family: 'Arial', sans-serif;
 }
 
@@ -43,23 +42,23 @@
     margin-bottom: 1rem;
 }
 
-.course-filters {
+.topic-filters {
     margin: 1rem 0;
 }
 
-.course-list {
+.topic-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 3rem; /* Increase the gap for more spacing */
+    gap: 3rem;
 }
 
 
-.course-card {
+.topic-card {
     display: flex;
     flex-direction: column;
 }
 
-.course-image {
+.topic-image {
     transition: all 0.3s ease;
     width: 300px;
     height: 170px;
@@ -67,7 +66,7 @@
     object-position: center;
 }
 
-.course-meta {
+.topic-meta {
     display: flex;
     align-items: center;
     margin: 0.5rem 0;
@@ -78,18 +77,18 @@
     color: #888;
 }
 
-.course-details {
+.topic-details {
     margin-top: 0.5rem;
     display: flex;
     justify-content: space-between;
-    font-size: 0.9rem; /* Make the text a bit smaller to fit */
+    font-size: 0.9rem;
     color: #666;
 }
 
-.course-price {
+.topic-price {
     margin-top: 1rem;
     font-size: 1.2rem;
-    color: #28a745; /* Price color */
+    color: #28a745;
     display: flex;
     justify-content: space-between;
 }
@@ -115,7 +114,106 @@
         margin-bottom: 1rem;
     }
 
-    .course-list {
+    .topic-list {
         grid-template-columns: 1fr;
+    }
+} */
+
+
+
+.topic-page {
+    font-family: 'Arial', sans-serif;
+}
+
+.content {
+    padding: 6rem 5%;
+}
+
+.breadcrumb {
+    margin-bottom: 1rem;
+}
+
+.topic-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    max-width: 90%; /* Giới hạn độ rộng tối đa của danh sách */
+    margin: 0 auto; /* Căn giữa danh sách */
+}
+
+.topic-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    scroll-behavior: smooth;
+    flex-grow: 1;
+    scroll-snap-type: x mandatory;
+    max-width: 100%; /* Giới hạn chiều rộng tối đa */
+}
+
+.topic-list::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn ngang */
+}
+
+.topic-card {
+    min-width: 280px;
+    max-width: 280px;
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start;
+}
+
+.topic-image {
+    transition: all 0.3s ease;
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.topic-details {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.topic-button {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-button.left {
+    left: -20px;
+}
+
+.scroll-button.right {
+    right: -20px;
+}
+
+@media (max-width: 768px) {
+    .subject-list {
+        flex-direction: column;
+        overflow-x: visible;
+    }
+
+    .scroll-button {
+        display: none;
     }
 }

@@ -21,12 +21,16 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/Home" element={<LandingPage />} />
+
                 <Route path="/Subject" element={<SubjectPage />} />
-                <Route path="/Chapter" element={<ChapterPage />} />
+                {/* <Route path="/Chapter" element={<ChapterPage />} /> */}
                 <Route path="/Subject/:id" element={<ChapterPage />} />
-                <Route path="/Topic" element={<TopicPage />} />
+                {/* <Route path="/Topic" element={<TopicPage />} /> */}
+                <Route path="/Chapter/:id" element={<TopicPage />} />
                 <Route path="/TopicDetails" element={<TopicDetails />} />
+
                 <Route path="/Comingsoon" element={<ComingSoonPage />} />
+                
                 <Route path="/Wallet" element={<WalletDetails />} />
 
                 <Route path="/Admin" element={<AdminDashboard />} />
