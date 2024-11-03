@@ -1,5 +1,4 @@
-import React from 'react';
-import { Layout, Card, Tabs, Typography, Row, Col, Statistic, Table, Tag, Avatar } from 'antd';
+import { Layout, Typography, Row, Col, Statistic, Table, Tag, Avatar, Tabs } from 'antd';
 import {
     UserOutlined,
     BookOutlined,
@@ -8,14 +7,13 @@ import {
     ClockCircleOutlined,
     ArrowUpOutlined
 } from '@ant-design/icons';
-import './AdminDashboard.css';
-import '../LandingPage/LandingPage.css'
+import { Card as ShadcnCard, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CourseManagement from '../../components/CourseManagement/CourseManagement';
 import Header from '../../components/Header/Header';
+import './AdminDashboard.css';
 
 const { Title, Text } = Typography;
-const { TabPane } = Tabs;
 
-// Mock data for the courses table
 const courseColumns = [
     {
         title: 'Course Name',
@@ -75,7 +73,6 @@ const courseData = [
     },
 ];
 
-// Mock data for the students table
 const studentColumns = [
     {
         title: 'Student',
@@ -133,128 +130,136 @@ const studentData = [
 const AdminDashboard = () => {
     return (
         <div>
-        <Layout className="landing-page">
-        <Header/> 
-        <div className="admin-dashboard">
-            
-            <div className="dashboard-header">
-                <div>
-                    <Title level={2}>Dashboard</Title>
-                    <Text type="secondary">Welcome back, Admin</Text>
+            <Layout className="landing-page">
+                <Header />
+                <div className="admin-dashboard">
+                    <div className="dashboard-header">
+                        <div>
+                            <Title level={2}>Dashboard</Title>
+                            <Text type="secondary">Welcome back, Admin</Text>
+                        </div>
+                        <div className="date-display">
+                            <ClockCircleOutlined />
+                            <Text type="secondary" style={{ marginLeft: '8px' }}>
+                                {new Date().toLocaleDateString('vi-VN')}
+                            </Text>
+                        </div>
+                    </div>
+
+                    <Tabs defaultActiveKey="overview" className="w-full">
+                        <Tabs.TabPane tab="Overview" key="overview">
+                            <div className="overview-content">
+                                <Row gutter={[16, 16]} className="stats-section">
+                                    <Col xs={24} sm={12} lg={6}>
+                                        <Layout.Content className="site-layout-background p-4 rounded-lg shadow">
+                                            <Statistic
+                                                title="Total Students"
+                                                value={10482}
+                                                prefix={<UserOutlined />}
+                                                suffix={
+                                                    <Text type="success" className="stat-trend">
+                                                        <ArrowUpOutlined /> 12.5%
+                                                    </Text>
+                                                }
+                                            />
+                                        </Layout.Content>
+                                    </Col>
+                                    <Col xs={24} sm={12} lg={6}>
+                                        <Layout.Content className="site-layout-background p-4 rounded-lg shadow">
+                                            <Statistic
+                                                title="Active Courses"
+                                                value={245}
+                                                prefix={<BookOutlined />}
+                                                suffix={
+                                                    <Text type="success" className="stat-trend">
+                                                        <ArrowUpOutlined /> 5%
+                                                    </Text>
+                                                }
+                                            />
+                                        </Layout.Content>
+                                    </Col>
+                                    <Col xs={24} sm={12} lg={6}>
+                                        <Layout.Content className="site-layout-background p-4 rounded-lg shadow">
+                                            <Statistic
+                                                title="Total Revenue"
+                                                value={425.8}
+                                                prefix={<DollarOutlined />}
+                                                suffix="M ₫"
+                                            />
+                                            <Text type="success" className="stat-trend">
+                                                <ArrowUpOutlined /> 18.2%
+                                            </Text>
+                                        </Layout.Content>
+                                    </Col>
+                                    <Col xs={24} sm={12} lg={6}>
+                                        <Layout.Content className="site-layout-background p-4 rounded-lg shadow">
+                                            <Statistic
+                                                title="Completion Rate"
+                                                value={78.5}
+                                                prefix={<CheckCircleOutlined />}
+                                                suffix="%"
+                                            />
+                                            <Text type="success" className="stat-trend">
+                                                <ArrowUpOutlined /> 2.4%
+                                            </Text>
+                                        </Layout.Content>
+                                    </Col>
+                                </Row>
+
+                                <ShadcnCard className="mt-6">
+                                    <CardHeader>
+                                        <CardTitle>Recent Activity</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <Tabs defaultActiveKey="1" type="card" className="ant-tabs-custom">
+                                            <Tabs.TabPane tab="Overview" key="1">
+                                                <Row gutter={[16, 16]}>
+                                                    <Col span={24}>
+                                                        <div className="activity-card">
+                                                            {[1, 2, 3].map((_, index) => (
+                                                                <div key={index} className="activity-item">
+                                                                    <div className="activity-icon">
+                                                                        <BookOutlined />
+                                                                    </div>
+                                                                    <div className="activity-content">
+                                                                        <Text strong>New course enrollment</Text>
+                                                                        <Text type="secondary">Student enrolled in "Physics 101"</Text>
+                                                                    </div>
+                                                                    <Text type="secondary">2 hours ago</Text>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                            </Tabs.TabPane>
+
+                                            <Tabs.TabPane tab="Courses" key="2">
+                                                <Table
+                                                    columns={courseColumns}
+                                                    dataSource={courseData}
+                                                    pagination={false}
+                                                />
+                                            </Tabs.TabPane>
+
+                                            <Tabs.TabPane tab="Students" key="3">
+                                                <Table
+                                                    columns={studentColumns}
+                                                    dataSource={studentData}
+                                                    pagination={false}
+                                                />
+                                            </Tabs.TabPane>
+                                        </Tabs>
+                                    </CardContent>
+                                </ShadcnCard>
+                            </div>
+                        </Tabs.TabPane>
+
+                        <Tabs.TabPane tab="Course Management" key="courses-management">
+                            <CourseManagement />
+                        </Tabs.TabPane>
+                    </Tabs>
                 </div>
-                <div className="date-display">
-                    <ClockCircleOutlined />
-                    <Text type="secondary" style={{ marginLeft: '8px' }}>
-                        {new Date().toLocaleDateString('vi-VN')}
-                    </Text>
-                </div>
-            </div>
-
-            {/* Stats Cards */}
-            <Row gutter={[16, 16]} className="stats-section">
-                <Col xs={24} sm={12} lg={6}>
-                    <Card>
-                        <Statistic
-                            title="Total Students"
-                            value={10482}
-                            prefix={<UserOutlined />}
-                            suffix={
-                                <Text type="success" className="stat-trend">
-                                    <ArrowUpOutlined /> 12.5%
-                                </Text>
-                            }
-                        />
-                    </Card>
-                </Col>
-                <Col xs={24} sm={12} lg={6}>
-                    <Card>
-                        <Statistic
-                            title="Active Courses"
-                            value={245}
-                            prefix={<BookOutlined />}
-                            suffix={
-                                <Text type="success" className="stat-trend">
-                                    <ArrowUpOutlined /> 5%
-                                </Text>
-                            }
-                        />
-                    </Card>
-                </Col>
-                <Col xs={24} sm={12} lg={6}>
-                    <Card>
-                        <Statistic
-                            title="Total Revenue"
-                            value={425.8}
-                            prefix={<DollarOutlined />}
-                            suffix="M ₫"
-                        />
-                        <Text type="success" className="stat-trend">
-                            <ArrowUpOutlined /> 18.2%
-                        </Text>
-                    </Card>
-                </Col>
-                <Col xs={24} sm={12} lg={6}>
-                    <Card>
-                        <Statistic
-                            title="Completion Rate"
-                            value={78.5}
-                            prefix={<CheckCircleOutlined />}
-                            suffix="%"
-                        />
-                        <Text type="success" className="stat-trend">
-                            <ArrowUpOutlined /> 2.4%
-                        </Text>
-                    </Card>
-                </Col>
-            </Row>
-
-            {/* Main Content */}
-            <Card className="main-content">
-                <Tabs defaultActiveKey="1" type="card">
-                    <TabPane tab="Overview" key="1">
-                        <Row gutter={[16, 16]}>
-                            <Col span={24}>
-                                <Card title="Recent Activity" className="activity-card">
-                                    {[1, 2, 3].map((_, index) => (
-                                        <div key={index} className="activity-item">
-                                            <div className="activity-icon">
-                                                <BookOutlined />
-                                            </div>
-                                            <div className="activity-content">
-                                                <Text strong>New course enrollment</Text>
-                                                <Text type="secondary">Student enrolled in "Physics 101"</Text>
-                                            </div>
-                                            <Text type="secondary">2 hours ago</Text>
-                                        </div>
-                                    ))}
-                                </Card>
-                            </Col>
-                        </Row>
-                    </TabPane>
-
-                    <TabPane tab="Courses" key="2">
-                        <Card className="courses-card">
-                            <Table
-                                columns={courseColumns}
-                                dataSource={courseData}
-                                pagination={false}
-                            />
-                        </Card>
-                    </TabPane>
-
-                    <TabPane tab="Students" key="3">
-                        <Card className="students-card">
-                            <Table
-                                columns={studentColumns}
-                                dataSource={studentData}
-                                pagination={false}
-                            />
-                        </Card>
-                    </TabPane>
-                </Tabs>
-            </Card>
-        </div>
-        </Layout>
+            </Layout>
         </div>
     );
 };
