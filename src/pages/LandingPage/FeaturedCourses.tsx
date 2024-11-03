@@ -9,27 +9,27 @@ const courses = [
         title: 'Con lắc lò xo',
         description: 'Động con lắc lò xo để nghiên cứu dao động điều hòa và năng lượng học trong vật lý động lực học...',
         image: 'https://thidaihoc.vn/wp-content/uploads/2021/07/con-lac-lo-xo-treo-thang-dung.jpg',
-        price: 17.84,
-        rating: 4.3,
-        reviews: 18321,
+        price: 200000,
+        rating: 5,
+        reviews: 6938,
     },
     {
         id: 2,
         title: 'Con lắc đơn',
         description: 'Con lắc đơn là hệ thống gồm sợi dây không dãn, chiều dài, khối lượng không đáng kể, với một đầu gắn cố định...',
         image: 'https://i.ytimg.com/vi/32C191fJRs8/sddefault.jpg',
-        price: 8.99,
-        rating: 3.9,
-        reviews: 8321,
+        price: 300000,
+        rating: 5,
+        reviews: 8472,
     },
     {
         id: 3,
         title: 'Dao động điều hòa',
         description: 'Dao động điều hòa được dùng trong đời sống và các hiện tượng vật lý để mô tả các chuyển động...',
         image: 'https://blog.marathon.edu.vn/wp-content/uploads/2022/03/cac-dai-luong-dac-trung-cua-dao-dong-dieu-hoa.jpg',
-        price: 11.70,
+        price: 100000,
         rating: 4.2,
-        reviews: 1231,
+        reviews: 4523,
     },
 ];
 
@@ -44,7 +44,7 @@ const FeaturedCourses = () => {
                         key={course.id}
                         hoverable
                         cover={<img alt={course.title} src={course.image} />}
-                        actions={[<span>${course.price.toFixed(2)}</span>]}
+                        actions={[<span>{course.price.toFixed(2)} VNĐ</span>]}
                         className="course-card"
                     >
                         <Card.Meta
@@ -53,7 +53,7 @@ const FeaturedCourses = () => {
                         />
                         <div className="course-rating">
                             <Rate disabled defaultValue={course.rating} />
-                            <span>({course.reviews.toLocaleString()})</span>
+                            {/* <p>({course.reviews.toLocaleString()})</p> */}
                         </div>
                     </Card>
                 ))}
