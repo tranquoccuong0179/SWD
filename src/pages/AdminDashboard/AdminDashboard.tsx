@@ -2,12 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Layout, Typography } from 'antd';
 import {
-    UserOutlined,
     BookOutlined,
-    DollarOutlined,
-    CheckCircleOutlined,
     ClockCircleOutlined,
-    ArrowUpOutlined
 } from '@ant-design/icons';
 import {
     Card,
@@ -49,20 +45,7 @@ import './AdminDashboard.css';
 const { Title, Text } = Typography;
 
 // Create axios instance with base configuration
-const api = axios.create({
-    baseURL: 'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api'
-});
-
-// Add request interceptor to include token
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-}, (error) => {
-    return Promise.reject(error);
-});
+const API_BASE_URL = 'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api';
 
 const AdminDashboard = () => {
     // State management
@@ -90,6 +73,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchDashboardData = async () => {
             const token = localStorage.getItem('accessToken');
+            console.log("Attempting to fetch dashboard data. Token:", token);  // Log token
 
             if (!token) {
                 setUnauthorized(true);
@@ -99,16 +83,24 @@ const AdminDashboard = () => {
             }
 
             try {
-                const response = await axios.get('/Dashboards');
+                console.log("Making API call to /Dashboards");  // Log API call start
+                const response = await axios.get('/Dashboards', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                console.log("Dashboard data response:", response.data);  // Log response data
 
                 if (response.data.statusCode === 200 && response.data.code === "Success") {
                     setDashboardData(response.data.data);
                     await Promise.all([fetchCourses(), fetchChapters()]);
                 } else {
+                    console.warn("Unexpected response format:", response.data);  // Log unexpected structure
                     throw new Error('Failed to fetch dashboard data');
                 }
             } catch (err) {
                 if (axios.isAxiosError(err)) {
+                    console.error("Axios error:", err);  // Log Axios-specific errors
                     if (err.response?.status === 401) {
                         setUnauthorized(true);
                         setError('Unauthorized access - Please log in again');
@@ -116,20 +108,22 @@ const AdminDashboard = () => {
                         setError(err.response?.data?.message || 'An error occurred while fetching dashboard data');
                     }
                 } else {
+                    console.error("Non-Axios error:", err);  // Log non-Axios errors
                     setError('An unexpected error occurred');
                 }
             } finally {
                 setLoading(false);
+                console.log("Dashboard data loading complete");  // Log completion
             }
         };
-
         fetchDashboardData();
     }, []);
+
 
     // API Functions for Courses
     const fetchCourses = async () => {
         try {
-            const response = await api.get('/courses');
+            const response = await axios.get('/courses');
             if (response.data.statusCode === 200) {
                 setCourses(response.data.data);
             }
@@ -140,7 +134,7 @@ const AdminDashboard = () => {
 
     const handleAddCourse = async () => {
         try {
-            const response = await api.post('/courses', courseForm);
+            const response = await axios.post('/courses', courseForm);
             if (response.data.statusCode === 200) {
                 await fetchCourses();
                 setIsAddCourseOpen(false);
@@ -153,7 +147,7 @@ const AdminDashboard = () => {
 
     const handleUpdateCourse = async () => {
         try {
-            const response = await api.put(`/courses/${selectedCourse.id}`, courseForm);
+            const response = await axios.put(`/courses/${selectedCourse.id}`, courseForm);
             if (response.data.statusCode === 200) {
                 await fetchCourses();
                 setIsAddCourseOpen(false);
@@ -167,7 +161,7 @@ const AdminDashboard = () => {
 
     const handleDeleteCourse = async (courseId) => {
         try {
-            const response = await api.delete(`/courses/${courseId}`);
+            const response = await axios.delete(`/courses/${courseId}`);
             if (response.data.statusCode === 200) {
                 await fetchCourses();
             }
@@ -179,7 +173,7 @@ const AdminDashboard = () => {
     // API Functions for Chapters
     const fetchChapters = async () => {
         try {
-            const response = await api.get('/chapters');
+            const response = await axios.get('/chapters');
             if (response.data.statusCode === 200) {
                 setChapters(response.data.data);
             }
@@ -190,7 +184,7 @@ const AdminDashboard = () => {
 
     const handleAddChapter = async () => {
         try {
-            const response = await api.post('/chapters', {
+            const response = await axios.post('/chapters', {
                 ...chapterForm,
                 courseId: parseInt(chapterForm.courseId)
             });
@@ -206,7 +200,7 @@ const AdminDashboard = () => {
 
     const handleUpdateChapter = async () => {
         try {
-            const response = await api.put(`/chapters/${selectedChapter.id}`, {
+            const response = await axios.put(`/chapters/${selectedChapter.id}`, {
                 ...chapterForm,
                 courseId: parseInt(chapterForm.courseId)
             });
@@ -223,7 +217,7 @@ const AdminDashboard = () => {
 
     const handleDeleteChapter = async (chapterId) => {
         try {
-            const response = await api.delete(`/chapters/${chapterId}`);
+            const response = await axios.delete(`/chapters/${chapterId}`);
             if (response.data.statusCode === 200) {
                 await fetchChapters();
             }
