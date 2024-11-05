@@ -3,7 +3,7 @@ import Header from '../../components/Header/Header';
 import { Layout, Button, Breadcrumb, Typography, Input, message } from 'antd';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import Footer from "../../components/Footer/Footer.tsx";
 import '../LandingPage/LandingPage.css';
 
@@ -21,10 +21,18 @@ const TopicDetailsPage = () => {
     const { id } = useParams();
     const [activeLesson, setActiveLesson] = useState(1);
     const [inputValues, setInputValues] = useState({});
+    const { topicId, chapterId, subjectId } = useParams();
+    const navigate = useNavigate();
 
+    const handleGoBack = () => {
+        navigate(-1); // Quay về trang trước
+    };
+    const handleGoBack2 = () => {
+        navigate(-2); // Quay về trang trước
+    };
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        if (/^\d*$/.test(value)) { // chỉ cho phép số hoặc chuỗi rỗng
+        if (/^\d*\.?\d*$/.test(value)) { // chỉ cho phép số hoặc chuỗi rỗng
             setInputValues((prevValues) => ({
                 ...prevValues,
                 [name]: value
@@ -35,7 +43,7 @@ const TopicDetailsPage = () => {
         { parameterId: '', value: 0 },
         { parameterId: '', value: 0 }
     ]);
-    
+
     const [problemId, setProblemId] = useState(''); // Thêm problemId
     const token = localStorage.getItem('accessToken');
     console.log("Token exist?:", !!token);
@@ -101,7 +109,7 @@ const TopicDetailsPage = () => {
         const data = parameters.filter((i) => i.topicId === id);
         setContentParameter(data);
     };
-    console.log("in", inputValues);
+    console.log("Input:", inputValues);
 
     // const handleSubmit = async () => {
     //     // let dataMap= content?.getPPVM
@@ -134,34 +142,34 @@ const TopicDetailsPage = () => {
     const handleSubmit = async () => {
         // let dataMap= content?.getPPVM
         const mappedData = content?.getPPVM.map((item) => ({
-          parameterId: item.parameterId,
-          value: inputValues[item.symbol] ? parseInt(inputValues[item.symbol]) : item.value,
+            parameterId: item.parameterId,
+            value: inputValues[item.symbol] ? parseInt(inputValues[item.symbol]) : item.value,
         }));
-      
+
         let data = {
-          problemId: problemId,
-          postPPVMs: mappedData,
+            problemId: problemId,
+            postPPVMs: mappedData,
         };
-      
+
         try {
-          const response = await axios.post(
-            `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`,
-            data,
-            { headers }
-          );
-      
-          if (response.status === 200) {
-            console.log('Response from API:', response.data);
-            message.success("Gửi tham số thành công!");
-            // Xử lý phản hồi từ API ở đây
-          } else {
-            message.error("Có lỗi xảy ra khi gửi tham số");
-          }
+            const response = await axios.post(
+                `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`,
+                data,
+                { headers }
+            );
+
+            if (response.status === 200) {
+                console.log('Response from API:', response.data);
+                message.success("Gửi tham số thành công!");
+                // Xử lý phản hồi từ API ở đây
+            } else {
+                message.error("Có lỗi xảy ra khi gửi tham số");
+            }
         } catch (error) {
-          console.error('Error sending data:', error);
-          message.error("Có lỗi xảy ra khi gửi tham số");
+            console.error('Error sending data:', error);
+            message.error("Có lỗi xảy ra khi gửi tham số");
         }
-      };
+    };
     return (
         <Layout className="landing-page">
             <Header />
@@ -169,8 +177,8 @@ const TopicDetailsPage = () => {
                 <Breadcrumb className="breadcrumb">
                     <Breadcrumb.Item><Link to={"/home"}>Trang chủ</Link></Breadcrumb.Item>
                     <Breadcrumb.Item><Link to={"/subject"}>Môn học</Link></Breadcrumb.Item>
-                    <Breadcrumb.Item><Link to={"/chapter"}>Chương</Link></Breadcrumb.Item>
-                    <Breadcrumb.Item><Link to={"/topic"}>Bài học</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item onClick={handleGoBack2} style={{ cursor: 'pointer' }}><Link>Chương</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item onClick={handleGoBack} style={{ cursor: 'pointer' }}><Link>Bài học</Link></Breadcrumb.Item>
                     <Breadcrumb.Item>{topicDetails[0]?.topicName}</Breadcrumb.Item>
                 </Breadcrumb>
 
@@ -208,7 +216,7 @@ const TopicDetailsPage = () => {
                                 </div>
                                 <div className="input-question text-left p-4 text-black text-lg font-medium mb-2">
                                     Nhập các tham số để tính toán:
-                                    <p>Giả sử g = 10  m/s^2</p>
+                                    {/* <p>Giả sử g = 10  m/s^2</p> */}
                                 </div>
                                 {/* <div className="parameter-inputs">
                                         <div className="mb-6">
@@ -262,10 +270,10 @@ const TopicDetailsPage = () => {
                                 <div>
                                     {content?.getPPVM?.map((e) => {
                                         return (<>
-                                        <div className='input-param-name text-left text-black text-lg font-normal mb-3'>Nhập {e?.symbol}</div>
-                                        <div className='input-form mb-3'><Input name={e?.symbol} value={inputValues[e.symbol] || ""}
+                                            <div className='input-param-name text-left text-black text-lg font-normal mb-3'>Nhập {e?.symbol}</div>
+                                            <div className='input-form mb-3'><Input name={e?.symbol} value={inputValues[e.symbol] || ""}
                                                 onChange={handleInputChange} placeholder={`Nhập ${e.symbol}`} /></div>
-                                            
+
                                         </>)
                                     })}
                                     <Button type="primary" size="large" onClick={handleSubmit}>Gửi tham số</Button>

@@ -6,7 +6,7 @@ import Header from "../../components/Header/Header.tsx";
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 interface Topic {
     id: number;
@@ -29,7 +29,11 @@ const TopicPage = () => {
     // const { id } = useParams();
     const { id } = useParams();//
     // const subjectId = id ? parseInt(id.replace(':', '')) : null;
+    const navigate = useNavigate();
 
+    const handleGoBack = () => {
+        navigate(-1); // Quay về trang trước
+    };
     useEffect(() => {
         const fetchTopics = async () => {
             try {
@@ -108,9 +112,9 @@ const TopicPage = () => {
 
             <Content className="content">
                 <Breadcrumb className="breadcrumb">
-                    <Breadcrumb.Item href="/home">Trang chủ</Breadcrumb.Item>
-                    <Breadcrumb.Item href="/subject">Môn học</Breadcrumb.Item>
-                    <Breadcrumb.Item href="/chapter">Chương</Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to={"/home"}>Trang chủ</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item><Link to={"/subject"}>Môn học</Link></Breadcrumb.Item>
+                    <Breadcrumb.Item onClick={handleGoBack} style={{ cursor: 'pointer' }}><Link>Chương</Link></Breadcrumb.Item>
                     <Breadcrumb.Item>Bài học</Breadcrumb.Item>
                 </Breadcrumb>
 
