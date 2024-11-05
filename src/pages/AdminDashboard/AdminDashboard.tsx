@@ -1,44 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Layout, Typography } from 'antd';
-import {
-    BookOutlined,
-    ClockCircleOutlined,
-} from '@ant-design/icons';
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-    DialogFooter,
-} from "@/components/ui/dialog";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { BookOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircle, Pencil, Trash2, Users, CheckCircle, AlertCircle, Layers, FileText } from 'lucide-react';
+import { Users, CheckCircle, AlertCircle, Layers, FileText } from 'lucide-react';
 import Header from '../../components/Header/Header';
 import './AdminDashboard.css';
 
@@ -49,8 +15,10 @@ const API_BASE_URL = 'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewe
 
 const AdminDashboard = () => {
     // State management
-    const [courses, setCourses] = useState([]);
+    const [subjects, setSubjects] = useState([]);
     const [chapters, setChapters] = useState([]);
+    const [problems, setProblems] = useState([]);
+    const [topics, setTopics] = useState([]);
     const [dashboardData, setDashboardData] = useState({
         totalUsers: 0,
         totalSuccessTransactions: 0,
@@ -61,19 +29,25 @@ const AdminDashboard = () => {
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isAddCourseOpen, setIsAddCourseOpen] = useState(false);
+    const [isAddSubjectOpen, setIsAddSubjectOpen] = useState(false);
     const [isAddChapterOpen, setIsAddChapterOpen] = useState(false);
-    const [selectedCourse, setSelectedCourse] = useState(null);
+    const [isAddProblemOpen, setIsAddProblemOpen] = useState(false);
+    const [isAddTopicOpen, setIsAddTopicOpen] = useState(false);
+    const [selectedSubject, setSelectedSubject] = useState(null);
     const [selectedChapter, setSelectedChapter] = useState(null);
+    const [selectedProblem, setSelectedProblem] = useState(null);
+    const [selectedTopic, setSelectedTopic] = useState(null);
     const [unauthorized, setUnauthorized] = useState(false);
-    const [courseForm, setCourseForm] = useState({ name: '', price: '' });
-    const [chapterForm, setChapterForm] = useState({ courseId: '', name: '', order: 1 });
+    const [subjectForm, setSubjectForm] = useState({ name: '', price: '' });
+    const [chapterForm, setChapterForm] = useState({ subjectId: '', name: '', order: 1 });
+    const [problemForm, setProblemForm] = useState({ chapterId: '', name: '', description: '' });
+    const [topicForm, setTopicForm] = useState({ problemId: '', name: '', description: '' });
 
     // Fetch dashboard data
     useEffect(() => {
         const fetchDashboardData = async () => {
             const token = localStorage.getItem('accessToken');
-            console.log("Attempting to fetch dashboard data. Token:", token);  // Log token
+            console.log("Attempting to fetch dashboard data. Token:", token);
 
             if (!token) {
                 setUnauthorized(true);
@@ -83,24 +57,24 @@ const AdminDashboard = () => {
             }
 
             try {
-                console.log("Making API call to /Dashboards");  // Log API call start
-                const response = await axios.get('/Dashboards', {
+                console.log("Making API call to /Dashboards");
+                const response = await axios.get(`${API_BASE_URL}/Dashboards`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                console.log("Dashboard data response:", response.data);  // Log response data
+                console.log("Dashboard data response:", response.data);
 
                 if (response.data.statusCode === 200 && response.data.code === "Success") {
                     setDashboardData(response.data.data);
-                    await Promise.all([fetchCourses(), fetchChapters()]);
+                    await Promise.all([fetchSubjects(), fetchChapters(), fetchProblems(), fetchTopics()]);
                 } else {
-                    console.warn("Unexpected response format:", response.data);  // Log unexpected structure
+                    console.warn("Unexpected response format:", response.data);
                     throw new Error('Failed to fetch dashboard data');
                 }
             } catch (err) {
                 if (axios.isAxiosError(err)) {
-                    console.error("Axios error:", err);  // Log Axios-specific errors
+                    console.error("Axios error:", err);
                     if (err.response?.status === 401) {
                         setUnauthorized(true);
                         setError('Unauthorized access - Please log in again');
@@ -108,72 +82,71 @@ const AdminDashboard = () => {
                         setError(err.response?.data?.message || 'An error occurred while fetching dashboard data');
                     }
                 } else {
-                    console.error("Non-Axios error:", err);  // Log non-Axios errors
-                    setError('An unexpected error occurred');
+                    console.error("Non-Axios error:", err);
+                    setError('An unexpected error occurred while fetching dashboard data');
                 }
             } finally {
                 setLoading(false);
-                console.log("Dashboard data loading complete");  // Log completion
+                console.log("Dashboard data loading complete");
             }
         };
         fetchDashboardData();
     }, []);
 
-
-    // API Functions for Courses
-    const fetchCourses = async () => {
+    // API Functions for Subjects
+    const fetchSubjects = async () => {
         try {
-            const response = await axios.get('/courses');
+            const response = await axios.get(`${API_BASE_URL}/subjects`);
             if (response.data.statusCode === 200) {
-                setCourses(response.data.data);
+                setSubjects(response.data.data);
             }
         } catch (err) {
-            console.error('Error fetching courses:', err);
+            console.error('Error fetching subjects:', err);
         }
     };
 
-    const handleAddCourse = async () => {
+    const handleAddSubject = async () => {
         try {
-            const response = await axios.post('/courses', courseForm);
+            const response = await axios.post(`${API_BASE_URL}/subjects`, subjectForm);
             if (response.data.statusCode === 200) {
-                await fetchCourses();
-                setIsAddCourseOpen(false);
-                setCourseForm({ name: '', price: '' });
+                await fetchSubjects();
+                setIsAddSubjectOpen(false);
+                setSubjectForm({ name: '', price: '' });
             }
         } catch (err) {
-            console.error('Error adding course:', err);
+            console.error('Error adding subject:', err);
         }
     };
 
-    const handleUpdateCourse = async () => {
+    const handleUpdateSubject = async () => {
         try {
-            const response = await axios.put(`/courses/${selectedCourse.id}`, courseForm);
+            const response = await axios.put(`${API_BASE_URL}/subjects/{id}`, subjectForm);
             if (response.data.statusCode === 200) {
-                await fetchCourses();
-                setIsAddCourseOpen(false);
-                setSelectedCourse(null);
-                setCourseForm({ name: '', price: '' });
+                await fetchSubjects();
+                setIsAddSubjectOpen(false);
+                setSelectedSubject(null);
+                setSubjectForm({ name: '', price: '' });
             }
         } catch (err) {
-            console.error('Error updating course:', err);
+            console.error('Error updating subject:', err);
         }
     };
 
-    const handleDeleteCourse = async (courseId) => {
+    const handleDeleteSubject = async (subjectId) => {
         try {
-            const response = await axios.delete(`/courses/${courseId}`);
+            const response = await axios.delete(`${API_BASE_URL}/subjects/{id}`);
             if (response.data.statusCode === 200) {
-                await fetchCourses();
+                await fetchSubjects();
             }
         } catch (err) {
-            console.error('Error deleting course:', err);
+            console.error('Error deleting subject:', err);
         }
     };
 
     // API Functions for Chapters
     const fetchChapters = async () => {
         try {
-            const response = await axios.get('/chapters');
+            const response = await axios.get(`${API_BASE_URL}/chapters`);
             if (response.data.statusCode === 200) {
                 setChapters(response.data.data);
             }
@@ -184,14 +157,14 @@ const AdminDashboard = () => {
 
     const handleAddChapter = async () => {
         try {
-            const response = await axios.post('/chapters', {
+            const response = await axios.post(`${API_BASE_URL}/chapters`, {
                 ...chapterForm,
-                courseId: parseInt(chapterForm.courseId)
+                subjectId: parseInt(chapterForm.subjectId)
             });
             if (response.data.statusCode === 200) {
                 await fetchChapters();
                 setIsAddChapterOpen(false);
-                setChapterForm({ courseId: '', name: '', order: 1 });
+                setChapterForm({ subjectId: '', name: '', order: 1 });
             }
         } catch (err) {
             console.error('Error adding chapter:', err);
@@ -200,15 +173,15 @@ const AdminDashboard = () => {
 
     const handleUpdateChapter = async () => {
         try {
-            const response = await axios.put(`/chapters/${selectedChapter.id}`, {
+            const response = await axios.put(`${API_BASE_URL}/chapters/{id}`, {
                 ...chapterForm,
-                courseId: parseInt(chapterForm.courseId)
+                subjectId: parseInt(chapterForm.subjectId)
             });
             if (response.data.statusCode === 200) {
                 await fetchChapters();
                 setIsAddChapterOpen(false);
                 setSelectedChapter(null);
-                setChapterForm({ courseId: '', name: '', order: 1 });
+                setChapterForm({ subjectId: '', name: '', order: 1 });
             }
         } catch (err) {
             console.error('Error updating chapter:', err);
@@ -217,12 +190,124 @@ const AdminDashboard = () => {
 
     const handleDeleteChapter = async (chapterId) => {
         try {
-            const response = await axios.delete(`/chapters/${chapterId}`);
+            const response = await axios.delete(`${API_BASE_URL}/chapters/{id}`);
             if (response.data.statusCode === 200) {
                 await fetchChapters();
             }
         } catch (err) {
             console.error('Error deleting chapter:', err);
+        }
+    };
+
+    // API Functions for Problems
+    const fetchProblems = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/problems`);
+            if (response.data.statusCode === 200) {
+                setProblems(response.data.data);
+            }
+        } catch (err) {
+            console.error('Error fetching problems:', err);
+        }
+    };
+
+    const handleAddProblem = async () => {
+        try {
+            const response = await axios.post(`${API_BASE_URL}/problems`, {
+                ...problemForm,
+                chapterId: parseInt(problemForm.chapterId)
+            });
+            if (response.data.statusCode === 200) {
+                await fetchProblems();
+                setIsAddProblemOpen(false);
+                setProblemForm({ chapterId: '', name: '', description: '' });
+            }
+        } catch (err) {
+            console.error('Error adding problem:', err);
+        }
+    };
+
+    const handleUpdateProblem = async () => {
+        try {
+            const response = await axios.put(`${API_BASE_URL}/problems/{id}`, {
+                ...problemForm,
+                chapterId: parseInt(problemForm.chapterId)
+            });
+            if (response.data.statusCode === 200) {
+                await fetchProblems();
+                setIsAddProblemOpen(false);
+                setSelectedProblem(null);
+                setProblemForm({ chapterId: '', name: '', description: '' });
+            }
+        } catch (err) {
+            console.error('Error updating problem:', err);
+        }
+    };
+
+    const handleDeleteProblem = async (problemId) => {
+        try {
+            const response = await axios.delete(`${API_BASE_URL}/problems/{id}`);
+            if (response.data.statusCode === 200) {
+                await fetchProblems();
+            }
+        } catch (err) {
+            console.error('Error deleting problem:', err);
+        }
+    };
+
+    // API Functions for Topics
+    const fetchTopics = async () => {
+        try {
+            const response = await axios.get(`${API_BASE_URL}/topics`);
+            if (response.data.statusCode === 200) {
+                setTopics(response.data.data);
+            }
+        } catch (err) {
+            console.error('Error fetching topics:', err);
+        }
+    };
+
+    const handleAddTopic = async () => {
+        try {
+            const response = await axios.post(`${API_BASE_URL}/topics`, {
+                ...topicForm,
+                problemId: parseInt(topicForm.problemId)
+            });
+            if (response.data.statusCode === 200) {
+                await fetchTopics();
+                setIsAddTopicOpen(false);
+                setTopicForm({ problemId: '', name: '', description: '' });
+            }
+        } catch (err) {
+            console.error('Error adding topic:', err);
+        }
+    };
+
+    const handleUpdateTopic = async () => {
+        try {
+            const response = await axios.put(`${API_BASE_URL}/topics/{id}`, {
+                ...topicForm,
+                problemId: parseInt(topicForm.problemId)
+            });
+            if (response.data.statusCode === 200) {
+                await fetchTopics();
+                setIsAddTopicOpen(false);
+                setSelectedTopic(null);
+                setTopicForm({ problemId: '', name: '', description: '' });
+            }
+        } catch (err) {
+            console.error('Error updating topic:', err);
+        }
+    };
+
+    const handleDeleteTopic = async (topicId) => {
+        try {
+            const response = await axios.delete(`${API_BASE_URL}/topics/{id}`);
+            if (response.data.statusCode === 200) {
+                await fetchTopics();
+            }
+        } catch (err) {
+            console.error('Error deleting topic:', err);
         }
     };
 
@@ -300,8 +385,10 @@ const AdminDashboard = () => {
                 <Tabs defaultValue="overview" className="w-full">
                     <TabsList>
                         <TabsTrigger value="overview">Overview</TabsTrigger>
-                        <TabsTrigger value="courses">Courses</TabsTrigger>
+                        <TabsTrigger value="subjects">Subjects</TabsTrigger>
                         <TabsTrigger value="chapters">Chapters</TabsTrigger>
+                        <TabsTrigger value="problems">Problems</TabsTrigger>
+                        <TabsTrigger value="topics">Topics</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="overview">
@@ -339,200 +426,24 @@ const AdminDashboard = () => {
                         </Card>
                     </TabsContent>
 
-                    <TabsContent value="courses">
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between">
-                                <CardTitle>Course Management</CardTitle>
-                                <Dialog open={isAddCourseOpen} onOpenChange={setIsAddCourseOpen}>
-                                    <DialogTrigger asChild>
-                                        <Button>
-                                            <PlusCircle className="mr-2 h-4 w-4" />
-                                            Add Course
-                                        </Button>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                        <DialogHeader>
-                                            <DialogTitle>{selectedCourse ? 'Edit Course' : 'Add New Course'}</DialogTitle>
-                                        </DialogHeader>
-                                        <div className="grid gap-4 py-4">
-                                            <div className="grid gap-2">
-                                                <Label htmlFor="name">Course Name</Label>
-                                                <Input
-                                                    id="name"
-                                                    value={courseForm.name}
-                                                    onChange={(e) => setCourseForm({ ...courseForm, name: e.target.value })}
-                                                />
-                                            </div>
-                                            <div className="grid gap-2">
-                                                <Label htmlFor="price">Price</Label>
-                                                <Input
-                                                    id="price"
-                                                    value={courseForm.price}
-                                                    onChange={(e) => setCourseForm({ ...courseForm, price: e.target.value })}
-                                                />
-                                            </div>
-                                        </div>
-                                        <DialogFooter>
-                                            <Button onClick={selectedCourse ? handleUpdateCourse : handleAddCourse}>
-                                                {selectedCourse ? 'Update' : 'Add'} Course
-                                            </Button>
-                                        </DialogFooter>
-                                    </DialogContent>
-                                </Dialog>
-                            </CardHeader>
-                            <CardContent>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Name</TableHead>
-                                            <TableHead>Price</TableHead>
-                                            <TableHead>Actions</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {courses.map((course) => (
-                                            <TableRow key={course.id}>
-                                                <TableCell>{course.name}</TableCell>
-                                                <TableCell>{course.price}</TableCell>
-                                                <TableCell>
-                                                    <div className="flex gap-2">
-                                                        <Button
-                                                            variant="outline"
-                                                            size="icon"
-                                                            onClick={() => {
-                                                                setSelectedCourse(course);
-                                                                setCourseForm(course);
-                                                                setIsAddCourseOpen(true);
-                                                            }}
-                                                        >
-                                                            <Pencil className="h-4 w-4" />
-                                                        </Button>
-                                                        <Button
-                                                            variant="destructive"
-                                                            size="icon"
-                                                            onClick={() => handleDeleteCourse(course.id)}
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </CardContent>
-                        </Card>
+                    <TabsContent value="overview">
+                        {/* Overview content */}
                     </TabsContent>
+
+                    <TabsContent value="subjects">
+                        {/* Subjects management */}
+                    </TabsContent>
+
                     <TabsContent value="chapters">
-                        <Card>
-                            <CardHeader className="flex flex-row items-center justify-between">
-                                <CardTitle>Chapter Management</CardTitle>
-                                <Dialog open={isAddChapterOpen} onOpenChange={setIsAddChapterOpen}>
-                                    <DialogTrigger asChild>
-                                        <Button>
-                                            <PlusCircle className="mr-2 h-4 w-4" />
-                                            Add Chapter
-                                        </Button>
-                                    </DialogTrigger>
-                                    <DialogContent>
-                                        <DialogHeader>
-                                            <DialogTitle>{selectedChapter ? 'Edit Chapter' : 'Add New Chapter'}</DialogTitle>
-                                        </DialogHeader>
-                                        <div className="grid gap-4 py-4">
-                                            <div className="grid gap-2">
-                                                <Label htmlFor="courseId">Course</Label>
-                                                <Select
-                                                    value={chapterForm.courseId}
-                                                    onValueChange={(value) => setChapterForm({ ...chapterForm, courseId: value })}
-                                                >
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Select a course" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {courses.map((course) => (
-                                                            <SelectItem key={course.id} value={course.id.toString()}>
-                                                                {course.name}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            </div>
-                                            <div className="grid gap-2">
-                                                <Label htmlFor="name">Chapter Name</Label>
-                                                <Input
-                                                    id="name"
-                                                    value={chapterForm.name}
-                                                    onChange={(e) => setChapterForm({ ...chapterForm, name: e.target.value })}
-                                                />
-                                            </div>
-                                            <div className="grid gap-2">
-                                                <Label htmlFor="order">Order</Label>
-                                                <Input
-                                                    id="order"
-                                                    type="number"
-                                                    value={chapterForm.order}
-                                                    onChange={(e) => setChapterForm({ ...chapterForm, order: parseInt(e.target.value) })}
-                                                />
-                                            </div>
-                                        </div>
-                                        <DialogFooter>
-                                            <Button onClick={selectedChapter ? handleUpdateChapter : handleAddChapter}>
-                                                {selectedChapter ? 'Update' : 'Add'} Chapter
-                                            </Button>
-                                        </DialogFooter>
-                                    </DialogContent>
-                                </Dialog>
-                            </CardHeader>
-                            <CardContent>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Name</TableHead>
-                                            <TableHead>Course</TableHead>
-                                            <TableHead>Order</TableHead>
-                                            <TableHead>Actions</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {chapters.map((chapter) => (
-                                            <TableRow key={chapter.id}>
-                                                <TableCell>{chapter.name}</TableCell>
-                                                <TableCell>
-                                                    {courses.find(c => c.id === chapter.courseId)?.name || 'Unknown Course'}
-                                                </TableCell>
-                                                <TableCell>{chapter.order}</TableCell>
-                                                <TableCell>
-                                                    <div className="flex gap-2">
-                                                        <Button
-                                                            variant="outline"
-                                                            size="icon"
-                                                            onClick={() => {
-                                                                setSelectedChapter(chapter);
-                                                                setChapterForm({
-                                                                    courseId: chapter.courseId.toString(),
-                                                                    name: chapter.name,
-                                                                    order: chapter.order
-                                                                });
-                                                                setIsAddChapterOpen(true);
-                                                            }}
-                                                        >
-                                                            <Pencil className="h-4 w-4" />
-                                                        </Button>
-                                                        <Button
-                                                            variant="destructive"
-                                                            size="icon"
-                                                            onClick={() => handleDeleteChapter(chapter.id)}
-                                                        >
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </Button>
-                                                    </div>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </CardContent>
-                        </Card>
+                        {/* Chapters management */}
+                    </TabsContent>
+
+                    <TabsContent value="problems">
+                        {/* Problems management */}
+                    </TabsContent>
+
+                    <TabsContent value="topics">
+                        {/* Topics management */}
                     </TabsContent>
                 </Tabs>
             </div>
