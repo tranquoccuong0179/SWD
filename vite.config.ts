@@ -7,7 +7,14 @@ import * as path from "node:path";
 export default defineConfig({
   plugins: [react()],
   server: {
-    open: '/home'
+    open: '/home',
+    proxy: {
+      '/api': {
+        target: 'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net',
+        changeOrigin: true,
+        secure: true
+      },
+    },
   },
   resolve: {
     alias: {

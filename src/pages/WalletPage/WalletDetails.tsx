@@ -49,7 +49,15 @@ const IntegratedWallet: React.FC = () => {
     const [amount, setAmount] = useState('');
     const [loading, setLoading] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [solutions, setSolutions] = useState([]);
 
+    const token = localStorage.getItem('accessToken');
+    console.log("Token exist?:", !!token);
+    console.log("Token value:", token);
+    const headers = {
+        'accept': '*/*',
+        'Authorization': `Bearer ${token}`,
+    };
     // Fetch wallet data
     const fetchWalletData = async () => {
         try {
@@ -91,9 +99,28 @@ const IntegratedWallet: React.FC = () => {
         }
     };
 
+    //Fetch solution data
+    const fetchSolutions = async () => {
+        try {
+            const response = await axios.get(
+                `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/solutions`,
+                { headers }
+            );
+            setSolutions(response.data.data.items);
+        }
+        catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Initial fetch when component mounts
     useEffect(() => {
         fetchWalletData();
+        fetchSolutions();
+        console.log('Solution:',);
+
 
         // Set up polling for wallet data every 30 seconds
         const pollInterval = setInterval(fetchWalletData, 30000);
@@ -225,90 +252,125 @@ const IntegratedWallet: React.FC = () => {
         },
     ];
 
-    // Table columns for purchased courses
+    // Table columns for purchased solution
     const courseColumns = [
         {
-            title: 'Tên khóa học',
+            title: 'Tên lời giải',
             dataIndex: 'name',
             key: 'name',
-            render: (text: string) => <div className="font-medium text-gray-800">{text}</div>
+            render: (text: string) => <div className="name-col font-medium text-gray-800">{text}</div>
         },
         {
-            title: 'Giá',
-            dataIndex: 'price',
-            key: 'price',
-            render: (price: number) => <div className="font-medium text-gray-800">{formatCurrency(price)}</div>
+            title: 'URL',
+            dataIndex: 'url',
+            key: 'url',
+            render: (text: string) => <div className="url-col font-medium text-gray-800">{text}</div>
         },
+        {
+            title: 'Xem lời giải',
+            key: 'action',
+            render: (record: any) => (
+                <div className="url-button flex justify-center">
+                <Button type="primary" onClick={() => window.open(record.url, '_blank')}>
+                    Xem
+                </Button></div>
+            )
+        }
     ];
 
     return (
         <Layout className="landing-page">
             <Header />
-        <div className='body-content'>
-            <div className="min-h-screen bg-gray-50">
-                <div className="max-w-20xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-                    {/* Wallet Header */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-                        <div className="p-6 sm:p-8">
-                            <div className="flex justify-between items-center mb-8">
-                                <div className="flex items-center gap-4">
-                                    <div className="bg-blue-50 p-3 rounded-xl">
-                                        <Wallet className="text-blue-600 h-6 w-6" />
+            <div className='body-content'>
+                <div className="min-h-screen bg-gray-50">
+                    <div className="max-w-20xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+                        {/* Wallet Header */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                            <div className="p-6 sm:p-8">
+                                <div className="flex justify-between items-center mb-8">
+                                    <div className="flex items-center gap-4">
+                                        <div className="bg-blue-50 p-3 rounded-xl">
+                                            <Wallet className="text-blue-600 h-6 w-6" />
+                                        </div>
+                                        <h1 className="text-2xl font-semibold leading-6 text-gray-900">Ví của tôi</h1>
                                     </div>
-                                    <h1 className="text-2xl font-semibold leading-6 text-gray-900">Ví của tôi</h1>
+                                    <Button type="primary" className="flex items-center gap-2" onClick={() => setShowAddFunds(true)}>
+                                        <CreditCard className="h-5 w-5" />
+                                        Nạp tiền
+                                    </Button>
                                 </div>
-                                <Button type="primary" className="flex items-center gap-2" onClick={() => setShowAddFunds(true)}>
-                                    <CreditCard className="h-5 w-5" />
-                                    Nạp tiền
-                                </Button>
-                            </div>
-                            <div className="mb-8 flex gap-2 items-center text-gray-600">
-                                <TrendingUp size={16} /> Số dư khả dụng: <strong className="text-lg font-semibold text-gray-900">{formatCurrency(walletData.balance)}</strong>
+                                <div className="mb-8 flex gap-2 items-center text-gray-600">
+                                    <TrendingUp size={16} /> Số dư khả dụng: <strong className="text-lg font-semibold text-gray-900">{formatCurrency(walletData.balance)}</strong>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Transactions Section */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
-                        <div className="p-6 sm:p-8">
-                            <div className="flex items-center gap-4 mb-6">
-                                <History className="h-6 w-6 text-gray-500" />
-                                <h2 className="text-lg font-semibold leading-6 text-gray-900">Lịch sử giao dịch</h2>
+                        {/* Transactions Section */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                            <div className="p-6 sm:p-8">
+                                <div className="flex items-center gap-4 mb-6">
+                                    <History className="h-6 w-6 text-gray-500" />
+                                    <h2 className="text-lg font-semibold leading-6 text-gray-900">Lịch sử giao dịch</h2>
+                                </div>
+                                <Table columns={transactionColumns} dataSource={walletData.transactions} rowKey="id" pagination={{ pageSize: 5 }} />
                             </div>
-                            <Table columns={transactionColumns} dataSource={walletData.transactions} rowKey="id" pagination={{ pageSize: 5 }} />
                         </div>
-                    </div>
 
-                    {/* Purchased Courses Section */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                        <div className="p-6 sm:p-8">
-                            <div className="flex items-center gap-4 mb-6">
-                                <GraduationCap className="h-6 w-6 text-gray-500" />
-                                <h2 className="text-lg font-semibold leading-6 text-gray-900">Khóa học đã mua</h2>
+                        {/* Purchased Courses Section */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div className="p-6 sm:p-8">
+                                <div className="flex items-center gap-4 mb-6">
+                                    <GraduationCap className="h-6 w-6 text-gray-500" />
+                                    <h2 className="text-lg font-semibold leading-6 text-gray-900">Lời giải đã mua</h2>
+                                </div>
+                                {/* <Table
+                                    columns={[
+                                        {
+                                            title: 'Tên lời giải',
+                                            dataIndex: 'name',
+                                            key: 'name',
+                                            render: (text: string) => <div className="name-col font-medium text-gray-800">{text}</div>
+                                        },
+                                        {
+                                            title: 'URL',
+                                            dataIndex: 'url',
+                                            key: 'url',
+                                            render: (text: string) => <div className="url-col font-medium text-gray-800">{text}</div>
+                                        },
+                                    ]}
+                                    dataSource={solutions}
+                                    rowKey="id"
+                                    pagination={{ pageSize: 5 }}
+                                /> */}
+                                <Table
+                                    columns={courseColumns}
+                                    dataSource={solutions}
+                                    rowKey="id"
+                                    pagination={{ pageSize: 5 }}
+                                />
+
                             </div>
-                            <Table columns={courseColumns} dataSource={walletData.purchasedCourses} rowKey="id" pagination={{ pageSize: 5 }} />
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Add Funds Modal */}
-            <Modal
-                title="Nạp tiền vào ví"
-                visible={showAddFunds}
-                onCancel={() => setShowAddFunds(false)}
-                footer={[
-                    <Button key="cancel" onClick={() => setShowAddFunds(false)}>Hủy</Button>,
-                    <Button key="submit" type="primary" onClick={handleAddFunds} loading={loading}>Xác nhận</Button>
-                ]}
-            >
-                <Input
-                    placeholder="Nhập số tiền"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                />
-            </Modal>
-        </div>
+                {/* Add Funds Modal */}
+                <Modal
+                    title="Nạp tiền vào ví"
+                    visible={showAddFunds}
+                    onCancel={() => setShowAddFunds(false)}
+                    footer={[
+                        <Button key="cancel" onClick={() => setShowAddFunds(false)}>Hủy</Button>,
+                        <Button key="submit" type="primary" onClick={handleAddFunds} loading={loading}>Xác nhận</Button>
+                    ]}
+                >
+                    <Input
+                        placeholder="Nhập số tiền"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                    />
+                </Modal>
+            </div>
         </Layout>
     );
 };

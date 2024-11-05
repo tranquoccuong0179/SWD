@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../../components/Header/Header';
-import { Layout, Button, Breadcrumb, Typography } from 'antd';
+import { Layout, Button, Breadcrumb, Typography, Input, message } from 'antd';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -20,12 +20,31 @@ const TopicDetailsPage = () => {
     const [contentParameter, setContentParameter] = useState([]);
     const { id } = useParams();
     const [activeLesson, setActiveLesson] = useState(1);
+    const [inputValues, setInputValues] = useState({});
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        if (/^\d*$/.test(value)) { // chỉ cho phép số hoặc chuỗi rỗng
+            setInputValues((prevValues) => ({
+                ...prevValues,
+                [name]: value
+            }));
+        }
+    };
     const [selectedParameters, setSelectedParameters] = useState([
         { parameterId: '', value: 0 },
         { parameterId: '', value: 0 }
     ]);
+    
     const [problemId, setProblemId] = useState(''); // Thêm problemId
+    const token = localStorage.getItem('accessToken');
+    console.log("Token exist?:", !!token);
+    console.log("Token value:", token);
 
+    const headers = {
+        'accept': '*/*',
+        'Authorization': `Bearer ${token}`,
+    };
     useEffect(() => {
         const fetchTopicDetails = async () => {
             try {
@@ -35,7 +54,13 @@ const TopicDetailsPage = () => {
                     return;
                 }
 
-                const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems`);
+                console.log("request headers:", headers);
+
+                const response = await axios.get(
+                    `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems`,
+                    { headers }
+                );
+                // const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems`);
                 const transformedTopicDetails = response.data.data.items
                     .filter(topic => topic.topicId === id);
                 setTopicDetails(transformedTopicDetails);
@@ -76,35 +101,67 @@ const TopicDetailsPage = () => {
         const data = parameters.filter((i) => i.topicId === id);
         setContentParameter(data);
     };
+    console.log("in", inputValues);
 
-    const handleSelectChange = (index, value) => {
-        const newParameters = [...selectedParameters];
-        newParameters[index].parameterId = value; // Cập nhật parameterId
-        setSelectedParameters(newParameters);
-    };
+    // const handleSubmit = async () => {
+    //     // let dataMap= content?.getPPVM
+    //     const mappedData = content?.getPPVM.map((item) => ({
+    //         parameterId: item.parameterId,
+    //         value: inputValues[item.symbol] ? parseInt(inputValues[item.symbol]) : item.value
+    //     }));
+    //     // Bắt trường hợp
+    //     message.success("Gửi tham số thành công!")
+    //     let data = {
+    //         problemId: problemId,
+    //         postPPVMs: mappedData
+    //     }
+    //     try {
+    //         const response = await axios.post(
+    //             `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`,
+    //             data,
+    //             { headers }
+    //         );
 
-    const handleInputChange = (index, value) => {
-        const newParameters = [...selectedParameters];
-        newParameters[index].value = value; // Cập nhật giá trị
-        setSelectedParameters(newParameters);
-    };
 
+    //         if (response.status === 200) {
+    //             console.log('Response from API:', response.data);
+    //             // Xử lý phản hồi từ API ở đây
+    //         }
+    //     } catch (error) {
+    //         console.error('Error sending data:', error);
+    //     }
+    // };
     const handleSubmit = async () => {
+        // let dataMap= content?.getPPVM
+        const mappedData = content?.getPPVM.map((item) => ({
+          parameterId: item.parameterId,
+          value: inputValues[item.symbol] ? parseInt(inputValues[item.symbol]) : item.value,
+        }));
+      
+        let data = {
+          problemId: problemId,
+          postPPVMs: mappedData,
+        };
+      
         try {
-            const response = await axios.post(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`, {
-                problemId: problemId, // ID bài toán
-                postPPVMs: selectedParameters
-            });
-
-            if (response.status === 200) {
-                console.log('Response from API:', response.data);
-                // Xử lý phản hồi từ API ở đây
-            }
+          const response = await axios.post(
+            `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`,
+            data,
+            { headers }
+          );
+      
+          if (response.status === 200) {
+            console.log('Response from API:', response.data);
+            message.success("Gửi tham số thành công!");
+            // Xử lý phản hồi từ API ở đây
+          } else {
+            message.error("Có lỗi xảy ra khi gửi tham số");
+          }
         } catch (error) {
-            console.error('Error sending data:', error);
+          console.error('Error sending data:', error);
+          message.error("Có lỗi xảy ra khi gửi tham số");
         }
-    };
-
+      };
     return (
         <Layout className="landing-page">
             <Header />
@@ -149,57 +206,69 @@ const TopicDetailsPage = () => {
                                 <div className="problem-description text-left p-4 bg-blue-100 text-black text-lg font-bold rounded-md">
                                     Bài toán: {content?.description}
                                 </div>
-                                <div className="input-question text-left p-4 text-black text-lg font-medium mb-3">
+                                <div className="input-question text-left p-4 text-black text-lg font-medium mb-2">
                                     Nhập các tham số để tính toán:
+                                    <p>Giả sử g = 10  m/s^2</p>
                                 </div>
-                                <div className="parameter-inputs">
-                                    <div className="mb-6">
-                                        <label className="block text-left text-base font-medium text-black mb-2" htmlFor="input1">Tham số 1:</label>
-                                        <div className="flex items-center space-x-2">
-                                            <select
-                                                id="type1"
-                                                className="p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
-                                                onChange={(e) => handleSelectChange(0, e.target.value)}
-                                            >
-                                                {contentParameter?.map((e) => (
-                                                    <option key={e.id} value={e.id}>
-                                                        {e?.name} {e?.symbol} ({e?.unit})
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            <input
-                                                id="input1"
-                                                type="number"
-                                                className="block w-full p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
-                                                placeholder="Nhập tham số 1"
-                                                onChange={(e) => handleInputChange(0, e.target.value)}
-                                            />
+                                {/* <div className="parameter-inputs">
+                                        <div className="mb-6">
+                                            <label className="block text-left text-base font-medium text-black mb-2" htmlFor="input1">Tham số 1:</label>
+                                            <div className="flex items-center space-x-2">
+                                                <select
+                                                    id="type1"
+                                                    className="p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
+                                                    onChange={(e) => handleSelectChange(0, e.target.value)}
+                                                >
+                                                    {contentParameter?.map((e) => (
+                                                        <option key={e.id} value={e.id}>
+                                                            {e?.name} {e?.symbol} ({e?.unit})
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <input
+                                                    id="input1"
+                                                    type="number"
+                                                    className="block w-full p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
+                                                    placeholder="Nhập tham số 1"
+                                                    onChange={(e) => handleInputChange(0, e.target.value)}
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="mb-6">
-                                        <label className="block text-left text-base font-medium text-black mb-2" htmlFor="input2">Tham số 2:</label>
-                                        <div className="flex items-center space-x-2">
-                                            <select
-                                                id="type2"
-                                                className="p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
-                                                onChange={(e) => handleSelectChange(1, e.target.value)}
-                                            >
-                                                {contentParameter?.map((e) => (
-                                                    <option key={e.id} value={e.id}>
-                                                        {e?.name} {e?.symbol} ({e?.unit})
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            <input
-                                                id="input2"
-                                                type="number"
-                                                className="block w-full p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
-                                                placeholder="Nhập tham số 2"
-                                                onChange={(e) => handleInputChange(1, e.target.value)}
-                                            />
+                                        <div className="mb-6">
+                                            <label className="block text-left text-base font-medium text-black mb-2" htmlFor="input2">Tham số 2:</label>
+                                            <div className="flex items-center space-x-2">
+                                                <select
+                                                    id="type2"
+                                                    className="p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
+                                                    onChange={(e) => handleSelectChange(1, e.target.value)}
+                                                >
+                                                    {contentParameter?.map((e) => (
+                                                        <option key={e.id} value={e.id}>
+                                                            {e?.name} {e?.symbol} ({e?.unit})
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <input
+                                                    id="input2"
+                                                    type="number"
+                                                    className="block w-full p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
+                                                    placeholder="Nhập tham số 2"
+                                                    onChange={(e) => handleInputChange(1, e.target.value)}
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <Button type="primary w-40 h-10 text-lg font-semibold p-3" onClick={handleSubmit}>Gửi</Button>
+                                        <Button type="primary w-40 h-10 text-lg font-semibold p-3" onClick={handleSubmit}>Gửi</Button>
+                                    </div> */}
+                                <div>
+                                    {content?.getPPVM?.map((e) => {
+                                        return (<>
+                                        <div className='input-param-name text-left text-black text-lg font-normal mb-3'>Nhập {e?.symbol}</div>
+                                        <div className='input-form mb-3'><Input name={e?.symbol} value={inputValues[e.symbol] || ""}
+                                                onChange={handleInputChange} placeholder={`Nhập ${e.symbol}`} /></div>
+                                            
+                                        </>)
+                                    })}
+                                    <Button type="primary" size="large" onClick={handleSubmit}>Gửi tham số</Button>
                                 </div>
                             </div>
                         </div>
