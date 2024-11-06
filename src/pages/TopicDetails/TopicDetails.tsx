@@ -61,14 +61,12 @@ const TopicDetailsPage = () => {
                     setLoading(false);
                     return;
                 }
-
-                console.log("request headers:", headers);
+                console.log("Request Headers:", headers);
 
                 const response = await axios.get(
                     `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems`,
                     { headers }
                 );
-                // const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems`);
                 const transformedTopicDetails = response.data.data.items
                     .filter(topic => topic.topicId === id);
                 setTopicDetails(transformedTopicDetails);
@@ -106,6 +104,7 @@ const TopicDetailsPage = () => {
     const handleChange = (e) => {
         setActiveLesson(e.id);
         setContent(e);
+        setProblemId(e.id);
         const data = parameters.filter((i) => i.topicId === id);
         setContentParameter(data);
     };
@@ -139,37 +138,77 @@ const TopicDetailsPage = () => {
     //         console.error('Error sending data:', error);
     //     }
     // };
+
+
+    // const handleSubmit = async () => {
+    //     const mappedData = content?.getPPVM.map((item) => ({
+    //         parameterId: item.parameterId,
+    //         value: inputValues[item.symbol] ? parseInt(inputValues[item.symbol]) : item.value,
+    //     }));
+
+    //     let data = {
+    //         problemId: problemId,
+    //         postPPVMs: mappedData,
+    //     };
+
+    //     try {
+    //         const response = await axios.post(
+    //             `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`,
+    //             data,
+    //             { headers }
+    //         );
+
+    //         if (response.status === 200) {
+    //             console.log('Response from API:', response.data);
+    //             message.success("Gửi tham số thành công!");
+    //             // Xử lý phản hồi từ API ở đây
+    //         } else {
+    //             message.error("Có lỗi xảy ra khi gửi tham số");
+    //         }
+    //     } catch (error) {
+    //         console.error('Error sending data:', error);
+    //         message.error("Có lỗi xảy ra khi gửi tham số");
+    //     }
+    // };
+
     const handleSubmit = async () => {
-        // let dataMap= content?.getPPVM
-        const mappedData = content?.getPPVM.map((item) => ({
+        if (!problemId) {
+            message.error("Thiếu problemId. Vui lòng kiểm tra lại.");
+            return;
+        }
+    
+        const mappedData = content?.getPPVM?.map((item) => ({
             parameterId: item.parameterId,
             value: inputValues[item.symbol] ? parseInt(inputValues[item.symbol]) : item.value,
         }));
-
-        let data = {
+    
+        const data = {
             problemId: problemId,
             postPPVMs: mappedData,
         };
-
+    
+        console.log("Data gửi lên:", data);
+    
         try {
             const response = await axios.post(
                 `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`,
                 data,
                 { headers }
             );
-
+    
             if (response.status === 200) {
-                console.log('Response from API:', response.data);
-                message.success("Gửi tham số thành công!");
-                // Xử lý phản hồi từ API ở đây
+                console.log('Response từ API:', response.data);
+                message.success(response.data.data);
             } else {
                 message.error("Có lỗi xảy ra khi gửi tham số");
             }
         } catch (error) {
-            console.error('Error sending data:', error);
+            console.error('Error gửi dữ liệu:', error);
+            console.log("Chi tiết lỗi:", error.response);
             message.error("Có lỗi xảy ra khi gửi tham số");
         }
     };
+    
     return (
         <Layout className="landing-page">
             <Header />

@@ -13,6 +13,7 @@ import {
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import BackToTopButton from '../../components/BackToTop';
+import Logo from '../../assets/logo.jpg'
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -23,6 +24,11 @@ const AboutUs = () => {
         { number: "500+", label: "Bài học", icon: <BookOutlined /> },
         { number: "50+", label: "Giảng viên", icon: <ExperimentOutlined /> },
         { number: "98%", label: "Học viên hài lòng", icon: <CheckCircleOutlined /> }
+    ];
+    const images = [
+        "https://real.itu.dk/people/sebastian-risi/avatar_hufaf1540bad1d633a363e87a51e088ee9_635670_270x270_fill_q75_lanczos_center.jpg",
+        "https://media.licdn.com/dms/image/v2/D5622AQE7RTscPXAGLQ/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1680192436729?e=2147483647&v=beta&t=JI4UeNEyjUbmlwEnXjo3uUBt9leDLdrNIKTddR0bMJE",
+        "https://pbs.twimg.com/profile_images/1789489585073876993/EXzN4ggz_400x400.jpg"
     ];
 
     return (
@@ -100,7 +106,8 @@ const AboutUs = () => {
                         <Col xs={24} md={12}>
                             <Card className="overflow-hidden rounded-2xl shadow-xl border-0">
                                 <img
-                                    src="/api/placeholder/600/400"
+                                    // src="https://files.oaiusercontent.com/file-6eq98JAy3vO0QpUSPaXukS4b?se=2024-11-06T08%3A46%3A37Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D170f6717-f0a4-4e71-890f-175a6a2da4ae.webp&sig=g0u3M%2BPO0bdyNF9CIzvPIDsLzKqftjDeiXnTWU3WQng%3D"
+                                    src={Logo}
                                     alt="Our Mission"
                                     className="w-full h-full object-cover rounded-lg"
                                 />
@@ -170,7 +177,7 @@ const AboutUs = () => {
                             Những người đứng sau sự thành công của Manim AI Physics Visualizer
                         </Paragraph>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {[1, 2, 3].map((member) => (
                             <Card
                                 key={member}
@@ -178,6 +185,25 @@ const AboutUs = () => {
                             >
                                 <img
                                     src={`/api/placeholder/300/300`}
+                                    alt={`Team Member ${member}`}
+                                    className="w-32 h-32 rounded-full mx-auto mb-6 object-cover"
+                                />
+                                <Title level={4} className="mb-2">Chuyên gia {member}</Title>
+                                <Paragraph className="text-gray-600 mb-4">Tiến sĩ Vật lý</Paragraph>
+                                <Paragraph className="text-gray-500">
+                                    Với hơn 10 năm kinh nghiệm trong lĩnh vực giảng dạy và nghiên cứu Vật lý
+                                </Paragraph>
+                            </Card>
+                        ))}
+                    </div> */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        {[1, 2, 3].map((member) => (
+                            <Card
+                                key={member}
+                                className="text-center hover:shadow-xl transition-all duration-300 border-0 shadow overflow-hidden"
+                            >
+                                <img
+                                    src={images[member - 1]}
                                     alt={`Team Member ${member}`}
                                     className="w-32 h-32 rounded-full mx-auto mb-6 object-cover"
                                 />

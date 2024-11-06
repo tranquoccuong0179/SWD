@@ -52,52 +52,52 @@ const Contact = () => {
                             <div className="space-y-6">
                                 <Card className="hover:shadow-lg transition-shadow duration-300 border-0 shadow">
                                     <div className="flex items-start space-x-4">
-                                        <div className="bg-blue-50 p-3 rounded-full">
+                                        <div className="md:w-2/12 bg-blue-50 p-3 rounded-full">
                                             <EnvironmentOutlined className="text-2xl text-blue-600" />
                                         </div>
-                                        <div>
+                                        <div className="md:w-8/12">
                                             <h3 className="text-lg font-semibold">Địa Chỉ</h3>
-                                            <p className="text-gray-600">123 Đường ABC, Quận XYZ</p>
-                                            <p className="text-gray-600">TP.HCM, Việt Nam</p>
+                                            <p className="font-medium text-gray-600">Lô E2a-7, Đường D1, Đ. D1, Long Thạnh Mỹ,</p>
+                                            <p className="font-medium text-gray-600">Thành Phố Thủ Đức, Hồ Chí Minh, Việt Nam</p>
                                         </div>
                                     </div>
                                 </Card>
 
                                 <Card className="hover:shadow-lg transition-shadow duration-300 border-0 shadow">
                                     <div className="flex items-start space-x-4">
-                                        <div className="bg-green-50 p-3 rounded-full">
+                                        <div className="md:w-2/12 bg-green-50 p-3 rounded-full">
                                             <PhoneOutlined className="text-2xl text-green-600" />
                                         </div>
-                                        <div>
+                                        <div className="md:w-8/12">
                                             <h3 className="text-lg font-semibold">Điện Thoại</h3>
-                                            <p className="text-gray-600">028.1234.5678</p>
-                                            <p className="text-gray-600">028.8765.4321</p>
+                                            <p className="font-medium text-gray-600">028.1234.5678</p>
+                                            <p className="font-medium text-gray-600">028.8765.4321</p>
                                         </div>
                                     </div>
                                 </Card>
 
                                 <Card className="hover:shadow-lg transition-shadow duration-300 border-0 shadow">
                                     <div className="flex items-start space-x-4">
-                                        <div className="bg-purple-50 p-3 rounded-full">
+                                        <div className="md:w-2/12 bg-purple-50 p-3 rounded-full">
                                             <MailOutlined className="text-2xl text-purple-600" />
                                         </div>
-                                        <div>
+                                        <div className="md:w-8/12">
                                             <h3 className="text-lg font-semibold">Email</h3>
-                                            <p className="text-gray-600">contact@manimphysics.edu.vn</p>
-                                            <p className="text-gray-600">support@manimphysics.edu.vn</p>
+                                            <p className="font-medium text-gray-600">contact@manimphysics.edu.vn</p>
+                                            <p className="font-medium text-gray-600">support@manimphysics.edu.vn</p>
                                         </div>
                                     </div>
                                 </Card>
 
                                 <Card className="hover:shadow-lg transition-shadow duration-300 border-0 shadow">
                                     <div className="flex items-start space-x-4">
-                                        <div className="bg-orange-50 p-3 rounded-full">
+                                        <div className="md:w-2/12 bg-orange-50 p-3 rounded-full">
                                             <ClockCircleOutlined className="text-2xl text-orange-600" />
                                         </div>
-                                        <div>
+                                        <div className="md:w-8/12">
                                             <h3 className="text-lg font-semibold">Giờ Làm Việc</h3>
-                                            <p className="text-gray-600">Thứ 2 - Thứ 6: 8:00 - 17:00</p>
-                                            <p className="text-gray-600">Thứ 7: 8:00 - 12:00</p>
+                                            <p className="font-medium text-gray-600">Thứ 2 - Thứ 6: 8:00 - 17:00</p>
+                                            <p className="font-medium text-gray-600">Thứ 7: 8:00 - 12:00</p>
                                         </div>
                                     </div>
                                 </Card>

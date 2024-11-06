@@ -60,12 +60,13 @@ const AdminDashboard = () => {
                 console.log("Making API call to /Dashboards");
                 const response = await axios.get(`${API_BASE_URL}/Dashboards`, {
                     headers: {
+                        accept: '*/*',
                         Authorization: `Bearer ${token}`
                     }
                 });
                 console.log("Dashboard data response:", response.data);
 
-                if (response.data.statusCode === 200 && response.data.code === "Success") {
+                if (response.data.statusCode === 200 && response.data.code === "Success!") {
                     setDashboardData(response.data.data);
                     await Promise.all([fetchSubjects(), fetchChapters(), fetchProblems(), fetchTopics()]);
                 } else {
