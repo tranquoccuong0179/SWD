@@ -50,6 +50,8 @@ const IntegratedWallet: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [solutions, setSolutions] = useState([]);
+    const [transaction, setTransaction] = useState([]);
+
 
     const token = localStorage.getItem('accessToken');
     console.log("Token exist?:", !!token);
@@ -98,6 +100,22 @@ const IntegratedWallet: React.FC = () => {
             setIsLoading(false);
         }
     };
+    // Fetch transaction history
+    const fetchTransaction = async () => {
+        try {
+            const response = await axios.get(
+                `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/transaction`,
+                { headers }
+            );
+            setTransaction(response.data.data.items);
+        }
+        catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     //Fetch solution data
     const fetchSolutions = async () => {
@@ -119,7 +137,7 @@ const IntegratedWallet: React.FC = () => {
     useEffect(() => {
         fetchWalletData();
         fetchSolutions();
-        console.log('Solution:',);
+        fetchTransaction();
 
 
         // Set up polling for wallet data every 30 seconds
@@ -203,12 +221,12 @@ const IntegratedWallet: React.FC = () => {
 
     // Table columns for transactions
     const transactionColumns = [
-        {
-            title: 'Mô tả',
-            dataIndex: 'description',
-            key: 'description',
-            render: (text: string) => <div className="font-medium text-gray-800">{text}</div>
-        },
+        // {
+        //     title: 'Mô tả',
+        //     dataIndex: 'description',
+        //     key: 'description',
+        //     render: (text: string) => <div className="font-medium text-gray-800">{text}</div>
+        // },
         {
             title: 'Số tiền',
             dataIndex: 'amount',
@@ -219,36 +237,42 @@ const IntegratedWallet: React.FC = () => {
                 </div>
             ),
         },
-        {
-            title: 'Ngày',
-            dataIndex: 'date',
-            key: 'date',
-            render: (date: string) => (
-                <div className="flex items-center gap-2 text-gray-600">
-                    <Clock size={16} /> {date}
-                </div>
-            ),
-        },
+        // {
+        //     title: 'Ngày',
+        //     dataIndex: 'date',
+        //     key: 'date',
+        //     render: (date: string) => (
+        //         <div className="flex items-center gap-2 text-gray-600">
+        //             <Clock size={16} /> {date}
+        //         </div>
+        //     ),
+        // },
+        // {
+        //     title: 'Trạng thái',
+        //     dataIndex: 'status',
+        //     key: 'status',
+        //     render: (status: string) => {
+        //         const statusConfig = {
+        //             COMPLETED: { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200' },
+        //             PENDING: { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200' },
+        //             FAILED: { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200' }
+        //         };
+        //         const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.PENDING;
+        //         return (
+        //             <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${config.bg} ${config.text} ${config.border}`}>
+        //                 {status === 'COMPLETED' && '✓ '}
+        //                 {status === 'FAILED' && '✕ '}
+        //                 {status === 'PENDING' && '⋯ '}
+        //                 {status}
+        //             </span>
+        //         );
+        //     },
+        // },
         {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            render: (status: string) => {
-                const statusConfig = {
-                    COMPLETED: { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200' },
-                    PENDING: { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200' },
-                    FAILED: { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200' }
-                };
-                const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.PENDING;
-                return (
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${config.bg} ${config.text} ${config.border}`}>
-                        {status === 'COMPLETED' && '✓ '}
-                        {status === 'FAILED' && '✕ '}
-                        {status === 'PENDING' && '⋯ '}
-                        {status}
-                    </span>
-                );
-            },
+            render: (text: string) => <div className="url-col font-medium text-gray-800">{text}</div>
         },
     ];
 
@@ -312,7 +336,13 @@ const IntegratedWallet: React.FC = () => {
                                     <History className="h-6 w-6 text-gray-500" />
                                     <h2 className="text-lg font-semibold leading-6 text-gray-900">Lịch sử giao dịch</h2>
                                 </div>
-                                <Table columns={transactionColumns} dataSource={walletData.transactions} rowKey="id" pagination={{ pageSize: 5 }} />
+                                {/* <Table columns={transactionColumns} dataSource={walletData.transactions} rowKey="id" pagination={{ pageSize: 5 }} /> */}
+                                <Table
+                                    columns={transactionColumns}
+                                    dataSource={transaction}
+                                    rowKey="id"
+                                    pagination={{ pageSize: 5 }}
+                                />
                             </div>
                         </div>
 
