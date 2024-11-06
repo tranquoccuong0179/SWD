@@ -88,7 +88,7 @@ const Header = () => {
           <Link to="/Home">Trang chủ</Link>
         </Menu.Item>
         <Menu.Item key="courses">
-          <Link to="/Aboutus">Về chúng tôi</Link>
+          <Link to="/AboutUs">Về chúng tôi</Link>
         </Menu.Item>
         <Menu.Item key="blog">
           <Link to="/Subject">Môn học</Link>
