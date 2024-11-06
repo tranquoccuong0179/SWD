@@ -125,7 +125,10 @@ const IntegratedWallet: React.FC = () => {
                 `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/solutions`,
                 { headers }
             );
-            setSolutions(response.data.data.items);
+            // setSolutions(response.data.data.items);
+            const id = localStorage.getItem('id')
+            const data = response.data.data.items?.filter((e) => e?.userId === id)
+            setSolutions(data)
         }
         catch (error) {
             console.error(error);
@@ -269,18 +272,22 @@ const IntegratedWallet: React.FC = () => {
         //         );
         //     },
         // },
-        // {
-        //     title: 'Trạng thái',
-        //     dataIndex: 'status',
-        //     key: 'status',
-        //     render: (text: string) => <div className="url-col font-medium text-gray-800">{text}</div>
-        // },
+        {
+            title: 'Mô tả',
+            dataIndex: 'amount',
+            key: 'amount',
+            render: (amount: number) => (
+                <div className={`font-medium ${amount >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+                    {amount > 0 ? 'Nạp tiền' : 'Mua lời giải'} {formatCurrency(amount)}
+                </div>
+            ),
+        },
         {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
             render: (text: string) => (
-                <div className={`url-col font-medium ${text === 'Complete' ? 'text-green-600' : text === 'Failed' ? 'text-red-600' : 'text-gray-800'}`}>
+                <div className={`font-medium ${text === 'Complete' ? 'text-green-600' : text === 'Failed' ? 'text-red-600' : 'text-gray-800'}`}>
                     {text}
                 </div>
             )
@@ -312,9 +319,9 @@ const IntegratedWallet: React.FC = () => {
             key: 'action',
             render: (record: any) => (
                 <div className="url-button flex justify-center">
-                <Button type="primary" onClick={() => window.open(record.url, '_blank')}>
-                    Xem
-                </Button></div>
+                    <Button type="primary" onClick={() => window.open(record.url, '_blank')}>
+                        Xem
+                    </Button></div>
             )
         }
     ];
@@ -335,13 +342,13 @@ const IntegratedWallet: React.FC = () => {
                                         </div>
                                         <h1 className="text-2xl font-semibold leading-6 text-gray-900">Ví của tôi</h1>
                                     </div>
-                                    <Button type="primary" className="flex items-center gap-2" onClick={() => setShowAddFunds(true)}>
+                                    <Button type="primary" className="h-10 w-30 flex items-center gap-2" onClick={() => setShowAddFunds(true)}>
                                         <CreditCard className="h-5 w-5" />
                                         Nạp tiền
                                     </Button>
                                 </div>
-                                <div className="mb-8 flex gap-2 items-center text-gray-600">
-                                    <TrendingUp size={16} /> Số dư khả dụng: <strong className="text-lg font-semibold text-gray-900">{formatCurrency(walletData.balance)}</strong>
+                                <div className="mb-8 flex gap-2 items-center text-gray-600 text-lg">
+                                    <TrendingUp size={26} /> Số dư khả dụng: <strong className="text-xl font-semibold text-gray-900">{formatCurrency(walletData.balance)}</strong>
                                 </div>
                             </div>
                         </div>

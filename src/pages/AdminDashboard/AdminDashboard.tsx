@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import {Button, Layout, Typography} from 'antd';
+import { Button, Divider, Layout, Typography, Table } from 'antd';
 import { BookOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {Users, CheckCircle, AlertCircle, Layers, FileText, DollarSign} from 'lucide-react';
+import { Users, CheckCircle, AlertCircle, Layers, FileText, DollarSign } from 'lucide-react';
 import Header from '../../components/Header/Header';
+import Footer from '@/components/Footer/Footer';
 import './AdminDashboard.css';
-import {Dialog, DialogContent } from '@radix-ui/react-dialog';
-import {DialogHeader, DialogTitle} from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@radix-ui/react-dialog';
+import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
+
 
 const { Title, Text } = Typography;
 
@@ -45,7 +47,7 @@ const AdminDashboard = () => {
     const [chapterForm, setChapterForm] = useState({ subjectId: '', name: '', order: 1 });
     const [problemForm, setProblemForm] = useState({ chapterId: '', name: '', description: '' });
     const [topicForm, setTopicForm] = useState({ problemId: '', name: '', description: '' });
-
+    const [activeTab, setActiveTab] = useState('overview');
     // Fetch dashboard data
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -341,12 +343,12 @@ const AdminDashboard = () => {
     };
 
     const CRUDDialog = ({
-                            isOpen,
-                            setIsOpen,
-                            title,
-                            children,
-                            onSubmit
-                        }) => (
+        isOpen,
+        setIsOpen,
+        title,
+        children,
+        onSubmit
+    }) => (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogContent>
                 <DialogHeader>
@@ -358,10 +360,10 @@ const AdminDashboard = () => {
                 }}>
                     {children}
                     <div className="flex justify-end gap-2 mt-4">
-                        <Button variant="outline" onClick={() => setIsOpen(false)}>
-                            Cancel
+                        <Button danger onClick={() => setIsOpen(false)}>
+                            Hủy
                         </Button>
-                        <Button type="submit">Submit</Button>
+                        <Button>Xác Nhận</Button>
                     </div>
                 </form>
             </DialogContent>
@@ -406,7 +408,7 @@ const AdminDashboard = () => {
             color: "text-pink-600"
         },
         {
-            title: "Tổng doanh thu", // Add this line for total revenue
+            title: "Tổng doanh thu (VNĐ)", // Add this line for total revenue
             value: dashboardData.totalRevenue, // Use the new state value
             icon: DollarSign, // You can use an appropriate icon for revenue
             color: "text-green-800" // Choose a color for the revenue stat
@@ -429,35 +431,71 @@ const AdminDashboard = () => {
     }
 
     return (
-        <Layout className="landing-page">
+        <Layout className="landing-page mt-16">
             <Header />
             <div className="admin-dashboard">
                 <div className="dashboard-header">
                     <div>
                         <Title level={2}>Dashboard</Title>
-                        <Text type="secondary">Welcome back, Admin</Text>
+                        <Text type="secondary">Chào mừng trở lại, Admin</Text>
                     </div>
                     <div className="date-display">
                         <ClockCircleOutlined />
-                        <Text type="secondary" style={{ marginLeft: '8px' }}>
+                        <Text type="secondary" style={{ marginLeft: '8px', marginRight: '1rem' }}>
                             {new Date().toLocaleDateString()}
                         </Text>
                     </div>
                 </div>
 
                 <Tabs defaultValue="overview" className="w-full">
-                    <TabsList>
-                        <TabsTrigger value="overview">Overview</TabsTrigger>
-                        <TabsTrigger value="subjects">Môn học</TabsTrigger>
-                        <TabsTrigger value="chapters">Chương</TabsTrigger>
-                        <TabsTrigger value="problems">Bài tập</TabsTrigger>
-                        <TabsTrigger value="topics">Chủ đề</TabsTrigger>
+                    <TabsList className="flex space-x-2 mb-4">
+                        <TabsTrigger
+                            value="overview"
+                            className={`px-4 py-2 rounded-lg ${activeTab === 'overview' ? 'bg-blue-500 text-black' : 'bg-gray-200 text-black'
+                                } hover:bg-blue-400`}
+                            onClick={() => setActiveTab('overview')}
+                        >
+                            Tổng Quan
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="subjects"
+                            className={`px-4 py-2 rounded-lg ${activeTab === 'subjects' ? 'bg-blue-500 text-black' : 'bg-gray-200 text-black'
+                                } hover:bg-blue-400`}
+                            onClick={() => setActiveTab('subjects')}
+                        >
+                            Môn Học
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="chapters"
+                            className={`px-4 py-2 rounded-lg ${activeTab === 'chapters' ? 'bg-blue-500 text-black' : 'bg-gray-200 text-black'
+                                } hover:bg-blue-400`}
+                            onClick={() => setActiveTab('chapters')}
+                        >
+                            Chương
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="topics"
+                            className={`px-4 py-2 rounded-lg ${activeTab === 'topics' ? 'bg-blue-500 text-black' : 'bg-gray-200 text-black'
+                                } hover:bg-blue-400`}
+                            onClick={() => setActiveTab('topics')}
+                        >
+                            Bài Học
+                        </TabsTrigger>
+                        <TabsTrigger
+                            value="problems"
+                            className={`px-4 py-2 rounded-lg ${activeTab === 'problems' ? 'bg-blue-500 text-black' : 'bg-gray-200 text-black'
+                                } hover:bg-blue-400`}
+                            onClick={() => setActiveTab('problems')}
+                        >
+                            Bài Tập
+                        </TabsTrigger>
+
                     </TabsList>
 
                     <TabsContent value="overview">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Tổng quan</CardTitle>
+                                <Title level={2}>Tổng quan</Title>
                             </CardHeader>
                             <CardContent>
                                 {loading ? (
@@ -489,13 +527,13 @@ const AdminDashboard = () => {
                         </Card>
                     </TabsContent>
 
-                    <TabsContent value="subjects">
+                    {/* <TabsContent value="subjects">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Quản ly mon học</CardTitle>
+                            <Title level={2}>Quản Lý Môn Học</Title>
                             </CardHeader>
                             <CardContent>
-                                <Button onClick={() => setIsAddSubjectOpen(true)}>Add Subject</Button>
+                                <Button onClick={() => setIsAddSubjectOpen(true)}>Thêm Môn Học</Button>
                                 <div className="mt-4">
                                     {Array.isArray(subjects) && subjects.length > 0 ? (
                                         subjects.map((subject) => (
@@ -538,15 +576,120 @@ const AdminDashboard = () => {
                                 required
                             />
                         </CRUDDialog>
-                    </TabsContent>
+                    </TabsContent> */}
 
-                    <TabsContent value="chapters">
+                    <TabsContent value="subjects">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Chapters Management</CardTitle>
+                                <Title level={2}>Quản Lý Môn Học</Title>
                             </CardHeader>
                             <CardContent>
-                                <Button onClick={() => setIsAddChapterOpen(true)}>Add Chapter</Button>
+                                <Button onClick={() => setIsAddSubjectOpen(true)}>Thêm Môn Học</Button>
+                                <div className="mt-4">
+                                    {Array.isArray(subjects) && subjects.length > 0 ? (
+                                        <Table
+                                            dataSource={subjects}
+                                            rowKey="id"
+                                            columns={[
+                                                {
+                                                    title: 'Tên Môn Học',
+                                                    dataIndex: 'name',
+                                                    key: 'name',
+                                                },
+                                                // {
+                                                //     title: 'Giá',
+                                                //     dataIndex: 'price',
+                                                //     key: 'price',
+                                                //     render: (price) => `$${price}`,
+                                                // },
+                                                {
+                                                    title: 'Quản Lý',
+                                                    key: 'actions',
+                                                    render: (_, subject) => (
+                                                        <div className="flex space-x-2">
+                                                            <Button onClick={() => {
+                                                                setSelectedSubject(subject);
+                                                                setSubjectForm({ name: subject.name, price: subject.price });
+                                                                setIsAddSubjectOpen(true);
+                                                            }}>
+                                                                Sửa
+                                                            </Button>
+                                                            <Button danger onClick={() => handleDeleteSubject(subject.id)}>
+                                                                Xóa
+                                                            </Button>
+                                                        </div>
+                                                    ),
+                                                },
+                                            ]}
+                                            pagination={false}
+                                        />
+                                    ) : (
+                                        <div>No subjects available</div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* <CRUDDialog
+                            isOpen={isAddSubjectOpen}
+                            setIsOpen={setIsAddSubjectOpen}
+                            title={selectedSubject ? "Edit Subject" : "Add Subject"}
+                            onSubmit={selectedSubject ? handleUpdateSubject : handleAddSubject}
+                        >
+                            <input
+                                type="text"
+                                placeholder="Subject Name"
+                                value={subjectForm.name}
+                                onChange={(e) => setSubjectForm({ ...subjectForm, name: e.target.value })}
+                                required
+                            />
+                            <input
+                                type="number"
+                                placeholder="Price"
+                                value={subjectForm.price}
+                                onChange={(e) => setSubjectForm({ ...subjectForm, price: e.target.value })}
+                                required
+                            />
+                        </CRUDDialog> */}
+
+                        <CRUDDialog
+                            isOpen={isAddSubjectOpen}
+                            setIsOpen={setIsAddSubjectOpen}
+                            // title={selectedSubject ? "Edit Subject" : "Add Subject"}
+                            onSubmit={selectedSubject ? handleUpdateSubject : handleAddSubject}
+                        >
+                            <div className="space-y-4 mt-3">
+                                <h2 className="text-2xl font-semibold text-center text-gray-800">
+                                    {selectedSubject ? "Sửa Môn Học" : "Thêm Môn Học"}
+                                </h2>
+                                <input
+                                    type="text"
+                                    placeholder="Tên Môn Học"
+                                    value={subjectForm.name}
+                                    onChange={(e) => setSubjectForm({ ...subjectForm, name: e.target.value })}
+                                    required
+                                    className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                                <input
+                                    type="number"
+                                    placeholder="Giá"
+                                    value={subjectForm.price}
+                                    onChange={(e) => setSubjectForm({ ...subjectForm, price: e.target.value })}
+                                    required
+                                    className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                            </div>
+                        </CRUDDialog>
+
+                    </TabsContent>
+
+                    {/* <TabsContent value="chapters">
+                        <Card>
+                            <CardHeader>
+                                <Title level={2}>Quản Lý Chương</Title>
+                            </CardHeader>
+                            <CardContent>
+                                <Button onClick={() => setIsAddChapterOpen(true)}>Thêm Chương</Button>
                                 <div className="mt-4">
                                     {Array.isArray(chapters) && chapters.length > 0 ? (
                                         chapters.map((chapter) => (
@@ -598,15 +741,264 @@ const AdminDashboard = () => {
                                 required
                             />
                         </CRUDDialog>
-                    </TabsContent>
+                    </TabsContent> */}
 
-                    <TabsContent value="problems">
+                    <TabsContent value="chapters">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Problems Management</CardTitle>
+                                <Title level={2}>Quản Lý Chương</Title>
                             </CardHeader>
                             <CardContent>
-                                <Button onClick={() => setIsAddProblemOpen(true)}>Add Problem</Button>
+                                <Button onClick={() => setIsAddChapterOpen(true)}>Thêm Chương</Button>
+                                <div className="mt-4">
+                                    {Array.isArray(chapters) && chapters.length > 0 ? (
+                                        <Table
+                                            dataSource={chapters}
+                                            rowKey="id"
+                                            pagination={false}
+                                            columns={[
+                                                {
+                                                    title: 'Tên Chương',
+                                                    dataIndex: 'name',
+                                                    key: 'name',
+                                                },
+                                                {
+                                                    title: 'Môn Học',
+                                                    dataIndex: 'subjectName',
+                                                    key: 'subjectName',
+                                                },
+                                                {
+                                                    title: 'Bài Học',
+                                                    key: 'topics',
+                                                    render: (_, chapter) => (
+                                                        <ul>
+                                                            {chapter.topics.map((topic) => (
+                                                                <li key={topic.id}>{topic.name}</li>
+                                                            ))}
+                                                        </ul>
+                                                    ),
+                                                },
+                                                {
+                                                    title: 'Quản Lý',
+                                                    key: 'actions',
+                                                    render: (_, chapter) => (
+                                                        <div className="flex space-x-2">
+                                                            <Button onClick={() => {
+                                                                setSelectedChapter(chapter);
+                                                                setChapterForm({ subjectId: chapter.subjectId, name: chapter.name });
+                                                                setIsAddChapterOpen(true);
+                                                            }}>
+                                                                Sửa
+                                                            </Button>
+                                                            <Button danger onClick={() => handleDeleteChapter(chapter.id)}>
+                                                                Xóa
+                                                            </Button>
+                                                        </div>
+                                                    ),
+                                                },
+                                            ]}
+                                        />
+                                    ) : (
+                                        <div>No chapters available</div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                        
+                        <CRUDDialog
+                            isOpen={isAddChapterOpen}
+                            setIsOpen={setIsAddChapterOpen}
+                            // title={selectedChapter ? "Edit Chapter" : "Add Chapter"}
+                            onSubmit={selectedChapter ? handleUpdateChapter : handleAddChapter}
+                        >
+                            <div className="space-y-4 mt-3">
+                                <h2 className="text-2xl font-semibold text-center text-gray-800">
+                                    {selectedChapter ? "Sửa Chương" : "Thêm Chương"}
+                                </h2>
+                            <input
+                                type="text"
+                                placeholder="Tên Chương"
+                                value={chapterForm.name}
+                                onChange={(e) => setChapterForm({ ...chapterForm, name: e.target.value })}
+                                required
+                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Subject ID"
+                                value={chapterForm.subjectId}
+                                onChange={(e) => setChapterForm({ ...chapterForm, subjectId: e.target.value })}
+                                required
+                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            </div>
+                        </CRUDDialog>
+                    </TabsContent>
+
+                    {/* <TabsContent value="topics">
+                        <Card>
+                            <CardHeader>
+                                <Title level={2}>Quản Lý Bài Học</Title>
+                            </CardHeader>
+                            <CardContent>
+                                <Button onClick={() => setIsAddTopicOpen(true)}>Thêm Bài Học</Button>
+                                <div className="mt-4">
+                                    {Array.isArray(topics) && topics.length > 0 ? (
+                                        topics.map((topic) => (
+                                            <div key={topic.id} className="flex flex-col mb-4">
+                                                <div className="font-bold">{topic.name} (Chapter: {topic.chapterName})</div>
+                                                <div>
+                                                    <strong>Problems:</strong>
+                                                    <ul>
+                                                        {topic.problems.map((problem) => (
+                                                            <li key={problem.id}>{problem.name}</li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                                <div>
+                                                    <Button onClick={() => {
+                                                        setSelectedTopic(topic);
+                                                        setTopicForm({
+                                                            chapterId: topic.chapterId,
+                                                            name: topic.name
+                                                        });
+                                                        setIsAddTopicOpen(true);
+                                                    }}>Edit</Button>
+                                                    <Button onClick={() => handleDeleteTopic(topic.id)}>Delete</Button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div>No topics available</div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <CRUDDialog
+                            isOpen={isAddTopicOpen}
+                            setIsOpen={setIsAddTopicOpen}
+                            title={selectedTopic ? "Edit Topic" : "Add Topic"}
+                            onSubmit={selectedTopic ? handleUpdateTopic : handleAddTopic}
+                        >
+                            <input
+                                type="text"
+                                placeholder="Topic Name"
+                                value={topicForm.name}
+                                onChange={(e) => setTopicForm({ ...topicForm, name: e.target.value })}
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Chapter ID"
+                                value={topicForm.chapterId}
+                                onChange={(e) => setTopicForm({ ...topicForm, chapterId: e.target.value })}
+                                required
+                            />
+                        </CRUDDialog>
+                    </TabsContent> */}
+
+                    <TabsContent value="topics">
+                        <Card>
+                            <CardHeader>
+                                <Title level={2}>Quản Lý Bài Học</Title>
+                            </CardHeader>
+                            <CardContent>
+                                <Button onClick={() => setIsAddTopicOpen(true)}>Thêm Bài Học</Button>
+                                <div className="mt-4">
+                                    {Array.isArray(topics) && topics.length > 0 ? (
+                                        <Table
+                                            dataSource={topics}
+                                            rowKey="id"
+                                            pagination={false}
+                                            columns={[
+                                                {
+                                                    title: 'Bài Học',
+                                                    dataIndex: 'name',
+                                                    key: 'name',
+                                                },
+                                                {
+                                                    title: 'Chương',
+                                                    dataIndex: 'chapterName',
+                                                    key: 'chapterName',
+                                                },
+                                                {
+                                                    title: 'Bài Toán',
+                                                    key: 'problems',
+                                                    render: (_, topic) => (
+                                                        <ul>
+                                                            {topic.problems.map((problem) => (
+                                                                <li key={problem.id}>{problem.name}</li>
+                                                            ))}
+                                                        </ul>
+                                                    ),
+                                                },
+                                                {
+                                                    title: 'Quản Lý',
+                                                    key: 'actions',
+                                                    render: (_, topic) => (
+                                                        <div className="flex space-x-2">
+                                                            <Button onClick={() => {
+                                                                setSelectedTopic(topic);
+                                                                setTopicForm({
+                                                                    chapterId: topic.chapterId,
+                                                                    name: topic.name,
+                                                                });
+                                                                setIsAddTopicOpen(true);
+                                                            }}>
+                                                                Sửa
+                                                            </Button>
+                                                            <Button danger onClick={() => handleDeleteTopic(topic.id)}>
+                                                                Xóa
+                                                            </Button>
+                                                        </div>
+                                                    ),
+                                                },
+                                            ]}
+                                        />
+                                    ) : (
+                                        <div>No topics available</div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <CRUDDialog
+                            isOpen={isAddTopicOpen}
+                            setIsOpen={setIsAddTopicOpen}
+                            // title={selectedTopic ? "Edit Topic" : "Add Topic"}
+                            onSubmit={selectedTopic ? handleUpdateTopic : handleAddTopic}
+                        >
+                            <div className="space-y-4 mt-3">
+                                <h2 className="text-2xl font-semibold text-center text-gray-800">
+                                    {selectedTopic ? "Sửa Bài Học" : "Thêm Bài Học"}
+                                </h2>
+                            <input
+                                type="text"
+                                placeholder="Tên Bài Học"
+                                value={topicForm.name}
+                                onChange={(e) => setTopicForm({ ...topicForm, name: e.target.value })}
+                                required
+                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Chapter ID"
+                                value={topicForm.chapterId}
+                                onChange={(e) => setTopicForm({ ...topicForm, chapterId: e.target.value })}
+                                required
+                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            </div>
+                        </CRUDDialog>
+                    </TabsContent>
+
+                    {/* <TabsContent value="problems">
+                        <Card>
+                            <CardHeader>
+                                <Title level={2}>Quản Lý Bài Toán</Title>
+                            </CardHeader>
+                            <CardContent>
+                                <Button onClick={() => setIsAddProblemOpen(true)}>Thêm Bài Toán</Button>
                                 <div className="mt-4">
                                     {Array.isArray(problems) && problems.length > 0 ? (
                                         problems.map((problem) => (
@@ -670,71 +1062,122 @@ const AdminDashboard = () => {
                                 required
                             />
                         </CRUDDialog>
-                    </TabsContent>
+                    </TabsContent> */}
 
-                    <TabsContent value="topics">
+                    <TabsContent value="problems">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Topics Management</CardTitle>
+                                <Title level={2}>Quản Lý Bài Toán</Title>
                             </CardHeader>
                             <CardContent>
-                                <Button onClick={() => setIsAddTopicOpen(true)}>Add Topic</Button>
+                                <Button onClick={() => setIsAddProblemOpen(true)}>Thêm Bài Toán</Button>
                                 <div className="mt-4">
-                                    {Array.isArray(topics) && topics.length > 0 ? (
-                                        topics.map((topic) => (
-                                            <div key={topic.id} className="flex flex-col mb-4">
-                                                <div className="font-bold">{topic.name} (Chapter: {topic.chapterName})</div>
-                                                <div>
-                                                    <strong>Problems:</strong>
-                                                    <ul>
-                                                        {topic.problems.map((problem) => (
-                                                            <li key={problem.id}>{problem.name}</li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                                <div>
-                                                    <Button onClick={() => {
-                                                        setSelectedTopic(topic);
-                                                        setTopicForm({
-                                                            chapterId: topic.chapterId,
-                                                            name: topic.name
-                                                        });
-                                                        setIsAddTopicOpen(true);
-                                                    }}>Edit</Button>
-                                                    <Button onClick={() => handleDeleteTopic(topic.id)}>Delete</Button>
-                                                </div>
-                                            </div>
-                                        ))
+                                    {Array.isArray(problems) && problems.length > 0 ? (
+                                        <Table
+                                            dataSource={problems}
+                                            rowKey="id"
+                                            pagination={false}
+                                            columns={[
+                                                {
+                                                    title: 'Bài Toán',
+                                                    dataIndex: 'name',
+                                                    key: 'name',
+                                                },
+                                                {
+                                                    title: 'Bài Học',
+                                                    dataIndex: 'topicName',
+                                                    key: 'topicName',
+                                                },
+                                                {
+                                                    title: 'Mô Tả',
+                                                    dataIndex: 'description',
+                                                    key: 'description',
+                                                },
+                                                {
+                                                    title: 'Tham Số',
+                                                    key: 'parameters',
+                                                    render: (_, problem) => (
+                                                        <ul>
+                                                            {problem.getPPVM.map((param) => (
+                                                                <li key={param.parameterId}>
+                                                                    {param.symbol}: {param.value}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    ),
+                                                },
+                                                {
+                                                    title: 'Quản Lý',
+                                                    key: 'actions',
+                                                    render: (_, problem) => (
+                                                        <div className="flex space-x-2">
+                                                            <Button onClick={() => {
+                                                                setSelectedProblem(problem);
+                                                                setProblemForm({
+                                                                    topicId: problem.topicId,
+                                                                    name: problem.name,
+                                                                    description: problem.description,
+                                                                });
+                                                                setIsAddProblemOpen(true);
+                                                            }}>
+                                                                Sửa
+                                                            </Button>
+                                                            <Button danger onClick={() => handleDeleteProblem(problem.id)}>
+                                                                Xóa
+                                                            </Button>
+                                                        </div>
+                                                    ),
+                                                },
+                                            ]}
+                                        />
                                     ) : (
-                                        <div>No topics available</div>
+                                        <div>No problems available</div>
                                     )}
                                 </div>
                             </CardContent>
                         </Card>
+
                         <CRUDDialog
-                            isOpen={isAddTopicOpen}
-                            setIsOpen={setIsAddTopicOpen}
-                            title={selectedTopic ? "Edit Topic" : "Add Topic"}
-                            onSubmit={selectedTopic ? handleUpdateTopic : handleAddTopic}
+                            isOpen={isAddProblemOpen}
+                            setIsOpen={setIsAddProblemOpen}
+                            // title={selectedProblem ? "Edit Problem" : "Add Problem"}
+                            onSubmit={selectedProblem ? handleUpdateProblem : handleAddProblem}
                         >
+                            <div className="space-y-4 mt-3">
+                                <h2 className="text-2xl font-semibold text-center text-gray-800">
+                                    {selectedProblem ? "Sửa Bài Toán" : "Thêm Bài Toán"}
+                                </h2>
                             <input
                                 type="text"
-                                placeholder="Topic Name"
-                                value={topicForm.name}
-                                onChange={(e) => setTopicForm({ ...topicForm, name: e.target.value })}
+                                placeholder="Tên Bài Toán"
+                                value={problemForm.name}
+                                onChange={(e) => setProblemForm({ ...problemForm, name: e.target.value })}
                                 required
+                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                             <input
                                 type="text"
-                                placeholder="Chapter ID"
-                                value={topicForm.chapterId}
-                                onChange={(e) => setTopicForm({ ...topicForm, chapterId: e.target.value })}
+                                placeholder="Topic ID"
+                                value={problemForm.topicId}
+                                onChange={(e) => setProblemForm({ ...problemForm, topicId: e.target.value })}
                                 required
+                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
+                            <textarea
+                                placeholder="Mô Tả"
+                                value={problemForm.description}
+                                onChange={(e) => setProblemForm({ ...problemForm, description: e.target.value })}
+                                required
+                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            </div>
                         </CRUDDialog>
                     </TabsContent>
+
+
                 </Tabs>
             </div>
+            <Footer />
         </Layout>
     );
 };

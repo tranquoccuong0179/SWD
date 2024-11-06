@@ -45,10 +45,10 @@ const TopicDetailsPage = () => {
 
     const [problemId, setProblemId] = useState(''); // Thêm problemId
     const token = localStorage.getItem('accessToken');
-    console.log("Token exist?:", !!token);
-    console.log("Token value:", token);
+    // console.log("Token exist?:", !!token);
+    // console.log("Token value:", token);
 
-    const headers = {
+    const headers = { 
         'accept': '*/*',
         'Authorization': `Bearer ${token}`,
     };

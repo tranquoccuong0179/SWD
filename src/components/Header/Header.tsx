@@ -52,7 +52,8 @@ const Header = () => {
       key: 'profile',
       icon: <UserOutlined />,
       label: 'Hồ sơ',
-      onClick: handleProfileClick
+      onClick: handleProfileClick,
+      style: { color: 'blue' }
     },
     {
       type: 'divider',
@@ -62,10 +63,11 @@ const Header = () => {
       icon: <WalletOutlined />,
       label: 'Ví của tôi',
       onClick: handleWalletClick,
-      style: { color: 'green' },
+      style: localStorage?.getItem('role') === 'User' ? {color: 'green'} : { display: 'none' }
     },
     {
       type: 'divider',
+      style: localStorage?.getItem('role') === 'User' ? {color: 'green'} : { display: 'none' }
     },
     {
       key: 'logout',

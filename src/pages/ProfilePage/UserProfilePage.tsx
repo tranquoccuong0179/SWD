@@ -3,13 +3,14 @@ import { Layout, Button, Typography, Input, Row, Col, Form, Divider, message } f
 import { UserOutlined, MailOutlined, PhoneOutlined, HomeOutlined, FacebookOutlined, TwitterOutlined, LinkedinOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import Header from '../../components/Header/Header';
-
+import Footer from '@/components/Footer/Footer';
 import './UserProfilePage.css';
 
 const { Title, Text } = Typography;
 
 const UserProfilePage = () => {
     const [isEditing, setIsEditing] = useState(false);
+    const [isEditingPass, setIsEditingPass] = useState(false);
     const [userData, setUserData] = useState({
         userName: '',
         fullName: '',
@@ -28,23 +29,30 @@ const UserProfilePage = () => {
     });
 
     useEffect(() => {
+        const userData = localStorage.getItem('userData') || '';
+        const map = JSON.parse(userData)
         const storedUserData = {
-            userName: localStorage.getItem('userName') || '',
-            fullName: localStorage.getItem('fullName') || '',
-            email: localStorage.getItem('email') || '',
-            phoneNumber: localStorage.getItem('phoneNumber') || '',
-            gender: localStorage.getItem('gender') || '',
-            address: localStorage.getItem('address') || '',
-            facebook: localStorage.getItem('facebook') || '',
-            twitter: localStorage.getItem('twitter') || '',
-            linkedin: localStorage.getItem('linkedin') || ''
+            userName: map?.userName || '',
+            fullName: map?.fullName || '',
+            email: map?.email || '',
+            phoneNumber: map?.phoneNumber || '',
+            gender: map?.gender || ''
+            // address: localStorage.getItem('address') || '',
+            // facebook: localStorage.getItem('facebook') || '',
+            // twitter: localStorage.getItem('twitter') || '',
+            // linkedin: localStorage.getItem('linkedin') || ''
         };
         setUserData(storedUserData);
     }, []);
 
+
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
     };
+    const handleEditPassToggle = () => {
+        setIsEditingPass(!isEditingPass);
+    };
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -55,8 +63,8 @@ const UserProfilePage = () => {
         const { name, value } = e.target;
         setPasswordData({ ...passwordData, [name]: value });
     };
-
-    const handleSave = async () => {
+    const handleSavePass = async () => {
+        const token = localStorage.getItem('accessToken');
         if (passwordData.newPassword && passwordData.confirmNewPassword) {
             if (passwordData.newPassword !== passwordData.confirmNewPassword) {
                 message.error("New password and confirmation do not match.");
@@ -67,9 +75,39 @@ const UserProfilePage = () => {
                 return;
             }
             localStorage.setItem('password', passwordData.newPassword);
-            message.success("Password updated successfully");
         }
+        try {
+            const response = await axios.put(
+                'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/ChangePassword',
+                {
+                    oldPassword: passwordData?.currentPassword,
+                    password: passwordData?.newPassword,
+                    confirmPassword: passwordData?.confirmNewPassword
+                },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+            console.log("sđ", response);
 
+            if (response?.status === 200) {
+                message.success("Password updated successfully");
+                setIsEditingPass(false);
+            } else {
+                message.error("Failed to update profile. Please try again.");
+            }
+
+        } catch (error) {
+
+        }
+    }
+
+    const handleSave = async () => {
+
+        const token = localStorage.getItem('accessToken');
         try {
             const response = await axios.put(
                 'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/UpdateProfile',
@@ -82,13 +120,15 @@ const UserProfilePage = () => {
                 },
                 {
                     headers: {
+                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     }
                 }
             );
 
             if (response.status === 200) {
-                Object.keys(userData).forEach(key => localStorage.setItem(key, userData[key]));
+                // Object.keys(userData).forEach(key => localStorage.setItem(key, userData[key]));
+                localStorage.setItem("userData", JSON.stringify(userData));
                 message.success("Profile updated successfully");
                 setIsEditing(false);
             } else {
@@ -103,20 +143,47 @@ const UserProfilePage = () => {
     return (
         <Layout className="user-profile-page">
             <Header />
-            <div className="profile-container">
-                <div className="profile-header">
-                    <Title level={3}>Welcome, {userData.fullName || 'User'}</Title>
-                    <Text type="secondary">{new Date().toDateString()}</Text>
+            <div className="profile-container mb-10">
+                {/* <div className="profile-header">
+                    <Title level={3}>Chào mừng, {userData.fullName || 'User'}!</Title>
                     <Button type="primary" onClick={handleEditToggle}>
-                        {isEditing ? "Cancel" : "Edit"}
+                        {isEditing ? "Hủy" : "Sửa thông tin"}
                     </Button>
-                </div>
+                    <Button type="primary" onClick={handleEditPassToggle}>
+                        {isEditingPass ? "Hủy" : "Đổi mật khẩu"}
+                    </Button>
+                </div> */}
+                <div className="profile-header flex justify-between items-start">
+                    <div className="w-10/12 space-y-2">
+                        <Title level={3}>Chào mừng, {userData.fullName || 'User'}!</Title>
+                        <div className="text-gray-600">
+                            {new Date().toLocaleString()} {/* Hiển thị thời gian hiện tại */}
+                        </div>
+                    </div>
 
-                <Divider orientation="left">Account Information</Divider>
+                    <div className="w-2/12 flex flex-col space-y-4">
+                        <Button
+                            type="primary"
+                            onClick={handleEditToggle}
+                            className="w-full"
+                        >
+                            {isEditing ? "Hủy" : "Sửa thông tin"}
+                        </Button>
+                        <Button
+                            type="primary"
+                            onClick={handleEditPassToggle}
+                            className="w-full"
+                        >
+                            {isEditingPass ? "Hủy" : "Đổi mật khẩu"}
+                        </Button>
+                    </div>
+                </div>
+                {/* <Text type="secondary">{new Date().toDateString()}</Text> */}
+                <Divider orientation="left">Thông tin tài khoản</Divider>
                 <Form layout="vertical" className="profile-form">
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item label="User Name" required>
+                            <Form.Item label="Tên đăng nhập" required>
                                 <Input
                                     name="userName"
                                     value={userData.userName}
@@ -127,7 +194,7 @@ const UserProfilePage = () => {
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label="Password">
+                            <Form.Item label="Mật khẩu">
                                 <Input.Password
                                     placeholder="********"
                                     disabled
@@ -136,12 +203,12 @@ const UserProfilePage = () => {
                         </Col>
                     </Row>
 
-                    {isEditing && (
+                    {isEditingPass && (
                         <>
-                            <Divider orientation="left">Change Password</Divider>
+                            <Divider orientation="left">Đổi mật khẩu</Divider>
                             <Row gutter={16}>
                                 <Col span={8}>
-                                    <Form.Item label="Current Password">
+                                    <Form.Item label="Mật khẩu cũ">
                                         <Input.Password
                                             name="currentPassword"
                                             value={passwordData.currentPassword}
@@ -151,7 +218,7 @@ const UserProfilePage = () => {
                                     </Form.Item>
                                 </Col>
                                 <Col span={8}>
-                                    <Form.Item label="New Password">
+                                    <Form.Item label="Mật khẩu mới">
                                         <Input.Password
                                             name="newPassword"
                                             value={passwordData.newPassword}
@@ -161,7 +228,7 @@ const UserProfilePage = () => {
                                     </Form.Item>
                                 </Col>
                                 <Col span={8}>
-                                    <Form.Item label="Confirm New Password">
+                                    <Form.Item label="Nhập lại mật khẩu mới">
                                         <Input.Password
                                             name="confirmNewPassword"
                                             value={passwordData.confirmNewPassword}
@@ -171,13 +238,18 @@ const UserProfilePage = () => {
                                     </Form.Item>
                                 </Col>
                             </Row>
+
+                            <Button type="primary" onClick={handleSavePass}>
+                                Lưu
+                            </Button>
+
                         </>
                     )}
 
-                    <Divider orientation="left">Contact Details</Divider>
+                    <Divider orientation="left">Thông tin cá nhân</Divider>
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item label="Full Name" required>
+                            <Form.Item label="Họ và Tên" required>
                                 <Input
                                     name="fullName"
                                     value={userData.fullName}
@@ -192,13 +264,14 @@ const UserProfilePage = () => {
                                     name="email"
                                     value={userData.email}
                                     onChange={handleInputChange}
-                                    disabled={!isEditing}
+                                    // disabled={!isEditing}
+                                    disabled
                                     prefix={<MailOutlined />}
                                 />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label="Phone Number">
+                            <Form.Item label="Số điện thoại">
                                 <Input
                                     name="phoneNumber"
                                     value={userData.phoneNumber}
@@ -208,7 +281,7 @@ const UserProfilePage = () => {
                                 />
                             </Form.Item>
                         </Col>
-                        <Col span={12}>
+                        {/* <Col span={12}>
                             <Form.Item label="Address">
                                 <Input
                                     name="address"
@@ -218,10 +291,20 @@ const UserProfilePage = () => {
                                     prefix={<HomeOutlined />}
                                 />
                             </Form.Item>
+                        </Col> */}
+                        <Col span={12}>
+                            <Form.Item label="Giới tính">
+                                <Input
+                                    name="gender"
+                                    value={userData.gender}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                />
+                            </Form.Item>
                         </Col>
                     </Row>
 
-                    <Divider orientation="left">Personal Information</Divider>
+                    {/* <Divider orientation="left">Personal Information</Divider>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item label="Gender">
@@ -233,9 +316,9 @@ const UserProfilePage = () => {
                                 />
                             </Form.Item>
                         </Col>
-                    </Row>
+                    </Row> */}
 
-                    <Divider orientation="left">Social Links</Divider>
+                    {/* <Divider orientation="left">Social Links</Divider>
                     <Row gutter={16}>
                         <Col span={8}>
                             <Form.Item label="Facebook">
@@ -270,15 +353,16 @@ const UserProfilePage = () => {
                                 />
                             </Form.Item>
                         </Col>
-                    </Row>
+                    </Row> */}
 
                     {isEditing && (
                         <Button type="primary" onClick={handleSave}>
-                            Save
+                            Lưu
                         </Button>
                     )}
                 </Form>
             </div>
+            <Footer />
         </Layout>
     );
 };
