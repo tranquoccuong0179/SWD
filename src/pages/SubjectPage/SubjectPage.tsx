@@ -6,6 +6,7 @@ import Header from "../../components/Header/Header.tsx";
 import { Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { subjectService } from '../../services/subjectServices.ts';
+import TempPic from "../../assets/pic1.jpg"
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -49,7 +50,7 @@ const SubjectPage = () => {
                     <div className="subject-list" ref={listRef}>
                         {subject.map(subject => (
                             <Card key={subject?.id} hoverable className="subject-card">
-                                <img alt={subject?.title} src={subject?.image || 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg'} className="subject-image mb-2" />
+                                <img alt={subject?.title} src={subject?.image || TempPic} className="subject-image mb-2" />
                                 <Title level={4} className='mb-2'>{subject?.name}</Title>
                                 <Paragraph ellipsis={{ rows: 2 }}>{subject?.description}</Paragraph>
                                 {/* <div className="subject-details">

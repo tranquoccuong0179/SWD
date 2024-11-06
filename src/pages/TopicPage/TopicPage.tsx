@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+import TempPic from "../../assets/pic1.jpg"
 
 interface Topic {
     id: number;
@@ -53,7 +54,7 @@ const TopicPage = () => {
                         id: topic.id,
                         name: topic.name,
                         description: topic.description,
-                        image: topic.imageUrl || 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg',
+                        image: topic.imageUrl || TempPic,
                         lessons: topic.lessonCount || 0,
                         students: topic.studentCount || 0,
                         chapterId: topic.chapterId,

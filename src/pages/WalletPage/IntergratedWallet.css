@@ -205,13 +205,20 @@ header {
     color: #991b1b;
 }
 .name-col {
-    width: 2rem; /* Độ rộng tùy chỉnh để phần tên lời giải có khoảng trống phù hợp */
+    width: 2rem;
 }
 
 .url-col {
-    width: auto; /* Để phần URL tự động điều chỉnh theo nội dung */
+    width: auto;
     word-wrap: break-word;
     white-space: normal;
     overflow-wrap: break-word;
-    max-width: 70rem; /* Đặt độ rộng tối đa cho cột URL */
+    max-width: 55rem;
+}
+.des-col {
+    width: auto;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
+    max-width: 15rem;
 }

@@ -60,6 +60,7 @@ const IntegratedWallet: React.FC = () => {
         'accept': '*/*',
         'Authorization': `Bearer ${token}`,
     };
+
     // Fetch wallet data
     const fetchWalletData = async () => {
         try {
@@ -100,6 +101,7 @@ const IntegratedWallet: React.FC = () => {
             setIsLoading(false);
         }
     };
+
     // Fetch transaction history
     const fetchTransaction = async () => {
         try {
@@ -115,7 +117,6 @@ const IntegratedWallet: React.FC = () => {
             setLoading(false);
         }
     };
-
 
     //Fetch solution data
     const fetchSolutions = async () => {
@@ -232,7 +233,7 @@ const IntegratedWallet: React.FC = () => {
             dataIndex: 'amount',
             key: 'amount',
             render: (amount: number) => (
-                <div className={`font-medium ${amount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                <div className={`font-medium ${amount >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
                     {formatCurrency(amount)}
                 </div>
             ),
@@ -268,21 +269,37 @@ const IntegratedWallet: React.FC = () => {
         //         );
         //     },
         // },
+        // {
+        //     title: 'Trạng thái',
+        //     dataIndex: 'status',
+        //     key: 'status',
+        //     render: (text: string) => <div className="url-col font-medium text-gray-800">{text}</div>
+        // },
         {
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
-            render: (text: string) => <div className="url-col font-medium text-gray-800">{text}</div>
-        },
+            render: (text: string) => (
+                <div className={`url-col font-medium ${text === 'Complete' ? 'text-green-600' : text === 'Failed' ? 'text-red-600' : 'text-gray-800'}`}>
+                    {text}
+                </div>
+            )
+        }
     ];
 
     // Table columns for purchased solution
     const courseColumns = [
         {
-            title: 'Tên lời giải',
+            title: 'Tên',
             dataIndex: 'name',
             key: 'name',
             render: (text: string) => <div className="name-col font-medium text-gray-800">{text}</div>
+        },
+        {
+            title: 'Mô tả',
+            dataIndex: 'description',
+            key: 'description',
+            render: (text: string) => <div className="des-col font-medium text-gray-800">{text}</div>
         },
         {
             title: 'URL',
@@ -336,7 +353,6 @@ const IntegratedWallet: React.FC = () => {
                                     <History className="h-6 w-6 text-gray-500" />
                                     <h2 className="text-lg font-semibold leading-6 text-gray-900">Lịch sử giao dịch</h2>
                                 </div>
-                                {/* <Table columns={transactionColumns} dataSource={walletData.transactions} rowKey="id" pagination={{ pageSize: 5 }} /> */}
                                 <Table
                                     columns={transactionColumns}
                                     dataSource={transaction}
@@ -353,25 +369,6 @@ const IntegratedWallet: React.FC = () => {
                                     <GraduationCap className="h-6 w-6 text-gray-500" />
                                     <h2 className="text-lg font-semibold leading-6 text-gray-900">Lời giải đã mua</h2>
                                 </div>
-                                {/* <Table
-                                    columns={[
-                                        {
-                                            title: 'Tên lời giải',
-                                            dataIndex: 'name',
-                                            key: 'name',
-                                            render: (text: string) => <div className="name-col font-medium text-gray-800">{text}</div>
-                                        },
-                                        {
-                                            title: 'URL',
-                                            dataIndex: 'url',
-                                            key: 'url',
-                                            render: (text: string) => <div className="url-col font-medium text-gray-800">{text}</div>
-                                        },
-                                    ]}
-                                    dataSource={solutions}
-                                    rowKey="id"
-                                    pagination={{ pageSize: 5 }}
-                                /> */}
                                 <Table
                                     columns={courseColumns}
                                     dataSource={solutions}

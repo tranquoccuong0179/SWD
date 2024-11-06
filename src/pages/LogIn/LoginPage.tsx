@@ -67,13 +67,26 @@ const LoginPage: React.FC = () => {
             phoneNumber: responseData.user.phoneNumber,
           })
         );
+
+        const userData = {
+          id: responseData.user.id,
+          userName: responseData.user.userName,
+          fullName: responseData.user.fullName,
+          email: responseData.user.email,
+          phoneNumber: responseData.user.phoneNumber,
+          gender: responseData.user.gender,
+          role: responseData.role
+        };
+        localStorage.setItem('userData', JSON.stringify(userData));
+        // console.log('USER DATA:', userData);
+        
+
         if (responseData.role === 'AdminSystem') {
           localStorage.setItem('accessToken', responseData.token.accessToken);
           localStorage.setItem('refreshToken', responseData.token.refreshToken);
           localStorage.setItem('fullName', responseData.user.fullName);
           localStorage.setItem('id', responseData.user.id);
           localStorage.setItem('role', responseData.role)
-          // console.log("ss33");
           navigate('/admin')
         } else {
           localStorage.setItem('accessToken', responseData.token.accessToken);

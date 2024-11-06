@@ -21,7 +21,6 @@ const TopicDetailsPage = () => {
     const { id } = useParams();
     const [activeLesson, setActiveLesson] = useState(1);
     const [inputValues, setInputValues] = useState({});
-    const { topicId, chapterId, subjectId } = useParams();
     const navigate = useNavigate();
 
     const handleGoBack = () => {
@@ -39,10 +38,10 @@ const TopicDetailsPage = () => {
             }));
         }
     };
-    const [selectedParameters, setSelectedParameters] = useState([
-        { parameterId: '', value: 0 },
-        { parameterId: '', value: 0 }
-    ]);
+    // const [selectedParameters, setSelectedParameters] = useState([
+    //     { parameterId: '', value: 0 },
+    //     { parameterId: '', value: 0 }
+    // ]);
 
     const [problemId, setProblemId] = useState(''); // Thêm problemId
     const token = localStorage.getItem('accessToken');

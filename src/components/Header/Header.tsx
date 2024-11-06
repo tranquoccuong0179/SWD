@@ -24,13 +24,22 @@ const Header = () => {
     window.location.href = '/home';
   };
 
-  const handleWalletClick = () => {
-    if (localStorage?.getItem('role') === 'AdminSystem') {
-      navigate('/admin')
-    } else {
-      navigate('/wallet');
-    }
+  // const handleWalletClick = () => {
+  //   if (localStorage?.getItem('role') === 'AdminSystem') {
+  //     navigate('/admin')
+  //   } else {
+  //     navigate('/wallet');
+  //   }
+  // };
 
+  const handleDashboardClick = () => {
+    navigate('/admin')
+  }
+  const handleWalletClick = () => {
+    navigate('/wallet')
+  }
+  const handleProfileClick = () => {
+    navigate('/profile');
   };
 
   const handleTrollClick = () => {
@@ -42,18 +51,39 @@ const Header = () => {
   // };
 
   const userMenuItems = [
-    // {
-    //   key: 'profile',
-    //   icon: <UserOutlined />,
-    //   label: 'Hồ sơ',
-    //   onClick: handleProfileClick
-    // },
+    {
+      key: 'Dashboard',
+      icon: <AreaChartOutlined />,
+      label: 'Dashboard',
+      onClick: handleDashboardClick,
+      style: localStorage?.getItem('role') === 'AdminSystem' ? {} : { display: 'none' }
+    },
+    {
+      type: 'divider',
+      style: localStorage?.getItem('role') === 'AdminSystem' ? {} : { display: 'none' }
+    },
+    {
+      key: 'profile',
+      icon: <UserOutlined />,
+      label: 'Hồ sơ',
+      onClick: handleProfileClick
+    },
+    {
+      type: 'divider',
+    },
     {
       key: 'wallet',
-      icon: localStorage?.getItem('role') === 'AdminSystem' ? <AreaChartOutlined /> : <WalletOutlined />,
-      label: localStorage?.getItem('role') === 'AdminSystem' ? 'Dashboard' : 'Ví của tôi',
-      onClick: handleWalletClick
+      icon: <WalletOutlined />,
+      label: 'Ví của tôi',
+      onClick: handleWalletClick,
+      style: { color: 'green' },
     },
+    // {
+    //   key: 'wallet',
+    //   icon: localStorage?.getItem('role') === 'AdminSystem' ? <AreaChartOutlined /> : <WalletOutlined />,
+    //   label: localStorage?.getItem('role') === 'AdminSystem' ? 'Dashboard' : 'Ví của tôi',
+    //   onClick: handleWalletClick
+    // },
     {
       type: 'divider',
     },

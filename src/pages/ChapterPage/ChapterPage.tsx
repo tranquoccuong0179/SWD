@@ -6,6 +6,7 @@ import Header from "../../components/Header/Header.tsx";
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import TempPic from "../../assets/pic1.jpg"
 
 const { Content } = Layout;
 const { Title, Paragraph, Text } = Typography;
@@ -50,7 +51,7 @@ const ChapterPage = () => {
                         name: chapter.name,
                         title: chapter.title,
                         description: chapter.description,
-                        image: chapter.imageUrl || 'https://img.freepik.com/free-vector/abstract-grunge-style-coming-soon-with-black-splatter_1017-26690.jpg',
+                        image: chapter.imageUrl || TempPic,
                         lessons: chapter.lessonCount || 0,
                         students: chapter.studentCount || 0,
                         subjectId: chapter.subjectId,
