@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Layout, Typography } from 'antd';
+import {Button, Layout, Typography} from 'antd';
 import { BookOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, CheckCircle, AlertCircle, Layers, FileText } from 'lucide-react';
 import Header from '../../components/Header/Header';
 import './AdminDashboard.css';
+import {Dialog, DialogContent } from '@radix-ui/react-dialog';
+import {DialogHeader, DialogTitle} from '@/components/ui/dialog';
 
 const { Title, Text } = Typography;
 
@@ -313,39 +315,67 @@ const AdminDashboard = () => {
         }
     };
 
+    const CRUDDialog = ({
+                            isOpen,
+                            setIsOpen,
+                            title,
+                            children,
+                            onSubmit
+                        }) => (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>{title}</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={(e) => {
+                    e.preventDefault();
+                    onSubmit();
+                }}>
+                    {children}
+                    <div className="flex justify-end gap-2 mt-4">
+                        <Button variant="outline" onClick={() => setIsOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button type="submit">Submit</Button>
+                    </div>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+
     const stats = [
         {
-            title: "Total Users",
+            title: "Tổng số người dùng",
             value: dashboardData.totalUsers,
             icon: Users,
             color: "text-blue-600"
         },
         {
-            title: "Success Transactions",
+            title: "Thanh toán thành công",
             value: dashboardData.totalSuccessTransactions,
             icon: CheckCircle,
             color: "text-green-600"
         },
         {
-            title: "Total Solutions",
+            title: "Tổng số lời giải",
             value: dashboardData.totalSolutions,
             icon: FileText,
             color: "text-purple-600"
         },
         {
-            title: "Total Problems",
+            title: "Tổng số bài tập",
             value: dashboardData.totalProblems,
             icon: AlertCircle,
             color: "text-yellow-600"
         },
         {
-            title: "Total Subjects",
+            title: "Tổng số môn học",
             value: dashboardData.totalSubjects,
             icon: BookOutlined,
             color: "text-indigo-600"
         },
         {
-            title: "Total Chapters",
+            title: "Tổng số chương",
             value: dashboardData.totalChapters,
             icon: Layers,
             color: "text-pink-600"
@@ -387,16 +417,16 @@ const AdminDashboard = () => {
                 <Tabs defaultValue="overview" className="w-full">
                     <TabsList>
                         <TabsTrigger value="overview">Overview</TabsTrigger>
-                        <TabsTrigger value="subjects">Subjects</TabsTrigger>
-                        <TabsTrigger value="chapters">Chapters</TabsTrigger>
-                        <TabsTrigger value="problems">Problems</TabsTrigger>
-                        <TabsTrigger value="topics">Topics</TabsTrigger>
+                        <TabsTrigger value="subjects">Môn học</TabsTrigger>
+                        <TabsTrigger value="chapters">Chương</TabsTrigger>
+                        <TabsTrigger value="problems">Bài tập</TabsTrigger>
+                        <TabsTrigger value="topics">Chủ đề</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="overview">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Dashboard Overview</CardTitle>
+                                <CardTitle>Tổng quan</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 {loading ? (
@@ -426,10 +456,6 @@ const AdminDashboard = () => {
                                 )}
                             </CardContent>
                         </Card>
-                    </TabsContent>
-
-                    <TabsContent value="overview">
-                        {/* Overview content */}
                     </TabsContent>
 
                     <TabsContent value="subjects">
