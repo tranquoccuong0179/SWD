@@ -101,8 +101,9 @@ const AdminDashboard = () => {
     const fetchSubjects = async () => {
         try {
             const response = await axios.get(`${API_BASE_URL}/subjects`);
+            console.log('Subjects response:', response.data); // Log the response
             if (response.data.statusCode === 200) {
-                setSubjects(response.data.data);
+                setSubjects(response.data.data); // Ensure this is an array
             }
         } catch (err) {
             console.error('Error fetching subjects:', err);
@@ -459,19 +460,221 @@ const AdminDashboard = () => {
                     </TabsContent>
 
                     <TabsContent value="subjects">
-                        {/* Subjects management */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Subjects Management</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Button onClick={() => setIsAddSubjectOpen(true)}>Add Subject</Button>
+                                <div className="mt-4">
+                                    {Array.isArray(subjects) ? (
+                                        subjects.map((subject) => (
+                                            <div key={subject.id} className="flex justify-between items-center">
+                                                <div>{subject.name} - ${subject.price}</div>
+                                                <div>
+                                                    <Button onClick={() => {
+                                                        setSelectedSubject(subject);
+                                                        setSubjectForm({ name: subject.name, price: subject.price });
+                                                        setIsAddSubjectOpen(true);
+                                                    }}>Edit</Button>
+                                                    <Button onClick={() => handleDeleteSubject(subject.id)}>Delete</Button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div>No subjects available</div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <CRUDDialog
+                            isOpen={isAddSubjectOpen}
+                            setIsOpen={setIsAddSubjectOpen}
+                            title={selectedSubject ? "Edit Subject" : "Add Subject"}
+                            onSubmit={selectedSubject ? handleUpdateSubject : handleAddSubject}
+                        >
+                            <input
+                                type="text"
+                                placeholder="Subject Name"
+                                value={subjectForm.name}
+                                onChange={(e) => setSubjectForm({ ...subjectForm, name: e.target.value })}
+                                required
+                            />
+                            <input
+                                type="number"
+                                placeholder="Price"
+                                value={subjectForm.price}
+                                onChange={(e) => setSubjectForm({ ...subjectForm, price: e.target.value })}
+                                required
+                            />
+                        </CRUDDialog>
                     </TabsContent>
 
                     <TabsContent value="chapters">
-                        {/* Chapters management */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Chapters Management</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Button onClick={() => setIsAddChapterOpen(true)}>Add Chapter</Button>
+                                <div className="mt-4">
+                                    {Array.isArray(chapters) ? (
+                                        chapters.map((chapter) => (
+                                            <div key={chapter.id} className="flex justify-between items-center">
+                                                <div>{chapter.name} (Subject ID: {chapter.subjectId})</div>
+                                                <div>
+                                                    <Button onClick={() => {
+                                                        setSelectedChapter(chapter);
+                                                        setChapterForm({ subjectId: chapter.subjectId, name: chapter.name, order: chapter.order });
+                                                        setIsAddChapterOpen(true);
+                                                    }}>Edit</Button>
+                                                    <Button onClick={() => handleDeleteChapter(chapter.id)}>Delete</Button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div>No subjects available</div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <CRUDDialog
+                            isOpen={isAddChapterOpen}
+                            setIsOpen={setIsAddChapterOpen}
+                            title={selectedChapter ? "Edit Chapter" : "Add Chapter"}
+                            onSubmit={selectedChapter ? handleUpdateChapter : handleAddChapter}
+                        >
+                            <input
+                                type="text"
+                                placeholder="Chapter Name"
+                                value={chapterForm.name}
+                                onChange={(e) => setChapterForm({ ...chapterForm, name: e.target.value })}
+                                required
+                            />
+                            <input
+                                type="number"
+                                placeholder="Subject ID"
+                                value={chapterForm.subjectId}
+                                onChange={(e) => setChapterForm({ ...chapterForm, subjectId: e.target.value })}
+                                required
+                            />
+                            <input
+                                type="number"
+                                placeholder="Order"
+                                value={chapterForm.order}
+                                onChange={(e) => setChapterForm({ ...chapterForm, order: e.target.value })}
+                                required
+                            />
+                        </CRUDDialog>
                     </TabsContent>
 
                     <TabsContent value="problems">
-                        {/* Problems management */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Problems Management</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Button onClick={() => setIsAddProblemOpen(true)}>Add Problem</Button>
+                                <div className="mt-4">
+                                    {Array.isArray(problems) ? (
+                                        problems.map((problem) => (
+                                            <div key={problem.id} className="flex justify-between items-center">
+                                                <div>{problem.name} (Chapter ID: {problem.chapterId})</div>
+                                                <div>
+                                                    <Button onClick={() => {
+                                                        setSelectedProblem(problem);
+                                                        setProblemForm({ chapterId: problem.chapterId, name: problem.name, difficulty: problem.difficulty });
+                                                        setIsAddProblemOpen(true);
+                                                    }}>Edit</Button>
+                                                    <Button onClick={() => handleDeleteProblem(problem.id)}>Delete</Button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div>No problems available</div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <CRUDDialog
+                            isOpen={isAddProblemOpen}
+                            setIsOpen={setIsAddProblemOpen}
+                            title={selectedProblem ? "Edit Problem" : "Add Problem"}
+                            onSubmit={selectedProblem ? handleUpdateProblem : handleAddProblem}
+                        >
+                            <input
+                                type="text"
+                                placeholder="Problem Name"
+                                value={problemForm.name}
+                                onChange={(e) => setProblemForm({ ...problemForm, name: e.target.value })}
+                                required
+                            />
+                            <input
+                                type="number"
+                                placeholder="Chapter ID"
+                                value={problemForm.chapterId}
+                                onChange={(e) => setProblemForm({ ...problemForm, chapterId: e.target.value })}
+                                required
+                            />
+                            <input
+                                type="text"
+                                placeholder="Difficulty"
+                                value={problemForm.difficulty}
+                                onChange={(e) => setProblemForm({ ...problemForm, difficulty: e.target.value })}
+                                required
+                            />
+                        </CRUDDialog>
                     </TabsContent>
 
                     <TabsContent value="topics">
-                        {/* Topics management */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Topics Management</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Button onClick={() => setIsAddTopicOpen(true)}>Add Topic</Button>
+                                <div className="mt-4">
+                                    {Array.isArray(topics) ? (
+                                        topics.map((topic) => (
+                                            <div key={topic.id} className="flex justify-between items-center">
+                                                <div>{topic.name} (Problem ID: {topic.problemId})</div>
+                                                <div>
+                                                    <Button onClick={() => {
+                                                        setSelectedTopic(topic);
+                                                        setTopicForm({ problemId: topic.problemId, name: topic.name });
+                                                        setIsAddTopicOpen(true);
+                                                    }}>Edit</Button>
+                                                    <Button onClick={() => handleDeleteTopic(topic.id)}>Delete</Button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div>No topics available</div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <CRUDDialog
+                            isOpen={isAddTopicOpen}
+                            setIsOpen={setIsAddTopicOpen}
+                            title={selectedTopic ? "Edit Topic" : "Add Topic"}
+                            onSubmit={selectedTopic ? handleUpdateTopic : handleAddTopic}
+                        >
+                            <input
+                                type="text"
+                                placeholder="Topic Name"
+                                value={topicForm.name}
+                                onChange={(e) => setTopicForm({ ...topicForm, name: e.target.value })}
+                                required
+                            />
+                            <input
+                                type="number"
+                                placeholder="Problem ID"
+                                value={topicForm.problemId}
+                                onChange={(e) => setTopicForm({ ...topicForm, problemId: e.target.value })}
+                                required
+                            />
+                        </CRUDDialog>
                     </TabsContent>
                 </Tabs>
             </div>
