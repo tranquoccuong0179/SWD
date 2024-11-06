@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Button, Typography, Input, Row, Col, Form, Divider, message } from 'antd';
 import { UserOutlined, MailOutlined, PhoneOutlined, HomeOutlined, FacebookOutlined, TwitterOutlined, LinkedinOutlined, LockOutlined } from '@ant-design/icons';
+import axios from 'axios';
 import Header from '../../components/Header/Header';
-import Footer from "../../components/Footer/Footer.tsx";
+
 import './UserProfilePage.css';
 
 const { Title, Text } = Typography;
@@ -14,7 +15,7 @@ const UserProfilePage = () => {
         fullName: '',
         email: '',
         phoneNumber: '',
-        gender: '',
+        gender: 0,
         address: '',
         facebook: '',
         twitter: '',
@@ -55,7 +56,7 @@ const UserProfilePage = () => {
         setPasswordData({ ...passwordData, [name]: value });
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (passwordData.newPassword && passwordData.confirmNewPassword) {
             if (passwordData.newPassword !== passwordData.confirmNewPassword) {
                 message.error("New password and confirmation do not match.");
@@ -65,14 +66,38 @@ const UserProfilePage = () => {
                 message.error("New password must be different from the current password.");
                 return;
             }
-            // Mock saving the new password (in real apps, you'd send it to the backend)
             localStorage.setItem('password', passwordData.newPassword);
             message.success("Password updated successfully");
         }
 
-        Object.keys(userData).forEach(key => localStorage.setItem(key, userData[key]));
-        message.success("Profile updated successfully");
-        setIsEditing(false);
+        try {
+            const response = await axios.put(
+                'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/UpdateProfile',
+                {
+                    userName: userData.userName,
+                    fullName: userData.fullName,
+                    email: userData.email,
+                    phoneNumber: userData.phoneNumber,
+                    gender: userData.gender,
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+
+            if (response.status === 200) {
+                Object.keys(userData).forEach(key => localStorage.setItem(key, userData[key]));
+                message.success("Profile updated successfully");
+                setIsEditing(false);
+            } else {
+                message.error("Failed to update profile. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            message.error("An error occurred while updating the profile.");
+        }
     };
 
     return (
