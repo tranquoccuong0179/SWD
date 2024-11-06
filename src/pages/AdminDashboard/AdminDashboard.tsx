@@ -103,13 +103,13 @@ const AdminDashboard = () => {
             const token = localStorage.getItem('accessToken');
             const response = await axios.get(`${API_BASE_URL}/subjects`, {
                 headers: {
-                    accept: '*/*',// DAY NE DAY NE DAY NE DAY NE DAY NE DAY NE DAY NE
+                    accept: '*/*',
                     Authorization: `Bearer ${token}`
                 }
             });
             console.log('Subjects response:', response.data); // Log the response
             if (response.data.statusCode === 200) {
-                setSubjects(response.data.data); // Ensure this is an array
+                setSubjects(response.data.data.items); // Update this line to access the items array
             }
         } catch (err) {
             console.error('Error fetching subjects:', err);
@@ -157,9 +157,16 @@ const AdminDashboard = () => {
     // API Functions for Chapters
     const fetchChapters = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/chapters`);
+            const token = localStorage.getItem('accessToken');
+            const response = await axios.get(`${API_BASE_URL}/chapters`, {
+                headers: {
+                    accept: '*/*',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            console.log('Chapters response:', response.data); // Log the response
             if (response.data.statusCode === 200) {
-                setChapters(response.data.data);
+                setChapters(response.data.data.items); // Access the items array
             }
         } catch (err) {
             console.error('Error fetching chapters:', err);
@@ -216,12 +223,13 @@ const AdminDashboard = () => {
             const token = localStorage.getItem('accessToken');
             const response = await axios.get(`${API_BASE_URL}/problems`, {
                 headers: {
-                    accept: '*/*',// DAY NE DAY NE DAY NE DAY NE DAY NE DAY NE DAY NE
+                    accept: '*/*',
                     Authorization: `Bearer ${token}`
                 }
             });
+            console.log('Problems response:', response.data); // Log the response
             if (response.data.statusCode === 200) {
-                setProblems(response.data.data);
+                setProblems(response.data.data.items); // Access the items array
             }
         } catch (err) {
             console.error('Error fetching problems:', err);
@@ -275,9 +283,16 @@ const AdminDashboard = () => {
     // API Functions for Topics
     const fetchTopics = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/topics`);
+            const token = localStorage.getItem('accessToken');
+            const response = await axios.get(`${API_BASE_URL}/topics`, {
+                headers: {
+                    accept: '*/*',
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            console.log('Topics response:', response.data); // Log the response
             if (response.data.statusCode === 200) {
-                setTopics(response.data.data);
+                setTopics(response.data.data.items); // Access the items array
             }
         } catch (err) {
             console.error('Error fetching topics:', err);
@@ -474,12 +489,12 @@ const AdminDashboard = () => {
                     <TabsContent value="subjects">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Subjects Management</CardTitle>
+                                <CardTitle>Quản ly mon học</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <Button onClick={() => setIsAddSubjectOpen(true)}>Add Subject</Button>
                                 <div className="mt-4">
-                                    {Array.isArray(subjects) ? (
+                                    {Array.isArray(subjects) && subjects.length > 0 ? (
                                         subjects.map((subject) => (
                                             <div key={subject.id} className="flex justify-between items-center">
                                                 <div>{subject.name} - ${subject.price}</div>
@@ -530,14 +545,23 @@ const AdminDashboard = () => {
                             <CardContent>
                                 <Button onClick={() => setIsAddChapterOpen(true)}>Add Chapter</Button>
                                 <div className="mt-4">
-                                    {Array.isArray(chapters) ? (
+                                    {Array.isArray(chapters) && chapters.length > 0 ? (
                                         chapters.map((chapter) => (
                                             <div key={chapter.id} className="flex justify-between items-center">
-                                                <div>{chapter.name} (Subject ID: {chapter.subjectId})</div>
+                                                <div>
+                                                    {chapter.name} (Subject: {chapter.subjectName})
+                                                    {chapter.topics.length > 0 && (
+                                                        <ul>
+                                                            {chapter.topics.map((topic) => (
+                                                                <li key={topic.id}>{topic.name}</li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                                </div>
                                                 <div>
                                                     <Button onClick={() => {
                                                         setSelectedChapter(chapter);
-                                                        setChapterForm({ subjectId: chapter.subjectId, name: chapter.name, order: chapter.order });
+                                                        setChapterForm({ subjectId: chapter.subjectId, name: chapter.name });
                                                         setIsAddChapterOpen(true);
                                                     }}>Edit</Button>
                                                     <Button onClick={() => handleDeleteChapter(chapter.id)}>Delete</Button>
@@ -545,7 +569,7 @@ const AdminDashboard = () => {
                                             </div>
                                         ))
                                     ) : (
-                                        <div>No subjects available</div>
+                                        <div>No chapters available</div>
                                     )}
                                 </div>
                             </CardContent>
@@ -564,17 +588,10 @@ const AdminDashboard = () => {
                                 required
                             />
                             <input
-                                type="number"
+                                type="text"
                                 placeholder="Subject ID"
                                 value={chapterForm.subjectId}
                                 onChange={(e) => setChapterForm({ ...chapterForm, subjectId: e.target.value })}
-                                required
-                            />
-                            <input
-                                type="number"
-                                placeholder="Order"
-                                value={chapterForm.order}
-                                onChange={(e) => setChapterForm({ ...chapterForm, order: e.target.value })}
                                 required
                             />
                         </CRUDDialog>
@@ -588,14 +605,29 @@ const AdminDashboard = () => {
                             <CardContent>
                                 <Button onClick={() => setIsAddProblemOpen(true)}>Add Problem</Button>
                                 <div className="mt-4">
-                                    {Array.isArray(problems) ? (
+                                    {Array.isArray(problems) && problems.length > 0 ? (
                                         problems.map((problem) => (
-                                            <div key={problem.id} className="flex justify-between items-center">
-                                                <div>{problem.name} (Chapter ID: {problem.chapterId})</div>
+                                            <div key={problem.id} className="flex flex-col mb-4">
+                                                <div className="font-bold">{problem.name} (Topic: {problem.topicName})</div>
+                                                <div>{problem.description}</div>
+                                                <div className="mt-2">
+                                                    <strong>Parameters:</strong>
+                                                    <ul>
+                                                        {problem.getPPVM.map((param) => (
+                                                            <li key={param.parameterId}>
+                                                                {param.symbol}: {param.value}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
                                                 <div>
                                                     <Button onClick={() => {
                                                         setSelectedProblem(problem);
-                                                        setProblemForm({ chapterId: problem.chapterId, name: problem.name, difficulty: problem.difficulty });
+                                                        setProblemForm({
+                                                            topicId: problem.topicId,
+                                                            name: problem.name,
+                                                            description: problem.description
+                                                        });
                                                         setIsAddProblemOpen(true);
                                                     }}>Edit</Button>
                                                     <Button onClick={() => handleDeleteProblem(problem.id)}>Delete</Button>
@@ -622,17 +654,16 @@ const AdminDashboard = () => {
                                 required
                             />
                             <input
-                                type="number"
-                                placeholder="Chapter ID"
-                                value={problemForm.chapterId}
-                                onChange={(e) => setProblemForm({ ...problemForm, chapterId: e.target.value })}
+                                type="text"
+                                placeholder="Topic ID"
+                                value={problemForm.topicId}
+                                onChange={(e) => setProblemForm({ ...problemForm, topicId: e.target.value })}
                                 required
                             />
-                            <input
-                                type="text"
-                                placeholder="Difficulty"
-                                value={problemForm.difficulty}
-                                onChange={(e) => setProblemForm({ ...problemForm, difficulty: e.target.value })}
+                            <textarea
+                                placeholder="Description"
+                                value={problemForm.description}
+                                onChange={(e) => setProblemForm({ ...problemForm, description: e.target.value })}
                                 required
                             />
                         </CRUDDialog>
@@ -646,14 +677,25 @@ const AdminDashboard = () => {
                             <CardContent>
                                 <Button onClick={() => setIsAddTopicOpen(true)}>Add Topic</Button>
                                 <div className="mt-4">
-                                    {Array.isArray(topics) ? (
+                                    {Array.isArray(topics) && topics.length > 0 ? (
                                         topics.map((topic) => (
-                                            <div key={topic.id} className="flex justify-between items-center">
-                                                <div>{topic.name} (Problem ID: {topic.problemId})</div>
+                                            <div key={topic.id} className="flex flex-col mb-4">
+                                                <div className="font-bold">{topic.name} (Chapter: {topic.chapterName})</div>
+                                                <div>
+                                                    <strong>Problems:</strong>
+                                                    <ul>
+                                                        {topic.problems.map((problem) => (
+                                                            <li key={problem.id}>{problem.name}</li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
                                                 <div>
                                                     <Button onClick={() => {
                                                         setSelectedTopic(topic);
-                                                        setTopicForm({ problemId: topic.problemId, name: topic.name });
+                                                        setTopicForm({
+                                                            chapterId: topic.chapterId,
+                                                            name: topic.name
+                                                        });
                                                         setIsAddTopicOpen(true);
                                                     }}>Edit</Button>
                                                     <Button onClick={() => handleDeleteTopic(topic.id)}>Delete</Button>
@@ -680,10 +722,10 @@ const AdminDashboard = () => {
                                 required
                             />
                             <input
-                                type="number"
-                                placeholder="Problem ID"
-                                value={topicForm.problemId}
-                                onChange={(e) => setTopicForm({ ...topicForm, problemId: e.target.value })}
+                                type="text"
+                                placeholder="Chapter ID"
+                                value={topicForm.chapterId}
+                                onChange={(e) => setTopicForm({ ...topicForm, chapterId: e.target.value })}
                                 required
                             />
                         </CRUDDialog>
