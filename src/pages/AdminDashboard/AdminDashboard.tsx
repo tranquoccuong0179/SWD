@@ -4,7 +4,7 @@ import {Button, Layout, Typography} from 'antd';
 import { BookOutlined, ClockCircleOutlined } from '@ant-design/icons';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, CheckCircle, AlertCircle, Layers, FileText } from 'lucide-react';
+import {Users, CheckCircle, AlertCircle, Layers, FileText, DollarSign} from 'lucide-react';
 import Header from '../../components/Header/Header';
 import './AdminDashboard.css';
 import {Dialog, DialogContent } from '@radix-ui/react-dialog';
@@ -27,7 +27,8 @@ const AdminDashboard = () => {
         totalSolutions: 0,
         totalProblems: 0,
         totalSubjects: 0,
-        totalChapters: 0
+        totalChapters: 0,
+        totalRevenue: 0
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -59,21 +60,17 @@ const AdminDashboard = () => {
             }
 
             try {
-                console.log("Making API call to /Dashboards");
                 const response = await axios.get(`${API_BASE_URL}/Dashboards`, {
                     headers: {
-                        accept: '*/*',// DAY NE DAY NE DAY NE DAY NE DAY NE DAY NE DAY NE
+                        accept: '*/*',
                         Authorization: `Bearer ${token}`
                     }
                 });
-                console.log("Dashboard data response:", response.data);
 
-                if (response.data.statusCode === 200 && response.data.code === "Success!") // DAY NE DAY NE DAY NE DAY NE DAY NE DAY NE DAY NE
-                {
-                    setDashboardData(response.data.data);
+                if (response.data.statusCode === 200 && response.data.code === "Success!") {
+                    setDashboardData(response.data.data); // This will now include totalRevenue
                     await Promise.all([fetchSubjects(), fetchChapters(), fetchProblems(), fetchTopics()]);
                 } else {
-                    console.warn("Unexpected response format:", response.data);
                     throw new Error('Failed to fetch dashboard data');
                 }
             } catch (err) {
@@ -407,6 +404,12 @@ const AdminDashboard = () => {
             value: dashboardData.totalChapters,
             icon: Layers,
             color: "text-pink-600"
+        },
+        {
+            title: "Tổng doanh thu", // Add this line for total revenue
+            value: dashboardData.totalRevenue, // Use the new state value
+            icon: DollarSign, // You can use an appropriate icon for revenue
+            color: "text-green-800" // Choose a color for the revenue stat
         }
     ];
 
