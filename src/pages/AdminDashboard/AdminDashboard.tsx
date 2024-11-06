@@ -100,7 +100,13 @@ const AdminDashboard = () => {
     // API Functions for Subjects
     const fetchSubjects = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/subjects`);
+            const token = localStorage.getItem('accessToken');
+            const response = await axios.get(`${API_BASE_URL}/subjects`, {
+                headers: {
+                    accept: '*/*',// DAY NE DAY NE DAY NE DAY NE DAY NE DAY NE DAY NE
+                    Authorization: `Bearer ${token}`
+                }
+            });
             console.log('Subjects response:', response.data); // Log the response
             if (response.data.statusCode === 200) {
                 setSubjects(response.data.data); // Ensure this is an array
@@ -207,7 +213,13 @@ const AdminDashboard = () => {
     // API Functions for Problems
     const fetchProblems = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/problems`);
+            const token = localStorage.getItem('accessToken');
+            const response = await axios.get(`${API_BASE_URL}/problems`, {
+                headers: {
+                    accept: '*/*',// DAY NE DAY NE DAY NE DAY NE DAY NE DAY NE DAY NE
+                    Authorization: `Bearer ${token}`
+                }
+            });
             if (response.data.statusCode === 200) {
                 setProblems(response.data.data);
             }
