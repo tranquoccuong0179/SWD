@@ -24,13 +24,6 @@ const Header = () => {
     window.location.href = '/home';
   };
 
-  // const handleWalletClick = () => {
-  //   if (localStorage?.getItem('role') === 'AdminSystem') {
-  //     navigate('/admin')
-  //   } else {
-  //     navigate('/wallet');
-  //   }
-  // };
 
   const handleDashboardClick = () => {
     navigate('/admin')
@@ -42,13 +35,6 @@ const Header = () => {
     navigate('/profile');
   };
 
-  const handleTrollClick = () => {
-    navigate('/comingsoon');
-  };
-
-  // const handleProfileClick = () => {
-  //   navigate('/profile');
-  // };
 
   const userMenuItems = [
     {
@@ -78,12 +64,6 @@ const Header = () => {
       onClick: handleWalletClick,
       style: { color: 'green' },
     },
-    // {
-    //   key: 'wallet',
-    //   icon: localStorage?.getItem('role') === 'AdminSystem' ? <AreaChartOutlined /> : <WalletOutlined />,
-    //   label: localStorage?.getItem('role') === 'AdminSystem' ? 'Dashboard' : 'Ví của tôi',
-    //   onClick: handleWalletClick
-    // },
     {
       type: 'divider',
     },
@@ -101,7 +81,6 @@ const Header = () => {
       <div className="logo-container">
         <img
           src="https://i.postimg.cc/xT0JJZbJ/physics-logo.jpg"
-          // src={logo}
           alt="Logo"
           className="logo"
         />
