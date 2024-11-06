@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Button, Typography, Input, Row, Col, Form, Divider, message } from 'antd';
-import { UserOutlined, MailOutlined, PhoneOutlined, HomeOutlined, FacebookOutlined, TwitterOutlined, LinkedinOutlined } from '@ant-design/icons';
+import { UserOutlined, MailOutlined, PhoneOutlined, HomeOutlined, FacebookOutlined, TwitterOutlined, LinkedinOutlined, LockOutlined } from '@ant-design/icons';
 import Header from '../../components/Header/Header';
 import Footer from "../../components/Footer/Footer.tsx";
 import './UserProfilePage.css';
@@ -19,6 +19,11 @@ const UserProfilePage = () => {
         facebook: '',
         twitter: '',
         linkedin: ''
+    });
+    const [passwordData, setPasswordData] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confirmNewPassword: ''
     });
 
     useEffect(() => {
@@ -45,7 +50,26 @@ const UserProfilePage = () => {
         setUserData({ ...userData, [name]: value });
     };
 
+    const handlePasswordChange = (e) => {
+        const { name, value } = e.target;
+        setPasswordData({ ...passwordData, [name]: value });
+    };
+
     const handleSave = () => {
+        if (passwordData.newPassword && passwordData.confirmNewPassword) {
+            if (passwordData.newPassword !== passwordData.confirmNewPassword) {
+                message.error("New password and confirmation do not match.");
+                return;
+            }
+            if (passwordData.currentPassword === passwordData.newPassword) {
+                message.error("New password must be different from the current password.");
+                return;
+            }
+            // Mock saving the new password (in real apps, you'd send it to the backend)
+            localStorage.setItem('password', passwordData.newPassword);
+            message.success("Password updated successfully");
+        }
+
         Object.keys(userData).forEach(key => localStorage.setItem(key, userData[key]));
         message.success("Profile updated successfully");
         setIsEditing(false);
@@ -86,6 +110,44 @@ const UserProfilePage = () => {
                             </Form.Item>
                         </Col>
                     </Row>
+
+                    {isEditing && (
+                        <>
+                            <Divider orientation="left">Change Password</Divider>
+                            <Row gutter={16}>
+                                <Col span={8}>
+                                    <Form.Item label="Current Password">
+                                        <Input.Password
+                                            name="currentPassword"
+                                            value={passwordData.currentPassword}
+                                            onChange={handlePasswordChange}
+                                            prefix={<LockOutlined />}
+                                        />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={8}>
+                                    <Form.Item label="New Password">
+                                        <Input.Password
+                                            name="newPassword"
+                                            value={passwordData.newPassword}
+                                            onChange={handlePasswordChange}
+                                            prefix={<LockOutlined />}
+                                        />
+                                    </Form.Item>
+                                </Col>
+                                <Col span={8}>
+                                    <Form.Item label="Confirm New Password">
+                                        <Input.Password
+                                            name="confirmNewPassword"
+                                            value={passwordData.confirmNewPassword}
+                                            onChange={handlePasswordChange}
+                                            prefix={<LockOutlined />}
+                                        />
+                                    </Form.Item>
+                                </Col>
+                            </Row>
+                        </>
+                    )}
 
                     <Divider orientation="left">Contact Details</Divider>
                     <Row gutter={16}>
