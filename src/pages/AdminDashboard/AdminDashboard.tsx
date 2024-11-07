@@ -95,22 +95,47 @@ const AdminDashboard = () => {
         fetchDashboardData();
     }, []);
 
-    // API Functions for Subjects
-    const fetchSubjects = async () => {
+    const apiRequest = async (method, url, data = null) => {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+            setUnauthorized(true);
+            setError('Authentication required');
+            return null; // or throw an error
+        }
+
         try {
-            const token = localStorage.getItem('accessToken');
-            const response = await axios.get(`${API_BASE_URL}/subjects`, {
+            const response = await axios({
+                method,
+                url: `${API_BASE_URL}${url}`,
                 headers: {
                     accept: '*/*',
                     Authorization: `Bearer ${token}`
-                }
+                },
+                data
             });
-            console.log('Subjects response:', response.data); // Log the response
-            if (response.data.statusCode === 200) {
-                setSubjects(response.data.data.items); // Update this line to access the items array
+
+            if (response.data.statusCode !== 200) {
+                throw new Error('Failed to fetch data');
             }
+
+            return response.data.data; // Return the data directly
         } catch (err) {
-            console.error('Error fetching subjects:', err);
+            console.error("API error:", err);
+            if (axios.isAxiosError(err) && err.response?.status === 401) {
+                setUnauthorized(true);
+                setError('Unauthorized access - Please log in again');
+            } else {
+                setError(err.response?.data?.message || 'An error occurred');
+            }
+            return null; // or throw an error
+        }
+    }
+
+    // API Functions for Subjects
+    const fetchSubjects = async () => {
+        const data = await apiRequest('get', '/subjects');
+        if (data) {
+            setSubjects(data.items);
         }
     };
 
@@ -129,7 +154,7 @@ const AdminDashboard = () => {
 
     const handleUpdateSubject = async () => {
         try {
-            const response = await axios.put(`${API_BASE_URL}/subjects/{id}`, subjectForm);
+            const response = await axios.put(`${API_BASE_URL}/subjects`, subjectForm);
             if (response.data.statusCode === 200) {
                 await fetchSubjects();
                 setIsAddSubjectOpen(false);
@@ -189,7 +214,7 @@ const AdminDashboard = () => {
 
     const handleUpdateChapter = async () => {
         try {
-            const response = await axios.put(`${API_BASE_URL}/chapters/{id}`, {
+            const response = await axios.put(`${API_BASE_URL}/chapters`, {
                 ...chapterForm,
                 subjectId: parseInt(chapterForm.subjectId)
             });
@@ -204,7 +229,7 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleDeleteChapter = async (chapterId) => {
+    const handleDeleteChapter = async () => {
         try {
             const response = await axios.delete(`${API_BASE_URL}/chapters/{id}`);
             if (response.data.statusCode === 200) {
@@ -252,7 +277,7 @@ const AdminDashboard = () => {
 
     const handleUpdateProblem = async () => {
         try {
-            const response = await axios.put(`${API_BASE_URL}/problems/{id}`, {
+            const response = await axios.put(`${API_BASE_URL}/problems`, {
                 ...problemForm,
                 chapterId: parseInt(problemForm.chapterId)
             });
@@ -315,7 +340,7 @@ const AdminDashboard = () => {
 
     const handleUpdateTopic = async () => {
         try {
-            const response = await axios.put(`${API_BASE_URL}/topics/{id}`, {
+            const response = await axios.put(`${API_BASE_URL}/topics`, {
                 ...topicForm,
                 problemId: parseInt(topicForm.problemId)
             });
@@ -330,7 +355,7 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleDeleteTopic = async (topicId) => {
+    const handleDeleteTopic = async () => {
         try {
             const response = await axios.delete(`${API_BASE_URL}/topics/{id}`);
             if (response.data.statusCode === 200) {
@@ -720,7 +745,7 @@ const AdminDashboard = () => {
                         <CRUDDialog
                             isOpen={isAddChapterOpen}
                             onClose={() => setIsAddChapterOpen(false)}
-                            title={selectedChapter ? "Sửa Chương" : "Thêm Chương"}
+                            title={selectedChapter ? "Sửa/Thêm Chương" : "Thêm Chương"}
                             fields={chapterFields}
                             formData={chapterForm}
                             setFormData={setChapterForm}
@@ -795,7 +820,7 @@ const AdminDashboard = () => {
                         <CRUDDialog
                             isOpen={isAddTopicOpen}
                             onClose={() => setIsAddTopicOpen(false)}
-                            title={selectedTopic ? "Sửa Bài học" : "Thêm Bài học"}
+                            title={selectedTopic ? "Sửa/Thêm Bài học" : "Thêm Bài học"}
                             fields={topicFields}
                             formData={topicFields}
                             setFormData={setTopicForm}
@@ -878,7 +903,7 @@ const AdminDashboard = () => {
                         <CRUDDialog
                             isOpen={isAddProblemOpen}
                             onClose={() => setIsAddProblemOpen(false)}
-                            title={selectedProblem ? "Sửa Bài tập" : "Thêm Bài tập"}
+                            title={selectedProblem ? "Sửa/Thêm Bài tập" : "Thêm Bài tập"}
                             fields={problemFields}
                             formData={problemFields}
                             setFormData={setProblemForm}
