@@ -50,7 +50,7 @@ const RegisterPage: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const [userId, setUserId] = useState('')
   // Timer state for OTP expiration
   const [otpTimer, setOtpTimer] = useState<number>(300); // 5 minutes in seconds
   const [canResendOtp, setCanResendOtp] = useState<boolean>(false);
@@ -112,17 +112,20 @@ const RegisterPage: React.FC = () => {
 
       // Send registration request
       const response = await axios.post(
-          'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/SignUp',
-          {
-            username: formData.username,
-            password: formData.password,
-            confirmPassword: formData.confirmPassword,
-            fullName: formData.fullName,
-            email: formData.email,
-            phoneNumber: formData.phone,
-            gender: genderValue,
-          }
+        'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/SignUp',
+        {
+          username: formData.username,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
+          fullName: formData.fullName,
+          email: formData.email,
+          phoneNumber: formData.phone,
+          gender: genderValue,
+        }
       );
+      setUserId(response?.data?.data)
+      console.log("res", response?.data);
+
 
       // Store userId for OTP verification
       setOtpFormData(prev => ({
@@ -162,16 +165,16 @@ const RegisterPage: React.FC = () => {
 
     try {
       const response = await axios.post(
-          'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/Verify',
-          {
-            userId: otpFormData.userId,
-            otp: otpFormData.otp
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json'
-            }
+        'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/Verify',
+        {
+          userId: userId,
+          otp: otpFormData.otp
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
           }
+        }
       );
 
       // Check if the response is successful (status code 200)
@@ -230,10 +233,10 @@ const RegisterPage: React.FC = () => {
     try {
       // Implement your resend OTP API call here
       await axios.post(
-          'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/ResendOTP',
-          {
-            userId: otpFormData.userId
-          }
+        'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/ResendOTP',
+        {
+          userId: otpFormData.userId
+        }
       );
 
       // Reset timer and disable resend button
@@ -313,184 +316,184 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-      <Layout className="landing-page">
-        <Row className="h-100 imageSetup">
-          <Col md={4}></Col>
-          <Col md={4}>
-            <Container className="auth-container">
-              {/* Auth tabs */}
-              <div className="auth-tabs" style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-                <Link to="/login" className="btn btn-light">LOGIN</Link>
-                <Button className='tab active' variant="light" style={{ marginLeft: '20px' }}>REGISTER</Button>
-              </div>
+    <Layout className="landing-page">
+      <Row className="h-100 imageSetup">
+        <Col md={4}></Col>
+        <Col md={4}>
+          <Container className="auth-container">
+            {/* Auth tabs */}
+            <div className="auth-tabs" style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+              <Link to="/login" className="btn btn-light">LOGIN</Link>
+              <Button className='tab active' variant="light" style={{ marginLeft: '20px' }}>REGISTER</Button>
+            </div>
 
-              {/* Alert messages */}
-              {error && <Alert variant="danger">{error}</Alert>}
-              {success && <Alert variant="success">{success}</Alert>}
+            {/* Alert messages */}
+            {error && <Alert variant="danger">{error}</Alert>}
+            {success && <Alert variant="success">{success}</Alert>}
 
-              {/* Conditional rendering of forms */}
-              {!showOtpForm ? (
-                  // Registration Form
-                  <Form className="auth-form" onSubmit={handleRegister}>
-                    {/* Username field */}
-                    <Form.Group className="mb-3">
-                      <Form.Control
-                          type="text"
-                          name="username"
-                          placeholder="Username"
-                          value={formData.username}
-                          onChange={handleInputChange}
-                          required
-                      />
-                    </Form.Group>
+            {/* Conditional rendering of forms */}
+            {!showOtpForm ? (
+              // Registration Form
+              <Form className="auth-form" onSubmit={handleRegister}>
+                {/* Username field */}
+                <Form.Group className="mb-3">
+                  <Form.Control
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    value={formData.username}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
 
-                    {/* Password field */}
-                    <Form.Group className="mb-3">
-                      <InputGroup>
-                        <Form.Control
-                            type={showPassword ? "text" : "password"}
-                            name="password"
-                            placeholder="Password"
-                            value={formData.password}
-                            onChange={handleInputChange}
-                            required
-                        />
-                        <Button
-                            variant="outline-secondary"
-                            onClick={togglePasswordVisibility}
-                            style={{
-                              border: '1px solid gray',
-                              borderRadius: '0 4px 4px 0'
-                            }}
-                        >
-                          {showPassword ? <FaEyeSlash /> : <FaEye />}
-                        </Button>
-                      </InputGroup>
-                      {passwordError && <Form.Text className="text-danger">{passwordError}</Form.Text>}
-                    </Form.Group>
-
-                    {/* Confirm Password field */}
-                    <Form.Group className="mb-3">
-                      <Form.Control
-                          type="password"
-                          name="confirmPassword"
-                          placeholder="Confirm Password"
-                          value={formData.confirmPassword}
-                          onChange={handleInputChange}
-                          required
-                      />
-                    </Form.Group>
-
-                    {/* Full Name field */}
-                    <Form.Group className="mb-3">
-                      <Form.Control
-                          type="text"
-                          name="fullName"
-                          placeholder="Full Name"
-                          value={formData.fullName}
-                          onChange={handleInputChange}
-                          required
-                      />
-                    </Form.Group>
-
-                    {/* Email field */}
-                    <Form.Group className="mb-3">
-                      <Form.Control
-                          type="email"
-                          name="email"
-                          placeholder="Email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          required
-                      />
-                    </Form.Group>
-
-                    {/* Phone field */}
-                    <Form.Group className="mb-3">
-                      <Form.Control
-                          type="tel"
-                          name="phoneNumber"
-                          placeholder="Phone Number"
-                          onChange={handlePhoneChange}
-                          isInvalid={!!phoneError}
-                          required
-                      />
-                      {phoneError && <Form.Text className="text-danger">{phoneError}</Form.Text>}
-                    </Form.Group>
-
-                    {/* Gender field */}
-                    <Form.Group className="mb-3">
-                      <Form.Select
-                          name="gender"
-                          value={formData.gender}
-                          onChange={handleInputChange}
-                          required
-                      >
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                      </Form.Select>
-                    </Form.Group>
-
-                    {/* Terms checkbox */}
-                    <Form.Group className="mb-3">
-                      <Form.Check type="checkbox" label="I have read and agree to the terms" required />
-                    </Form.Group>
-
-                    {/* Submit button */}
-                    <LoadingButton
-                        type="submit"
-                        isLoading={isLoading}
-                        className="w-100 btn btn-primary"
+                {/* Password field */}
+                <Form.Group className="mb-3">
+                  <InputGroup>
+                    <Form.Control
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="Password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    <Button
+                      variant="outline-secondary"
+                      onClick={togglePasswordVisibility}
+                      style={{
+                        border: '1px solid gray',
+                        borderRadius: '0 4px 4px 0'
+                      }}
                     >
-                      SIGN UP
-                    </LoadingButton>
-                  </Form>
-              ) : (
-                  // OTP Verification Form
-                  <Form className="auth-form" onSubmit={handleOtpSubmit}>
-                    <Form.Group className="mb-3">
-                      <Form.Control
-                          type="text"
-                          name="otp"
-                          placeholder="Enter OTP from email"
-                          value={otpFormData.otp}
-                          onChange={handleInputChange}
-                          maxLength={6}
-                          required
-                      />
-                      <Form.Text className="text-muted">
-                        Time remaining: {formatTime(otpTimer)}
-                      </Form.Text>
-                    </Form.Group>
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </Button>
+                  </InputGroup>
+                  {passwordError && <Form.Text className="text-danger">{passwordError}</Form.Text>}
+                </Form.Group>
 
-                    {/* OTP Submit button */}
-                    <LoadingButton
-                        type="submit"
-                        isLoading={isLoading}
-                        className="w-100 btn btn-primary mb-3"
-                    >
-                      VERIFY OTP
-                    </LoadingButton>
+                {/* Confirm Password field */}
+                <Form.Group className="mb-3">
+                  <Form.Control
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
 
-                    {/* Resend OTP button */}
-                    {canResendOtp && (
-                        <Button
-                            onClick={handleResendOtp}
-                            disabled={isLoading || !canResendOtp}
-                            className="w-100 btn btn-secondary"
-                        >
-                          Resend OTP
-                        </Button>
-                    )}
-                  </Form>
-              )}
-            </Container>
-          </Col>
-          <Col md={4}></Col>
-        </Row>
-      </Layout>
+                {/* Full Name field */}
+                <Form.Group className="mb-3">
+                  <Form.Control
+                    type="text"
+                    name="fullName"
+                    placeholder="Full Name"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+
+                {/* Email field */}
+                <Form.Group className="mb-3">
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+
+                {/* Phone field */}
+                <Form.Group className="mb-3">
+                  <Form.Control
+                    type="tel"
+                    name="phoneNumber"
+                    placeholder="Phone Number"
+                    onChange={handlePhoneChange}
+                    isInvalid={!!phoneError}
+                    required
+                  />
+                  {phoneError && <Form.Text className="text-danger">{phoneError}</Form.Text>}
+                </Form.Group>
+
+                {/* Gender field */}
+                <Form.Group className="mb-3">
+                  <Form.Select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </Form.Select>
+                </Form.Group>
+
+                {/* Terms checkbox */}
+                <Form.Group className="mb-3">
+                  <Form.Check type="checkbox" label="I have read and agree to the terms" required />
+                </Form.Group>
+
+                {/* Submit button */}
+                <LoadingButton
+                  type="submit"
+                  isLoading={isLoading}
+                  className="w-100 btn btn-primary"
+                >
+                  SIGN UP
+                </LoadingButton>
+              </Form>
+            ) : (
+              // OTP Verification Form
+              <Form className="auth-form" onSubmit={handleOtpSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Control
+                    type="text"
+                    name="otp"
+                    placeholder="Enter OTP from email"
+                    value={otpFormData.otp}
+                    onChange={handleInputChange}
+                    maxLength={6}
+                    required
+                  />
+                  <Form.Text className="text-muted">
+                    Time remaining: {formatTime(otpTimer)}
+                  </Form.Text>
+                </Form.Group>
+
+                {/* OTP Submit button */}
+                <LoadingButton
+                  type="submit"
+                  isLoading={isLoading}
+                  className="w-100 btn btn-primary mb-3"
+                >
+                  VERIFY OTP
+                </LoadingButton>
+
+                {/* Resend OTP button */}
+                {canResendOtp && (
+                  <Button
+                    onClick={handleResendOtp}
+                    disabled={isLoading || !canResendOtp}
+                    className="w-100 btn btn-secondary"
+                  >
+                    Resend OTP
+                  </Button>
+                )}
+              </Form>
+            )}
+          </Container>
+        </Col>
+        <Col md={4}></Col>
+      </Row>
+    </Layout>
   );
 };
 

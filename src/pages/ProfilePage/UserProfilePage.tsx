@@ -67,11 +67,11 @@ const UserProfilePage = () => {
         const token = localStorage.getItem('accessToken');
         if (passwordData.newPassword && passwordData.confirmNewPassword) {
             if (passwordData.newPassword !== passwordData.confirmNewPassword) {
-                message.error("New password and confirmation do not match.");
+                message.error("Mật khẩu mới và xác nhận mật khẩu mới không khớp.");
                 return;
             }
             if (passwordData.currentPassword === passwordData.newPassword) {
-                message.error("New password must be different from the current password.");
+                message.error("Mật khẩu mới phải khác mật khẩu cũ.");
                 return;
             }
             localStorage.setItem('password', passwordData.newPassword);
@@ -94,10 +94,10 @@ const UserProfilePage = () => {
             console.log("sđ", response);
 
             if (response?.status === 200) {
-                message.success("Password updated successfully");
+                message.success("Đổi mật khẩu thành công!");
                 setIsEditingPass(false);
             } else {
-                message.error("Failed to update profile. Please try again.");
+                message.error("Đổi mật khẩu thất bại, vui lòng thử lại.");
             }
 
         } catch (error) {
@@ -129,10 +129,10 @@ const UserProfilePage = () => {
             if (response.status === 200) {
                 // Object.keys(userData).forEach(key => localStorage.setItem(key, userData[key]));
                 localStorage.setItem("userData", JSON.stringify(userData));
-                message.success("Profile updated successfully");
+                message.success("Sửa thông tin thành công!");
                 setIsEditing(false);
             } else {
-                message.error("Failed to update profile. Please try again.");
+                message.error("Sửa thông tin thất bại, vui lòng thử lại.");
             }
         } catch (error) {
             console.error("Error updating profile:", error);

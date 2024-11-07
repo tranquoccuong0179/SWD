@@ -84,7 +84,7 @@ const TopicDetailsPage = () => {
                     setLoading(false);
                     return;
                 }
-                const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/parameter`);
+                const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/parameters`);
                 const transformedParameters = response.data.data.items
                     .filter(parameter => parameter.topicId === id);
                 setParameters(transformedParameters);

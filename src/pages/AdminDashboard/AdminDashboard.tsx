@@ -62,7 +62,7 @@ const AdminDashboard = () => {
             }
 
             try {
-                const response = await axios.get(`${API_BASE_URL}/Dashboards`, {
+                const response = await axios.get(`${API_BASE_URL}/dashboards`, {
                     headers: {
                         accept: '*/*',
                         Authorization: `Bearer ${token}`

@@ -106,7 +106,7 @@ const IntegratedWallet: React.FC = () => {
     const fetchTransaction = async () => {
         try {
             const response = await axios.get(
-                `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/transaction`,
+                `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/transactions`,
                 { headers }
             );
             setTransaction(response.data.data.items);
@@ -176,7 +176,7 @@ const IntegratedWallet: React.FC = () => {
                 return;
             }
 
-            const response = await axios.post(`${BASE_API_URL}/api/wallet/create`, null, {
+            const response = await axios.post(`${BASE_API_URL}/api/wallets/create`, null, {
                 params: { balance: numericAmount },
                 headers: {
                     'Content-Type': 'application/json',
