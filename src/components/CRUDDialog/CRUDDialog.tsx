@@ -2,21 +2,33 @@ import React from 'react';
 import { Modal, Form, Input, InputNumber, Button, Space } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 
-const CRUDDialog = ({
-    isOpen,
-    onClose,
-    title,
-    fields = [], // Default to an empty array
-    onSubmit,
-    initialValues,
-    isLoading = false,
-}) => {
+interface CRUDDialogProps {
+    isOpen: boolean;
+    onClose: () => void;
+    title: string;
+    fields: Array<{ name: string; label: string; required: boolean; type: string; min?: number; description?: string }>;
+    formData: { [key: string]: any };
+    setFormData: (data: { [key: string]: any }) => void;
+    onSubmit: (data: { [key: string]: any }) => Promise<void>;
+    isLoading: boolean;
+}
+
+const CRUDDialog: React.FC<CRUDDialogProps> = ({
+                                                   isOpen,
+                                                   onClose,
+                                                   title,
+                                                   fields,
+                                                   formData,
+                                                   setFormData,
+                                                   onSubmit,
+                                                   isLoading,
+                                               }) => {
     const [form] = Form.useForm();
 
     const handleSubmit = async () => {
         try {
             const values = await form.validateFields();
-            onSubmit(values);
+            await onSubmit(values);
         } catch (error) {
             console.error('Validation failed:', error);
         }
@@ -31,10 +43,10 @@ const CRUDDialog = ({
 
     // Set initial values when they change
     React.useEffect(() => {
-        if (initialValues && isOpen) {
-            form.setFieldsValue(initialValues);
+        if (formData && isOpen) {
+            form.setFieldsValue(formData);
         }
-    }, [initialValues, isOpen, form]);
+    }, [formData, isOpen, form]);
 
     const renderField = (field) => {
         const commonProps = {
@@ -66,36 +78,31 @@ const CRUDDialog = ({
             onCancel={onClose}
             footer={[
                 <Space key="footer">
-                    <Button onClick={onClose}>
-                        Cancel
-                    </Button>
-                    <Button
-                        type="primary"
-                        loading={isLoading}
-                        onClick={handleSubmit}
-                    >
+                    <Button onClick={onClose}>Cancel</Button>
+                    <Button type="primary" loading={isLoading} onClick={handleSubmit}>
                         {isLoading ? 'Processing...' : 'Submit'}
                     </Button>
-                </Space>
+                </Space>,
             ]}
         >
-            <Form form={form} layout="vertical" initialValues={initialValues}>
-                {Array.isArray(fields) && fields.map((field) => (
-                    <Form.Item
-                        key={field.name}
-                        name={field.name}
-                        label={field.label}
-                        rules={[
-                            {
-                                required: field.required,
-                                message: `Please enter ${field.label}`,
-                            },
-                        ]}
-                        extra={field.description}
-                    >
-                        {renderField(field)}
-                    </Form.Item>
-                ))}
+            <Form form={form} layout="vertical">
+                {Array.isArray(fields) &&
+                    fields.map((field) => (
+                        <Form.Item
+                            key={field.name}
+                            name={field.name}
+                            label={field.label}
+                            rules={[
+                                {
+                                    required: field.required,
+                                    message: `Please enter ${field.label}`,
+                                },
+                            ]}
+                            extra={field.description}
+                        >
+                            {renderField(field)}
+                        </Form.Item>
+                    ))}
             </Form>
         </Modal>
     );

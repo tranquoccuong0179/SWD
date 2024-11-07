@@ -100,7 +100,7 @@ const AdminDashboard = () => {
         if (!token) {
             setUnauthorized(true);
             setError('Authentication required');
-            return null; // or throw an error
+            return null;
         }
 
         try {
@@ -109,27 +109,27 @@ const AdminDashboard = () => {
                 url: `${API_BASE_URL}${url}`,
                 headers: {
                     accept: '*/*',
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                 },
-                data
+                data,
             });
 
             if (response.data.statusCode !== 200) {
                 throw new Error('Failed to fetch data');
             }
 
-            return response.data.data; // Return the data directly
+            return response.data.data;
         } catch (err) {
-            console.error("API error:", err);
+            console.error('API error:', err);
             if (axios.isAxiosError(err) && err.response?.status === 401) {
                 setUnauthorized(true);
                 setError('Unauthorized access - Please log in again');
             } else {
                 setError(err.response?.data?.message || 'An error occurred');
             }
-            return null; // or throw an error
+            return null;
         }
-    }
+    };
 
     // API Functions for Subjects
     const fetchSubjects = async () => {
@@ -141,7 +141,7 @@ const AdminDashboard = () => {
 
     const handleAddSubject = async () => {
         try {
-            const response = await axios.post(`${API_BASE_URL}/subjects`, subjectForm);
+            const response = await apiRequest('post', '/subjects', subjectForm);
             if (response.data.statusCode === 200) {
                 await fetchSubjects();
                 setIsAddSubjectOpen(false);
@@ -154,7 +154,7 @@ const AdminDashboard = () => {
 
     const handleUpdateSubject = async () => {
         try {
-            const response = await axios.put(`${API_BASE_URL}/subjects`, subjectForm);
+            const response = await apiRequest('put', '/subjects', subjectForm);
             if (response.data.statusCode === 200) {
                 await fetchSubjects();
                 setIsAddSubjectOpen(false);
@@ -168,7 +168,7 @@ const AdminDashboard = () => {
 
     const handleDeleteSubject = async (subjectId) => {
         try {
-            const response = await axios.delete(`${API_BASE_URL}/subjects/{id}`);
+            const response = await apiRequest('delete', `/subjects/${subjectId}`);
             if (response.data.statusCode === 200) {
                 await fetchSubjects();
             }
@@ -176,31 +176,20 @@ const AdminDashboard = () => {
             console.error('Error deleting subject:', err);
         }
     };
-
+    
     // API Functions for Chapters
     const fetchChapters = async () => {
-        try {
-            const token = localStorage.getItem('accessToken');
-            const response = await axios.get(`${API_BASE_URL}/chapters`, {
-                headers: {
-                    accept: '*/*',
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            console.log('Chapters response:', response.data); // Log the response
-            if (response.data.statusCode === 200) {
-                setChapters(response.data.data.items); // Access the items array
-            }
-        } catch (err) {
-            console.error('Error fetching chapters:', err);
+        const data = await apiRequest('get', '/chapters');
+        if (data) {
+            setChapters(data.items);
         }
     };
 
     const handleAddChapter = async () => {
         try {
-            const response = await axios.post(`${API_BASE_URL}/chapters`, {
+            const response = await apiRequest('post', '/chapters', {
                 ...chapterForm,
-                subjectId: parseInt(chapterForm.subjectId)
+                subjectId: parseInt(chapterForm.subjectId),
             });
             if (response.data.statusCode === 200) {
                 await fetchChapters();
@@ -214,9 +203,9 @@ const AdminDashboard = () => {
 
     const handleUpdateChapter = async () => {
         try {
-            const response = await axios.put(`${API_BASE_URL}/chapters`, {
+            const response = await apiRequest('put', '/chapters', {
                 ...chapterForm,
-                subjectId: parseInt(chapterForm.subjectId)
+                subjectId: parseInt(chapterForm.subjectId),
             });
             if (response.data.statusCode === 200) {
                 await fetchChapters();
@@ -229,9 +218,9 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleDeleteChapter = async () => {
+    const handleDeleteChapter = async (chapterId) => {
         try {
-            const response = await axios.delete(`${API_BASE_URL}/chapters/{id}`);
+            const response = await apiRequest('delete', `/chapters/${chapterId}`);
             if (response.data.statusCode === 200) {
                 await fetchChapters();
             }
@@ -240,30 +229,18 @@ const AdminDashboard = () => {
         }
     };
 
-    // API Functions for Problems
     const fetchProblems = async () => {
-        try {
-            const token = localStorage.getItem('accessToken');
-            const response = await axios.get(`${API_BASE_URL}/problems`, {
-                headers: {
-                    accept: '*/*',
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            console.log('Problems response:', response.data); // Log the response
-            if (response.data.statusCode === 200) {
-                setProblems(response.data.data.items); // Access the items array
-            }
-        } catch (err) {
-            console.error('Error fetching problems:', err);
+        const data = await apiRequest('get', '/problems');
+        if (data) {
+            setProblems(data.items);
         }
     };
 
     const handleAddProblem = async () => {
         try {
-            const response = await axios.post(`${API_BASE_URL}/problems`, {
+            const response = await apiRequest('post', '/problems', {
                 ...problemForm,
-                chapterId: parseInt(problemForm.chapterId)
+                chapterId: parseInt(problemForm.chapterId),
             });
             if (response.data.statusCode === 200) {
                 await fetchProblems();
@@ -277,9 +254,9 @@ const AdminDashboard = () => {
 
     const handleUpdateProblem = async () => {
         try {
-            const response = await axios.put(`${API_BASE_URL}/problems`, {
+            const response = await apiRequest('put', '/problems', {
                 ...problemForm,
-                chapterId: parseInt(problemForm.chapterId)
+                chapterId: parseInt(problemForm.chapterId),
             });
             if (response.data.statusCode === 200) {
                 await fetchProblems();
@@ -294,7 +271,7 @@ const AdminDashboard = () => {
 
     const handleDeleteProblem = async (problemId) => {
         try {
-            const response = await axios.delete(`${API_BASE_URL}/problems/{id}`);
+            const response = await apiRequest('delete', `/problems/{id}`);
             if (response.data.statusCode === 200) {
                 await fetchProblems();
             }
@@ -303,30 +280,18 @@ const AdminDashboard = () => {
         }
     };
 
-    // API Functions for Topics
     const fetchTopics = async () => {
-        try {
-            const token = localStorage.getItem('accessToken');
-            const response = await axios.get(`${API_BASE_URL}/topics`, {
-                headers: {
-                    accept: '*/*',
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            console.log('Topics response:', response.data); // Log the response
-            if (response.data.statusCode === 200) {
-                setTopics(response.data.data.items); // Access the items array
-            }
-        } catch (err) {
-            console.error('Error fetching topics:', err);
+        const data = await apiRequest('get', '/topics');
+        if (data) {
+            setTopics(data.items);
         }
     };
 
     const handleAddTopic = async () => {
         try {
-            const response = await axios.post(`${API_BASE_URL}/topics`, {
+            const response = await apiRequest('post', '/topics', {
                 ...topicForm,
-                problemId: parseInt(topicForm.problemId)
+                problemId: parseInt(topicForm.problemId),
             });
             if (response.data.statusCode === 200) {
                 await fetchTopics();
@@ -340,9 +305,9 @@ const AdminDashboard = () => {
 
     const handleUpdateTopic = async () => {
         try {
-            const response = await axios.put(`${API_BASE_URL}/topics`, {
+            const response = await apiRequest('put', '/topics', {
                 ...topicForm,
-                problemId: parseInt(topicForm.problemId)
+                problemId: parseInt(topicForm.problemId),
             });
             if (response.data.statusCode === 200) {
                 await fetchTopics();
@@ -355,9 +320,9 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleDeleteTopic = async () => {
+    const handleDeleteTopic = async (topicId) => {
         try {
-            const response = await axios.delete(`${API_BASE_URL}/topics/{id}`);
+            const response = await apiRequest('delete', `/topics/${topicId}`);
             if (response.data.statusCode === 200) {
                 await fetchTopics();
             }
