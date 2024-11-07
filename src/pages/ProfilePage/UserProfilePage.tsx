@@ -37,10 +37,6 @@ const UserProfilePage = () => {
             email: map?.email || '',
             phoneNumber: map?.phoneNumber || '',
             gender: map?.gender || ''
-            // address: localStorage.getItem('address') || '',
-            // facebook: localStorage.getItem('facebook') || '',
-            // twitter: localStorage.getItem('twitter') || '',
-            // linkedin: localStorage.getItem('linkedin') || ''
         };
         setUserData(storedUserData);
     }, []);
@@ -144,15 +140,6 @@ const UserProfilePage = () => {
         <Layout className="user-profile-page">
             <Header />
             <div className="profile-container mb-10">
-                {/* <div className="profile-header">
-                    <Title level={3}>Chào mừng, {userData.fullName || 'User'}!</Title>
-                    <Button type="primary" onClick={handleEditToggle}>
-                        {isEditing ? "Hủy" : "Sửa thông tin"}
-                    </Button>
-                    <Button type="primary" onClick={handleEditPassToggle}>
-                        {isEditingPass ? "Hủy" : "Đổi mật khẩu"}
-                    </Button>
-                </div> */}
                 <div className="profile-header flex justify-between items-start">
                     <div className="w-10/12 space-y-2">
                         <Title level={3}>Chào mừng, {userData.fullName || 'User'}!</Title>
@@ -281,17 +268,6 @@ const UserProfilePage = () => {
                                 />
                             </Form.Item>
                         </Col>
-                        {/* <Col span={12}>
-                            <Form.Item label="Address">
-                                <Input
-                                    name="address"
-                                    value={userData.address}
-                                    onChange={handleInputChange}
-                                    disabled={!isEditing}
-                                    prefix={<HomeOutlined />}
-                                />
-                            </Form.Item>
-                        </Col> */}
                         <Col span={12}>
                             <Form.Item label="Giới tính">
                                 <Input
@@ -303,58 +279,6 @@ const UserProfilePage = () => {
                             </Form.Item>
                         </Col>
                     </Row>
-
-                    {/* <Divider orientation="left">Personal Information</Divider>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item label="Gender">
-                                <Input
-                                    name="gender"
-                                    value={userData.gender}
-                                    onChange={handleInputChange}
-                                    disabled={!isEditing}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row> */}
-
-                    {/* <Divider orientation="left">Social Links</Divider>
-                    <Row gutter={16}>
-                        <Col span={8}>
-                            <Form.Item label="Facebook">
-                                <Input
-                                    name="facebook"
-                                    value={userData.facebook}
-                                    onChange={handleInputChange}
-                                    disabled={!isEditing}
-                                    prefix={<FacebookOutlined />}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={8}>
-                            <Form.Item label="Twitter">
-                                <Input
-                                    name="twitter"
-                                    value={userData.twitter}
-                                    onChange={handleInputChange}
-                                    disabled={!isEditing}
-                                    prefix={<TwitterOutlined />}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={8}>
-                            <Form.Item label="LinkedIn">
-                                <Input
-                                    name="linkedin"
-                                    value={userData.linkedin}
-                                    onChange={handleInputChange}
-                                    disabled={!isEditing}
-                                    prefix={<LinkedinOutlined />}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row> */}
-
                     {isEditing && (
                         <Button type="primary" onClick={handleSave}>
                             Lưu
