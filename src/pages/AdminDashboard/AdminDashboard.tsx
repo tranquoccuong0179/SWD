@@ -8,8 +8,7 @@ import { Users, CheckCircle, AlertCircle, Layers, FileText, DollarSign } from 'l
 import Header from '../../components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import './AdminDashboard.css';
-import { Dialog, DialogContent } from '@radix-ui/react-dialog';
-import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import CRUDDialog from "@/components/CRUDDialog/CRUDDialog.tsx";
 
 
 const { Title, Text } = Typography;
@@ -62,7 +61,7 @@ const AdminDashboard = () => {
             }
 
             try {
-                const response = await axios.get(`${API_BASE_URL}/dashboards`, {
+                const response = await axios.get(`${API_BASE_URL}/dashboard`, {
                     headers: {
                         accept: '*/*',
                         Authorization: `Bearer ${token}`
@@ -342,33 +341,87 @@ const AdminDashboard = () => {
         }
     };
 
-    const CRUDDialog = ({
-        isOpen,
-        setIsOpen,
-        title,
-        children,
-        onSubmit
-    }) => (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>{title}</DialogTitle>
-                </DialogHeader>
-                <form onSubmit={(e) => {
-                    e.preventDefault();
-                    onSubmit();
-                }}>
-                    {children}
-                    <div className="flex justify-end gap-2 mt-4">
-                        <Button danger onClick={() => setIsOpen(false)}>
-                            Hủy
-                        </Button>
-                        <Button>Xác Nhận</Button>
-                    </div>
-                </form>
-            </DialogContent>
-        </Dialog>
-    );
+    const subjectFields = [
+        {
+            name: 'name',
+            label: 'Tên Môn Học',
+            required: true,
+            type: 'text'
+        },
+        {
+            name: 'price',
+            label: 'Giá (VNĐ)',
+            required: true,
+            type: 'number',
+            min: 0,
+            description: 'Nhập giá không bao gồm dấu phẩy hoặc đơn vị tiền tệ'
+        }
+    ];
+
+    // Field configurations for other sections
+
+    const chapterFields = [
+        {
+            name: 'name',
+            label: 'Tên Chương',
+            required: true,
+            type: 'text'
+        },
+        {
+            name: 'subjectId',
+            label: 'ID Môn Học',
+            required: true,
+            type: 'number',
+            description: 'Chọn môn học cho chương này'
+        },
+        {
+            name: 'order',
+            label: 'Thứ tự',
+            required: true,
+            type: 'number',
+            min: 1,
+            description: 'Thứ tự hiển thị của chương'
+        }
+    ];
+
+    const topicFields = [
+        {
+            name: 'name',
+            label: 'Tên Bài Học',
+            required: true,
+            type: 'text'
+        },
+        {
+            name: 'chapterId',
+            label: 'ID Chương',
+            required: true,
+            type: 'number',
+            description: 'Chọn chương cho bài học này'
+        }
+    ];
+
+    const problemFields = [
+        {
+            name: 'name',
+            label: 'Tên Bài Toán',
+            required: true,
+            type: 'text'
+        },
+        {
+            name: 'topicId',
+            label: 'ID Bài Học',
+            required: true,
+            type: 'number',
+            description: 'Chọn bài học cho bài toán này'
+        },
+        {
+            name: 'description',
+            label: 'Mô Tả',
+            required: true,
+            type: 'textarea',
+            description: 'Mô tả chi tiết về bài toán'
+        }
+    ];
 
     const stats = [
         {
@@ -532,7 +585,16 @@ const AdminDashboard = () => {
                                 <Title level={2}>Quản Lý Môn Học</Title>
                             </CardHeader>
                             <CardContent>
-                                <Button onClick={() => setIsAddSubjectOpen(true)}>Thêm Môn Học</Button>
+                                <Button
+                                    onClick={() => {
+                                        setSelectedSubject(null);
+                                        setSubjectForm({ name: '', price: '' });
+                                        setIsAddSubjectOpen(true);
+                                    }}
+                                    className="mb-4"
+                                >
+                                    Thêm Môn Học
+                                </Button>
                                 <div className="mt-4">
                                     {Array.isArray(subjects) && subjects.length > 0 ? (
                                         <Table
@@ -544,22 +606,27 @@ const AdminDashboard = () => {
                                                     dataIndex: 'name',
                                                     key: 'name',
                                                 },
-                                                // {
-                                                //     title: 'Giá',
-                                                //     dataIndex: 'price',
-                                                //     key: 'price',
-                                                //     render: (price) => `$${price}`,
-                                                // },
+                                                {
+                                                    title: 'Giá',
+                                                    dataIndex: 'price',
+                                                    key: 'price',
+                                                    render: (price) => new Intl.NumberFormat('vi-VN', {
+                                                        style: 'currency',
+                                                        currency: 'VND'
+                                                    }).format(price),
+                                                },
                                                 {
                                                     title: 'Quản Lý',
                                                     key: 'actions',
                                                     render: (_, subject) => (
                                                         <div className="flex space-x-2">
-                                                            <Button onClick={() => {
-                                                                setSelectedSubject(subject);
-                                                                setSubjectForm({ name: subject.name, price: subject.price });
-                                                                setIsAddSubjectOpen(true);
-                                                            }}>
+                                                            <Button
+                                                                onClick={() => {
+                                                                    setSelectedSubject(subject);
+                                                                    setSubjectForm({ name: subject.name, price: subject.price });
+                                                                    setIsAddSubjectOpen(true);
+                                                                }}
+                                                            >
                                                                 Sửa
                                                             </Button>
                                                             <Button danger onClick={() => handleDeleteSubject(subject.id)}>
@@ -575,37 +642,19 @@ const AdminDashboard = () => {
                                         <div>No subjects available</div>
                                     )}
                                 </div>
+
+                                <CRUDDialog
+                                    isOpen={isAddSubjectOpen}
+                                    onClose={() => setIsAddSubjectOpen(false)}
+                                    title={selectedSubject ? "Sửa Môn Học" : "Thêm Môn Học"}
+                                    fields={subjectFields}
+                                    formData={subjectForm}
+                                    setFormData={setSubjectForm}
+                                    onSubmit={selectedSubject ? handleUpdateSubject : handleAddSubject}
+                                    isLoading={loading}
+                                />
                             </CardContent>
                         </Card>
-                        <CRUDDialog
-                            isOpen={isAddSubjectOpen}
-                            setIsOpen={setIsAddSubjectOpen}
-                            // title={selectedSubject ? "Edit Subject" : "Add Subject"}
-                            onSubmit={selectedSubject ? handleUpdateSubject : handleAddSubject}
-                        >
-                            <div className="space-y-4 mt-3">
-                                <h2 className="text-2xl font-semibold text-center text-gray-800">
-                                    {selectedSubject ? "Sửa Môn Học" : "Thêm Môn Học"}
-                                </h2>
-                                <input
-                                    type="text"
-                                    placeholder="Tên Môn Học"
-                                    value={subjectForm.name}
-                                    onChange={(e) => setSubjectForm({ ...subjectForm, name: e.target.value })}
-                                    required
-                                    className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                                <input
-                                    type="number"
-                                    placeholder="Giá"
-                                    value={subjectForm.price}
-                                    onChange={(e) => setSubjectForm({ ...subjectForm, price: e.target.value })}
-                                    required
-                                    className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                />
-                            </div>
-                        </CRUDDialog>
-
                     </TabsContent>
                     <TabsContent value="chapters">
                         <Card>
@@ -668,35 +717,16 @@ const AdminDashboard = () => {
                                 </div>
                             </CardContent>
                         </Card>
-                        
                         <CRUDDialog
                             isOpen={isAddChapterOpen}
-                            setIsOpen={setIsAddChapterOpen}
-                            // title={selectedChapter ? "Edit Chapter" : "Add Chapter"}
+                            onClose={() => setIsAddChapterOpen(false)}
+                            title={selectedChapter ? "Sửa Chương" : "Thêm Chương"}
+                            fields={chapterFields}
+                            formData={chapterForm}
+                            setFormData={setChapterForm}
                             onSubmit={selectedChapter ? handleUpdateChapter : handleAddChapter}
-                        >
-                            <div className="space-y-4 mt-3">
-                                <h2 className="text-2xl font-semibold text-center text-gray-800">
-                                    {selectedChapter ? "Sửa Chương" : "Thêm Chương"}
-                                </h2>
-                            <input
-                                type="text"
-                                placeholder="Tên Chương"
-                                value={chapterForm.name}
-                                onChange={(e) => setChapterForm({ ...chapterForm, name: e.target.value })}
-                                required
-                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            <input
-                                type="text"
-                                placeholder="Subject ID"
-                                value={chapterForm.subjectId}
-                                onChange={(e) => setChapterForm({ ...chapterForm, subjectId: e.target.value })}
-                                required
-                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            </div>
-                        </CRUDDialog>
+                            isLoading={loading}
+                        />
                     </TabsContent>
                     <TabsContent value="topics">
                         <Card>
@@ -762,35 +792,16 @@ const AdminDashboard = () => {
                                 </div>
                             </CardContent>
                         </Card>
-
                         <CRUDDialog
                             isOpen={isAddTopicOpen}
-                            setIsOpen={setIsAddTopicOpen}
-                            // title={selectedTopic ? "Edit Topic" : "Add Topic"}
+                            onClose={() => setIsAddTopicOpen(false)}
+                            title={selectedTopic ? "Sửa Bài học" : "Thêm Bài học"}
+                            fields={topicFields}
+                            formData={topicFields}
+                            setFormData={setTopicForm}
                             onSubmit={selectedTopic ? handleUpdateTopic : handleAddTopic}
-                        >
-                            <div className="space-y-4 mt-3">
-                                <h2 className="text-2xl font-semibold text-center text-gray-800">
-                                    {selectedTopic ? "Sửa Bài Học" : "Thêm Bài Học"}
-                                </h2>
-                            <input
-                                type="text"
-                                placeholder="Tên Bài Học"
-                                value={topicForm.name}
-                                onChange={(e) => setTopicForm({ ...topicForm, name: e.target.value })}
-                                required
-                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            <input
-                                type="text"
-                                placeholder="Chapter ID"
-                                value={topicForm.chapterId}
-                                onChange={(e) => setTopicForm({ ...topicForm, chapterId: e.target.value })}
-                                required
-                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            </div>
-                        </CRUDDialog>
+                            isLoading={loading}
+                        />
                     </TabsContent>
                     <TabsContent value="problems">
                         <Card>
@@ -864,42 +875,16 @@ const AdminDashboard = () => {
                                 </div>
                             </CardContent>
                         </Card>
-
                         <CRUDDialog
                             isOpen={isAddProblemOpen}
-                            setIsOpen={setIsAddProblemOpen}
-                            // title={selectedProblem ? "Edit Problem" : "Add Problem"}
+                            onClose={() => setIsAddProblemOpen(false)}
+                            title={selectedProblem ? "Sửa Bài tập" : "Thêm Bài tập"}
+                            fields={problemFields}
+                            formData={problemFields}
+                            setFormData={setProblemForm}
                             onSubmit={selectedProblem ? handleUpdateProblem : handleAddProblem}
-                        >
-                            <div className="space-y-4 mt-3">
-                                <h2 className="text-2xl font-semibold text-center text-gray-800">
-                                    {selectedProblem ? "Sửa Bài Toán" : "Thêm Bài Toán"}
-                                </h2>
-                            <input
-                                type="text"
-                                placeholder="Tên Bài Toán"
-                                value={problemForm.name}
-                                onChange={(e) => setProblemForm({ ...problemForm, name: e.target.value })}
-                                required
-                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            <input
-                                type="text"
-                                placeholder="Topic ID"
-                                value={problemForm.topicId}
-                                onChange={(e) => setProblemForm({ ...problemForm, topicId: e.target.value })}
-                                required
-                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            <textarea
-                                placeholder="Mô Tả"
-                                value={problemForm.description}
-                                onChange={(e) => setProblemForm({ ...problemForm, description: e.target.value })}
-                                required
-                                className="w-2/3 bg-white p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            </div>
-                        </CRUDDialog>
+                            isLoading={loading}
+                        />
                     </TabsContent>
                 </Tabs>
             </div>
