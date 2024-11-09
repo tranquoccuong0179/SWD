@@ -195,7 +195,7 @@ const AdminDashboard = () => {
 
     const handleDeleteSubject = async (subjectId) => {
         try {
-            const response = await apiRequest('delete', `/subjects/{id}`);
+            const response = await apiRequest('delete', `/subjects/${subjectId}`);
             if (response.data.statusCode === 200) {
                 await fetchSubjects();
             }
@@ -247,7 +247,7 @@ const AdminDashboard = () => {
 
     const handleDeleteChapter = async (chapterId) => {
         try {
-            const response = await apiRequest('delete', `/chapters/{id}`);
+            const response = await apiRequest('delete', `/chapters/${chapterId}`);
             if (response.data.statusCode === 200) {
                 await fetchChapters();
             }
@@ -296,9 +296,9 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleDeleteProblem = async () => {
+    const handleDeleteProblem = async (problemId) => {
         try {
-            const response = await apiRequest('delete', `/problems/{id}`);
+            const response = await apiRequest('delete', `/problems/${problemId}`);
             if (response.data.statusCode === 200) {
                 await fetchProblems();
             }
@@ -349,7 +349,7 @@ const AdminDashboard = () => {
 
     const handleDeleteTopic = async (topicId) => {
         try {
-            const response = await apiRequest('delete', `/topics/{id}`);
+            const response = await apiRequest('delete', `/topics/${topicId}`);
             if (response.data.statusCode === 200) {
                 await fetchTopics();
             }
