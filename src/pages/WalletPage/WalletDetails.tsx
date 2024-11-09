@@ -4,6 +4,7 @@ import { Button, Modal, Form, Input, Table, message, Layout } from 'antd';
 import { Wallet, CreditCard, History, GraduationCap, TrendingUp, Clock } from 'lucide-react';
 import Header from '../../components/Header/Header.tsx';
 import "./IntergratedWallet.css";
+import { Navigate } from 'react-router-dom';
 
 interface WalletData {
     userId: string;
@@ -54,8 +55,8 @@ const IntegratedWallet: React.FC = () => {
 
 
     const token = localStorage.getItem('accessToken');
-    console.log("Token exist?:", !!token);
-    console.log("Token value:", token);
+    // console.log("Token exist?:", !!token);
+    console.log("Token:", token);   
     const headers = {
         'accept': '*/*',
         'Authorization': `Bearer ${token}`,
@@ -156,6 +157,9 @@ const IntegratedWallet: React.FC = () => {
         await fetchWalletData();
         setShowAddFunds(false);
         message.success('Nạp tiền thành công!');
+        setTimeout(() => {
+            Navigate("/wallet")
+        }, 10000)
     };
 
     // Handle adding funds to wallet

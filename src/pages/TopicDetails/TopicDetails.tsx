@@ -118,10 +118,10 @@ const TopicDetailsPage = () => {
         //     message.error("Tham số g chỉ có thể là 9.8 hoặc 10. Vui lòng kiểm tra lại.");
         //     return;
         // }
-        if (Number(inputValues["g"]) !== 9.8 && Number(inputValues["g"]) !== 10) {
-            message.error("Tham số g chỉ có thể là 9.8 hoặc 10. Vui lòng kiểm tra lại.");
-            return;
-        }
+        // if (Number(inputValues["g"]) !== 9.8 && Number(inputValues["g"]) !== 10) {
+        //     message.error("Tham số g chỉ có thể là 9.8 hoặc 10. Vui lòng kiểm tra lại.");
+        //     return;
+        // }
 
         const mappedData = content?.getPPVM?.map((item) => ({
             parameterId: item.parameterId,
@@ -144,7 +144,7 @@ const TopicDetailsPage = () => {
 
             if (response.status === 200) {
                 console.log('Response từ API:', response.data);
-                message.success(response.data.data + "Đang chuyển hướng đến trang ví của tôi, xin vui lòng chờ 5 đến 10 phút sẽ có lời giải.");
+                message.success(response.data.data + " Đang chuyển hướng đến trang ví của tôi, xin vui lòng chờ 5 đến 10 phút sẽ có lời giải.");
                 //Redirect tới trang /wallet
                 setTimeout(() => {
                     navigate("/wallet")
@@ -155,8 +155,8 @@ const TopicDetailsPage = () => {
             }
         } catch (error) {
             console.error('Error gửi dữ liệu:', error);
-            console.log("Chi tiết lỗi:", error.response);
-            message.error("Có lỗi xảy ra khi gửi tham số");
+            console.log("Error log:", error.response);
+            message.error("Bài toán này chưa có lời giải, hãy thử bài toán khác!");
         }
     };
 

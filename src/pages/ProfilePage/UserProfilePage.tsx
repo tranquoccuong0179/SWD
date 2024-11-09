@@ -31,16 +31,19 @@ const UserProfilePage = () => {
     useEffect(() => {
         const userData = localStorage.getItem('userData') || '';
         const map = JSON.parse(userData)
+        console.log("map", map);
+
         const storedUserData = {
             userName: map?.userName || '',
             fullName: map?.fullName || '',
             email: map?.email || '',
             phoneNumber: map?.phoneNumber || '',
-            gender: map?.gender || ''
+            gender: map?.gender !== undefined ? parseInt(map.gender) : '' // Kiểm tra riêng trường hợp undefined
         };
+
         setUserData(storedUserData);
     }, []);
-
+    // console.log("user", userData);
 
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
@@ -269,19 +272,19 @@ const UserProfilePage = () => {
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                        {/* <Input
+                            {/* <Input
                                     name="gender"
                                     value={userData.gender === 0 ? "Nữ" : userData?.gender === 1 ? "Nam" : ""}
                                     onChange={handleInputChange}
                                     disabled={!isEditing}
                                 /> */}
                             <Form.Item label="Giới tính">
-                            {console.log("Gender value:", userData.gender)}
+                                {console.log("Gender value:", userData.gender)}
                                 <Select
                                     name="gender"
                                     value={userData.gender}
                                     onChange={(value) => handleInputChange({ target: { name: 'gender', value } })}
-                                    disabled={!isEditing}  
+                                    disabled={!isEditing}
                                 >
                                     <Select.Option value={0}>Nữ</Select.Option>
                                     <Select.Option value={1}>Nam</Select.Option>

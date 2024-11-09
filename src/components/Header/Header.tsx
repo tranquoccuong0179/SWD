@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Logout } from '../../store/user/action.ts';
 import "./Header.css";
+import LogoPic from '../../assets/einstein.jpg';
 
 interface RootState {
   USER: {
@@ -80,13 +81,14 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className="logo-container">
+      <a href="/home" className="logo-container">
         <img
-          src="https://i.postimg.cc/xT0JJZbJ/physics-logo.jpg"
+          // src="https://i.postimg.cc/xT0JJZbJ/physics-logo.jpg"
+          src={LogoPic}
           alt="Logo"
           className="logo"
         />
-      </div>
+      </a>
 
       <Input
         placeholder="Bạn muốn học gì?"
@@ -102,7 +104,7 @@ const Header = () => {
           <Link to="/AboutUs">Về chúng tôi</Link>
         </Menu.Item>
         <Menu.Item key="blog">
-          <Link to="/Subject">Môn học</Link>
+          <Link to="/Subject" style={localStorage?.getItem('role') === 'User' ? {} : { display: 'none' }}>Môn học</Link>
         </Menu.Item>
         <Menu.Item key="contact">
           <Link to="/Contact">Liên hệ</Link>
