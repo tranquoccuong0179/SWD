@@ -1,11 +1,11 @@
 .user-profile-page {
     background-color: #f9fafe;
-    padding: 24px;
+    /* padding: 24px; */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 100px;
+    margin-top: 4rem;
 }
 
 .profile-container {

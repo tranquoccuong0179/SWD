@@ -119,7 +119,7 @@ const RegisterPage: React.FC = () => {
           confirmPassword: formData.confirmPassword,
           fullName: formData.fullName,
           email: formData.email,
-          phoneNumber: formData.phone,
+          phone: formData.phone,
           gender: genderValue,
         }
       );
@@ -412,7 +412,7 @@ const RegisterPage: React.FC = () => {
                 <Form.Group className="mb-3">
                   <Form.Control
                     type="tel"
-                    name="phoneNumber"
+                    name="phone"
                     placeholder="Phone Number"
                     onChange={handlePhoneChange}
                     isInvalid={!!phoneError}

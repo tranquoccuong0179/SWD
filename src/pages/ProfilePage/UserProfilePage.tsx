@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Button, Typography, Input, Row, Col, Form, Divider, message } from 'antd';
+import { Layout, Button, Typography, Input, Row, Col, Form, Divider, message, Select } from 'antd';
 import { UserOutlined, MailOutlined, PhoneOutlined, HomeOutlined, FacebookOutlined, TwitterOutlined, LinkedinOutlined, LockOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import Header from '../../components/Header/Header';
@@ -269,13 +269,23 @@ const UserProfilePage = () => {
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label="Giới tính">
-                                <Input
+                        {/* <Input
                                     name="gender"
-                                    value={userData.gender}
+                                    value={userData.gender === 0 ? "Nữ" : userData?.gender === 1 ? "Nam" : ""}
                                     onChange={handleInputChange}
                                     disabled={!isEditing}
-                                />
+                                /> */}
+                            <Form.Item label="Giới tính">
+                            {console.log("Gender value:", userData.gender)}
+                                <Select
+                                    name="gender"
+                                    value={userData.gender}
+                                    onChange={(value) => handleInputChange({ target: { name: 'gender', value } })}
+                                    disabled={!isEditing}  
+                                >
+                                    <Select.Option value={0}>Nữ</Select.Option>
+                                    <Select.Option value={1}>Nam</Select.Option>
+                                </Select>
                             </Form.Item>
                         </Col>
                     </Row>

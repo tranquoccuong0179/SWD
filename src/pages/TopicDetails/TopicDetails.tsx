@@ -48,7 +48,7 @@ const TopicDetailsPage = () => {
     // console.log("Token exist?:", !!token);
     // console.log("Token value:", token);
 
-    const headers = { 
+    const headers = {
         'accept': '*/*',
         'Authorization': `Bearer ${token}`,
     };
@@ -109,95 +109,47 @@ const TopicDetailsPage = () => {
     };
     console.log("Input:", inputValues);
 
-    // const handleSubmit = async () => {
-    //     // let dataMap= content?.getPPVM
-    //     const mappedData = content?.getPPVM.map((item) => ({
-    //         parameterId: item.parameterId,
-    //         value: inputValues[item.symbol] ? parseInt(inputValues[item.symbol]) : item.value
-    //     }));
-    //     // Bắt trường hợp
-    //     message.success("Gửi tham số thành công!")
-    //     let data = {
-    //         problemId: problemId,
-    //         postPPVMs: mappedData
-    //     }
-    //     try {
-    //         const response = await axios.post(
-    //             `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`,
-    //             data,
-    //             { headers }
-    //         );
-
-
-    //         if (response.status === 200) {
-    //             console.log('Response from API:', response.data);
-    //             // Xử lý phản hồi từ API ở đây
-    //         }
-    //     } catch (error) {
-    //         console.error('Error sending data:', error);
-    //     }
-    // };
-
-
-    // const handleSubmit = async () => {
-    //     const mappedData = content?.getPPVM.map((item) => ({
-    //         parameterId: item.parameterId,
-    //         value: inputValues[item.symbol] ? parseInt(inputValues[item.symbol]) : item.value,
-    //     }));
-
-    //     let data = {
-    //         problemId: problemId,
-    //         postPPVMs: mappedData,
-    //     };
-
-    //     try {
-    //         const response = await axios.post(
-    //             `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`,
-    //             data,
-    //             { headers }
-    //         );
-
-    //         if (response.status === 200) {
-    //             console.log('Response from API:', response.data);
-    //             message.success("Gửi tham số thành công!");
-    //             // Xử lý phản hồi từ API ở đây
-    //         } else {
-    //             message.error("Có lỗi xảy ra khi gửi tham số");
-    //         }
-    //     } catch (error) {
-    //         console.error('Error sending data:', error);
-    //         message.error("Có lỗi xảy ra khi gửi tham số");
-    //     }
-    // };
-
     const handleSubmit = async () => {
         if (!problemId) {
             message.error("Thiếu problemId. Vui lòng kiểm tra lại.");
             return;
         }
-    
+        // if (inputValues["g"] !== 9.8 && inputValues["g"] !== 10) {
+        //     message.error("Tham số g chỉ có thể là 9.8 hoặc 10. Vui lòng kiểm tra lại.");
+        //     return;
+        // }
+        if (Number(inputValues["g"]) !== 9.8 && Number(inputValues["g"]) !== 10) {
+            message.error("Tham số g chỉ có thể là 9.8 hoặc 10. Vui lòng kiểm tra lại.");
+            return;
+        }
+
         const mappedData = content?.getPPVM?.map((item) => ({
             parameterId: item.parameterId,
             value: inputValues[item.symbol] ? parseInt(inputValues[item.symbol]) : item.value,
         }));
-    
+
         const data = {
             problemId: problemId,
             postPPVMs: mappedData,
         };
-    
+
         console.log("Data gửi lên:", data);
-    
+
         try {
             const response = await axios.post(
                 `https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`,
                 data,
                 { headers }
             );
-    
+
             if (response.status === 200) {
                 console.log('Response từ API:', response.data);
-                message.success(response.data.data);
+                message.success(response.data.data + "Đang chuyển hướng đến trang ví của tôi, xin vui lòng chờ 5 đến 10 phút sẽ có lời giải.");
+                //Redirect tới trang /wallet
+                setTimeout(() => {
+                    navigate("/wallet")
+                }, 5000)
+
             } else {
                 message.error("Có lỗi xảy ra khi gửi tham số");
             }
@@ -207,7 +159,7 @@ const TopicDetailsPage = () => {
             message.error("Có lỗi xảy ra khi gửi tham số");
         }
     };
-    
+
     return (
         <Layout className="landing-page">
             <Header />
@@ -252,66 +204,15 @@ const TopicDetailsPage = () => {
                                 <div className="problem-description text-left p-4 bg-blue-100 text-black text-lg font-bold rounded-md">
                                     Bài toán: {content?.description}
                                 </div>
-                                <div className="input-question text-left p-4 text-black text-lg font-medium mb-2">
-                                    Nhập các tham số để tính toán:
-                                    {/* <p>Giả sử g = 10  m/s^2</p> */}
-                                </div>
-                                {/* <div className="parameter-inputs">
-                                        <div className="mb-6">
-                                            <label className="block text-left text-base font-medium text-black mb-2" htmlFor="input1">Tham số 1:</label>
-                                            <div className="flex items-center space-x-2">
-                                                <select
-                                                    id="type1"
-                                                    className="p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
-                                                    onChange={(e) => handleSelectChange(0, e.target.value)}
-                                                >
-                                                    {contentParameter?.map((e) => (
-                                                        <option key={e.id} value={e.id}>
-                                                            {e?.name} {e?.symbol} ({e?.unit})
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                                <input
-                                                    id="input1"
-                                                    type="number"
-                                                    className="block w-full p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
-                                                    placeholder="Nhập tham số 1"
-                                                    onChange={(e) => handleInputChange(0, e.target.value)}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="mb-6">
-                                            <label className="block text-left text-base font-medium text-black mb-2" htmlFor="input2">Tham số 2:</label>
-                                            <div className="flex items-center space-x-2">
-                                                <select
-                                                    id="type2"
-                                                    className="p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
-                                                    onChange={(e) => handleSelectChange(1, e.target.value)}
-                                                >
-                                                    {contentParameter?.map((e) => (
-                                                        <option key={e.id} value={e.id}>
-                                                            {e?.name} {e?.symbol} ({e?.unit})
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                                <input
-                                                    id="input2"
-                                                    type="number"
-                                                    className="block w-full p-2 text-base text-black border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-300 bg-blue-100"
-                                                    placeholder="Nhập tham số 2"
-                                                    onChange={(e) => handleInputChange(1, e.target.value)}
-                                                />
-                                            </div>
-                                        </div>
-                                        <Button type="primary w-40 h-10 text-lg font-semibold p-3" onClick={handleSubmit}>Gửi</Button>
-                                    </div> */}
+                                <div className="input-question text-left p-4 text-black text-lg font-medium mb-2">Nhập các tham số để tính toán:</div>
                                 <div>
                                     {content?.getPPVM?.map((e) => {
                                         return (<>
-                                            <div className='input-param-name text-left text-black text-lg font-normal mb-3'>Nhập {e?.symbol}</div>
+                                            <div className='input-param-name text-left text-black text-lg font-normal mb-3'>
+                                                Nhập {e?.symbol}{e?.symbol === "g" && " (giả sử g = 9.8 hoặc 10 m/s^2)"}
+                                            </div>
                                             <div className='input-form mb-3'><Input name={e?.symbol} value={inputValues[e.symbol] || ""}
                                                 onChange={handleInputChange} placeholder={`Nhập ${e.symbol}`} /></div>
-
                                         </>)
                                     })}
                                     <Button type="primary" size="large" onClick={handleSubmit}>Gửi tham số</Button>
