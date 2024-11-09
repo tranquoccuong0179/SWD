@@ -106,13 +106,20 @@ const AdminDashboard = () => {
         }
 
         try {
+            const headers = {
+                accept: '*/*',
+                Authorization: `Bearer ${token}`,
+            };
+
+            // Don't set Content-Type for FormData, let browser set it automatically
+            if (!(data instanceof FormData)) {
+                headers['Content-Type'] = 'application/json';
+            }
+
             const response = await axios({
                 method,
                 url: `${API_BASE_URL}${url}`,
-                headers: {
-                    accept: '*/*',
-                    Authorization: `Bearer ${token}`,
-                },
+                headers,
                 data,
             });
 
@@ -188,10 +195,18 @@ const AdminDashboard = () => {
     //     }
     // };
 
+// Update the update subject handler
     const handleUpdateSubject = async () => {
         try {
-            const response = await apiRequest('put', '/subjects', subjectForm);
-            if (response.data.statusCode === 200) {
+            const formData = new FormData();
+            formData.append('id', subjectForm.id);
+            formData.append('name', subjectForm.name);
+            if (subjectForm.imageLink) {
+                formData.append('imageLink', subjectForm.imageLink);
+            }
+
+            const response = await apiRequest('put', '/subjects', formData);
+            if (response) {
                 await fetchSubjects();
                 setIsAddSubjectOpen(false);
                 setSelectedSubject(null);
