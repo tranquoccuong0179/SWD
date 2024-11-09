@@ -296,7 +296,7 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleDeleteProblem = async (problemId) => {
+    const handleDeleteProblem = async () => {
         try {
             const response = await apiRequest('delete', `/problems/{id}`);
             if (response.data.statusCode === 200) {
