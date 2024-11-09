@@ -63,7 +63,7 @@ const TopicDetailsPage = () => {
                 console.log("Request Headers:", headers);
 
                 const response = await axios.get(
-                    `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems`,
+                    `https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/problems`,
                     { headers }
                 );
                 const transformedTopicDetails = response.data.data.items
@@ -84,7 +84,7 @@ const TopicDetailsPage = () => {
                     setLoading(false);
                     return;
                 }
-                const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/parameters`);
+                const response = await axios.get(`https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/parameters`);
                 const transformedParameters = response.data.data.items
                     .filter(parameter => parameter.topicId === id);
                 setParameters(transformedParameters);
@@ -190,7 +190,7 @@ const TopicDetailsPage = () => {
     
         try {
             const response = await axios.post(
-                `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`,
+                `https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/problems/purchaseProblem`,
                 data,
                 { headers }
             );

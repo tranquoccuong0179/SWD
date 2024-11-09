@@ -45,7 +45,7 @@ const TopicPage = () => {
                     return;
                 }
 
-                const response = await axios.get(`https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/topics`);
+                const response = await axios.get(`https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/topics`);
 
                 console.log("API Response:", response.data);
                 console.log("ChapterId:", id);

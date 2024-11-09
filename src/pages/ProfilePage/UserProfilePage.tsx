@@ -74,7 +74,7 @@ const UserProfilePage = () => {
         }
         try {
             const response = await axios.put(
-                'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/ChangePassword',
+                'https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/auth/ChangePassword',
                 {
                     oldPassword: passwordData?.currentPassword,
                     password: passwordData?.newPassword,
@@ -106,7 +106,7 @@ const UserProfilePage = () => {
         const token = localStorage.getItem('accessToken');
         try {
             const response = await axios.put(
-                'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/UpdateProfile',
+                'https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/auth/UpdateProfile',
                 {
                     userName: userData.userName,
                     fullName: userData.fullName,

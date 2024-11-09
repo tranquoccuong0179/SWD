@@ -23,7 +23,7 @@ interface WalletData {
     }>;
 }
 
-const BASE_API_URL = 'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net';
+const BASE_API_URL = 'https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net';
 
 const getAuthToken = () => localStorage.getItem('accessToken');
 
@@ -71,7 +71,7 @@ const IntegratedWallet: React.FC = () => {
                 return;
             }
 
-            const response = await axios.get(`${BASE_API_URL}/getWallet`, {
+            const response = await axios.get(`${BASE_API_URL}/api/wallets`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -106,7 +106,7 @@ const IntegratedWallet: React.FC = () => {
     const fetchTransaction = async () => {
         try {
             const response = await axios.get(
-                `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/transactions`,
+                `https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/transactions`,
                 { headers }
             );
             setTransaction(response.data.data.items);
@@ -122,7 +122,7 @@ const IntegratedWallet: React.FC = () => {
     const fetchSolutions = async () => {
         try {
             const response = await axios.get(
-                `https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/solutions`,
+                `https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/solutions`,
                 { headers }
             );
             // setSolutions(response.data.data.items);
@@ -193,7 +193,7 @@ const IntegratedWallet: React.FC = () => {
                 // Set up payment status check
                 const checkPaymentStatus = setInterval(async () => {
                     try {
-                        const statusResponse = await axios.get(`${BASE_API_URL}/getWallet`, {
+                        const statusResponse = await axios.get(`${BASE_API_URL}/api/wallets`, {
                             headers: {
                                 'Authorization': `Bearer ${token}`
                             }

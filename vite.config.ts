@@ -10,7 +10,7 @@ export default defineConfig({
     open: '/home',
     proxy: {
       '/api': {
-        target: 'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net',
+        target: 'https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/',
         changeOrigin: true,
         secure: true
       },

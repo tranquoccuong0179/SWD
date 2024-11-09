@@ -112,7 +112,7 @@ const RegisterPage: React.FC = () => {
 
       // Send registration request
       const response = await axios.post(
-        'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/SignUp',
+        'https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/auth/SignUp',
         {
           username: formData.username,
           password: formData.password,
@@ -165,7 +165,7 @@ const RegisterPage: React.FC = () => {
 
     try {
       const response = await axios.post(
-        'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/Verify',
+        'https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/auth/Verify',
         {
           userId: userId,
           otp: otpFormData.otp
@@ -233,7 +233,7 @@ const RegisterPage: React.FC = () => {
     try {
       // Implement your resend OTP API call here
       await axios.post(
-        'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api/auth/ResendOTP',
+        'https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/auth/ResendOTP',
         {
           userId: otpFormData.userId
         }

@@ -14,7 +14,7 @@ import CRUDDialog from "@/components/CRUDDialog/CRUDDialog.tsx";
 const { Title, Text } = Typography;
 
 // Create axios instance with base configuration
-const API_BASE_URL = 'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net/api';
+const API_BASE_URL = 'https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api';
 
 const AdminDashboard = () => {
     // State management

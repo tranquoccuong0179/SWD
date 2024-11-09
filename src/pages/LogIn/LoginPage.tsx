@@ -29,7 +29,7 @@ interface LoginResponse {
   role: string;
 }
 
-const API_BASE_URL = 'https://manimapi-hfanb8gyejb3eacw.southeastasia-01.azurewebsites.net';
+const API_BASE_URL = 'https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net';
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState<string>('');
@@ -53,9 +53,6 @@ const LoginPage: React.FC = () => {
 
       // Adjusted based on possible data nesting
       const responseData = response.data.data || response.data;
-      console.log("DATA:", response.data);
-      console.log("ROLE:", responseData.role);
-
 
       if (responseData && responseData.user) {
         dispatch(
