@@ -19,7 +19,6 @@ const CRUDDialog: React.FC<CRUDDialogProps> = ({
                                                    title,
                                                    fields,
                                                    formData,
-                                                   setFormData,
                                                    onSubmit,
                                                    isLoading,
                                                }) => {

@@ -49,6 +49,8 @@ const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('overview');
     const [isOpen, setIsOpen] = useState(false)
     const [form] = Form.useForm();
+    const [subjectOptions, setSubjectOptions] = useState([]);
+const [chapterOptions, setChapterOptions] = useState([]);
     // Fetch dashboard data
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -149,16 +151,6 @@ const AdminDashboard = () => {
     };
 
     const handleAddSubject = async () => {
-        // try {
-        //     const response = await apiRequest('post', '/subjects', subjectForm);
-        //     if (response.data.statusCode === 200) {
-        //         await fetchSubjects();
-        //         setIsAddSubjectOpen(false);
-        //         setSubjectForm({ Name: '', ImageLink: '' });
-        //     }
-        // } catch (err) {
-        //     console.error('Error adding subject:', err);
-        // }
         const data = new FormData();
         data.append('Name', subjectForm.Name);
 
@@ -169,33 +161,6 @@ const AdminDashboard = () => {
 
     };
 
-    // const handleAddSubject = async () => {
-    //     try {
-    //         const formData = new FormData();
-    //         formData.append('Name', subjectForm.Name);
-
-    //         // Nếu có file được chọn
-    //         if (subjectForm.ImageLink instanceof File) {
-    //             formData.append('ImageLink', subjectForm.ImageLink);
-    //         }
-
-    //         const response = await apiRequest('post', '/subjects', formData, {
-    //             headers: {
-    //                 'Content-Type': 'multipart/form-data'
-    //             }
-    //         });
-
-    //         if (response.data.statusCode === 200) {
-    //             await fetchSubjects();
-    //             setIsAddSubjectOpen(false);
-    //             setSubjectForm({ Name: '', ImageLink: '' });
-    //         }
-    //     } catch (err) {
-    //         console.error('Error adding subject:', err);
-    //     }
-    // };
-
-// Update the update subject handler
     const handleUpdateSubject = async () => {
         try {
             const formData = new FormData();
@@ -240,17 +205,17 @@ const AdminDashboard = () => {
 
     const handleAddChapter = async () => {
         try {
-            const response = await apiRequest('post', '/chapters', {
-                ...chapterForm,
-                subjectId: parseInt(chapterForm.subjectId),
+            const response = await axios.post('/api/chapters', {
+                subjectId: selectedSubjectId,
+                name: form.getFieldValue('chapterName'),
             });
-            if (response.data.statusCode === 200) {
-                await fetchChapters();
-                setIsAddChapterOpen(false);
-                setChapterForm({ subjectId: '', name: '', order: 1 });
-            }
-        } catch (err) {
-            console.error('Error adding chapter:', err);
+            message.success('Thêm chương thành công');
+            setIsAddChapterOpen(false);
+            form.resetFields();
+            await fetchChapters(); // Cập nhật danh sách chương
+        } catch (error) {
+            console.error('Error adding chapter:', error);
+            message.error('Thêm chương thất bại');
         }
     };
 
@@ -342,17 +307,17 @@ const AdminDashboard = () => {
 
     const handleAddTopic = async () => {
         try {
-            const response = await apiRequest('post', '/topics', {
-                ...topicForm,
-                problemId: parseInt(topicForm.problemId),
+            const response = await axios.post('/api/topics', {
+                chapterId: selectedChapterId,
+                name: form.getFieldValue('topicName'),
             });
-            if (response.data.statusCode === 200) {
-                await fetchTopics();
-                setIsAddTopicOpen(false);
-                setTopicForm({ problemId: '', name: '', description: '' });
-            }
-        } catch (err) {
-            console.error('Error adding topic:', err);
+            message.success('Thêm bài học thành công');
+            setIsAddTopicOpen(false);
+            form.resetFields();
+            await fetchTopics(); // Cập nhật danh sách bài học
+        } catch (error) {
+            console.error('Error adding topic:', error);
+            message.error('Thêm bài học thất bại');
         }
     };
 
@@ -822,33 +787,6 @@ const AdminDashboard = () => {
 
                                     </Form>
                                 </Modal>
-                                {/* <CRUDDialog
-                                    isOpen={isAddSubjectOpen}
-                                    onClose={() => setIsAddSubjectOpen(false)}
-                                    title={selectedSubject ? "Sửa Môn Học" : "Thêm Môn Học"}
-                                    fields={subjectFields}
-                                    formData={subjectForm}
-                                    // setFormData={setSubjectForm}
-                                    setFormData={(field, value) => {
-                                        console.log("Field:", field); // Kiểm tra tên trường
-                                        console.log("Value:", value); // Kiểm tra giá trị trường hoặc file
-                                    
-                                        if (field === 'ImageLink') {
-                                            setSubjectForm(prev => ({
-                                                ...prev,
-                                                [field]: value.target.files[0] // Lưu file vào form
-                                            }));
-                                        } else {
-                                            setSubjectForm(prev => ({
-                                                ...prev,
-                                                [field]: value
-                                            }));
-                                        }
-                                    }}                                    
-                                    
-                                    onSubmit={selectedSubject ? handleUpdateSubject : handleAddSubject}
-                                    isLoading={loading}
-                                /> */}
                             </CardContent>
                         </Card>
                     </TabsContent>
