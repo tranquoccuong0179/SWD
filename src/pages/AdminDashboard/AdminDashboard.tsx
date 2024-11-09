@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Divider, Layout, Typography, Table } from 'antd';
-import { BookOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { Button, Divider, Layout, Typography, Table, Form, Input, Upload, Modal, message } from 'antd';
+import { BookOutlined, ClockCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, CheckCircle, AlertCircle, Layers, FileText, DollarSign } from 'lucide-react';
@@ -42,11 +42,13 @@ const AdminDashboard = () => {
     const [selectedProblem, setSelectedProblem] = useState(null);
     const [selectedTopic, setSelectedTopic] = useState(null);
     const [unauthorized, setUnauthorized] = useState(false);
-    const [subjectForm, setSubjectForm] = useState({ name: '', price: '' });
+    const [subjectForm, setSubjectForm] = useState({ Name: '', ImageLink: '' });
     const [chapterForm, setChapterForm] = useState({ subjectId: '', name: '', order: 1 });
     const [problemForm, setProblemForm] = useState({ chapterId: '', name: '', description: '' });
     const [topicForm, setTopicForm] = useState({ problemId: '', name: '', description: '' });
     const [activeTab, setActiveTab] = useState('overview');
+    const [isOpen, setIsOpen] = useState(false)
+    const [form] = Form.useForm();
     // Fetch dashboard data
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -140,17 +142,51 @@ const AdminDashboard = () => {
     };
 
     const handleAddSubject = async () => {
-        try {
-            const response = await apiRequest('post', '/subjects', subjectForm);
-            if (response.data.statusCode === 200) {
-                await fetchSubjects();
-                setIsAddSubjectOpen(false);
-                setSubjectForm({ name: '', price: '' });
-            }
-        } catch (err) {
-            console.error('Error adding subject:', err);
+        // try {
+        //     const response = await apiRequest('post', '/subjects', subjectForm);
+        //     if (response.data.statusCode === 200) {
+        //         await fetchSubjects();
+        //         setIsAddSubjectOpen(false);
+        //         setSubjectForm({ Name: '', ImageLink: '' });
+        //     }
+        // } catch (err) {
+        //     console.error('Error adding subject:', err);
+        // }
+        const data = new FormData();
+        data.append('Name', subjectForm.Name);
+
+        if (subjectForm.ImageLink && subjectForm.ImageLink[0]) {
+            data.append('ImageLink', subjectForm.ImageLink[0]); // Chỉ lấy file đầu tiên
         }
+        console.log("ss", subjectForm);
+
     };
+
+    // const handleAddSubject = async () => {
+    //     try {
+    //         const formData = new FormData();
+    //         formData.append('Name', subjectForm.Name);
+
+    //         // Nếu có file được chọn
+    //         if (subjectForm.ImageLink instanceof File) {
+    //             formData.append('ImageLink', subjectForm.ImageLink);
+    //         }
+
+    //         const response = await apiRequest('post', '/subjects', formData, {
+    //             headers: {
+    //                 'Content-Type': 'multipart/form-data'
+    //             }
+    //         });
+
+    //         if (response.data.statusCode === 200) {
+    //             await fetchSubjects();
+    //             setIsAddSubjectOpen(false);
+    //             setSubjectForm({ Name: '', ImageLink: '' });
+    //         }
+    //     } catch (err) {
+    //         console.error('Error adding subject:', err);
+    //     }
+    // };
 
     const handleUpdateSubject = async () => {
         try {
@@ -159,7 +195,7 @@ const AdminDashboard = () => {
                 await fetchSubjects();
                 setIsAddSubjectOpen(false);
                 setSelectedSubject(null);
-                setSubjectForm({ name: '', price: '' });
+                setSubjectForm({ Name: '', ImageLink: '' });
             }
         } catch (err) {
             console.error('Error updating subject:', err);
@@ -168,15 +204,17 @@ const AdminDashboard = () => {
 
     const handleDeleteSubject = async (subjectId) => {
         try {
-            const response = await apiRequest('delete', `/subjects/${subjectId}`);
-            if (response.data.statusCode === 200) {
-                await fetchSubjects();
-            }
+            const response = await apiRequest('delete', `/subjects/${subjectId}`).then((res) => {
+                fetchSubjects();
+            });
+            // if (response.data.statusCode === 200) {
+            //     await fetchSubjects();
+            // }
         } catch (err) {
             console.error('Error deleting subject:', err);
         }
     };
-    
+
     // API Functions for Chapters
     const fetchChapters = async () => {
         const data = await apiRequest('get', '/chapters');
@@ -333,19 +371,27 @@ const AdminDashboard = () => {
 
     const subjectFields = [
         {
-            name: 'name',
+            name: 'Name',
             label: 'Tên Môn Học',
             required: true,
             type: 'text'
         },
+        // {
+        //     name: 'price',
+        //     label: 'Giá (VNĐ)',
+        //     required: true,
+        //     type: 'number',
+        //     min: 0,
+        //     description: 'Nhập giá không bao gồm dấu phẩy hoặc đơn vị tiền tệ'
+        // }
         {
-            name: 'price',
-            label: 'Giá (VNĐ)',
+            name: 'ImageLink',
+            label: 'Ảnh Môn Học',
             required: true,
-            type: 'number',
-            min: 0,
-            description: 'Nhập giá không bao gồm dấu phẩy hoặc đơn vị tiền tệ'
-        }
+            type: 'file',
+            accept: 'image/*', // Chỉ cho phép upload file ảnh
+
+        },
     ];
 
     // Field configurations for other sections
@@ -472,6 +518,76 @@ const AdminDashboard = () => {
             </Card>
         );
     }
+    console.log("id", selectedSubject);
+    
+    const handleFinish = (values) => {
+        const formData = new FormData();
+        formData.append('Name', values.Name);
+        formData.append('id', selectedSubject?.id);
+
+        // Nếu có file ảnh, thêm nó vào FormData
+        if (values.ImageLink && values.ImageLink[0]) {
+            formData.append('ImageLink', values.ImageLink[0].originFileObj);
+        }
+        if (selectedSubject !== null) {
+            axios.put(`https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/subjects?id=${selectedSubject.id}`, formData)
+                .then(async response => {
+                    await fetchSubjects();
+                    setIsOpen(false)
+                    message.success("Update thành công")
+                    console.log('Success:', response.data);
+                    setSelectedSubject(null)
+                    form.resetFields(); // Reset form sau khi submit
+                    // Xử lý sau khi submit thành công
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        } else {
+            axios.post('https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/subjects', formData)
+                .then(async response => {
+                    await fetchSubjects();
+                    setIsOpen(false)
+                    message.success("Thêm thành công")
+                    console.log('Success:', response.data);
+                    form.resetFields(); // Reset form sau khi submit
+                    // Xử lý sau khi submit thành công
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        // Gửi formData tới server bằng axios
+
+
+    };
+    const onClose = () => {
+        setIsOpen(false)
+    }
+    const haneleSetSubject = (object) => {
+        const item = subjects?.find((e) => e?.id === object?.id);
+        console.log("Selected item:", item);
+
+        if (item) {
+            // Kiểm tra xem có URL ảnh không
+            const imageFile = item.image ? [{
+                uid: item.id,          // Duy nhất, dùng id của subject
+                name: 'image.jpg',     // Tên file có thể đặt theo ý
+                status: 'done',        // Trạng thái là 'done' nếu ảnh đã có
+                url: item.image,       // URL ảnh từ API
+            }] : [];  // Nếu không có ảnh, để mảng rỗng
+
+            console.log("Image file to set:", imageFile); // Kiểm tra mảng imageFile
+
+            // Cập nhật giá trị vào form
+            form.setFieldsValue({
+                Name: item.name,      // Cập nhật tên môn học
+                ImageLink: imageFile, // Cập nhật trường ImageLink
+            });
+        }
+    };
+
+    console.log("gh", subjects);
 
     return (
         <Layout className="landing-page mt-16">
@@ -577,9 +693,10 @@ const AdminDashboard = () => {
                             <CardContent>
                                 <Button
                                     onClick={() => {
-                                        setSelectedSubject(null);
-                                        setSubjectForm({ name: '', price: '' });
-                                        setIsAddSubjectOpen(true);
+                                        // setSelectedSubject(null);
+                                        // setSubjectForm({ Name: '', ImageLink: '' });
+                                        // setIsAddSubjectOpen(true);
+                                        setIsOpen(true)
                                     }}
                                     className="mb-4"
                                 >
@@ -596,14 +713,24 @@ const AdminDashboard = () => {
                                                     dataIndex: 'name',
                                                     key: 'name',
                                                 },
+                                                // {
+                                                //     title: 'Giá',
+                                                //     dataIndex: 'price',
+                                                //     key: 'price',
+                                                //     render: (price) => new Intl.NumberFormat('vi-VN', {
+                                                //         style: 'currency',
+                                                //         currency: 'VND'
+                                                //     }).format(price),
+                                                // },
                                                 {
-                                                    title: 'Giá',
-                                                    dataIndex: 'price',
-                                                    key: 'price',
-                                                    render: (price) => new Intl.NumberFormat('vi-VN', {
-                                                        style: 'currency',
-                                                        currency: 'VND'
-                                                    }).format(price),
+                                                    title: 'Ảnh Môn Học',
+                                                    dataIndex: 'image',
+                                                    key: 'image',
+                                                    render: (text) => (
+                                                        <div style={{ textAlign: 'center' }}>
+                                                            <img src={text} alt="Ảnh Môn Học" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
+                                                        </div>
+                                                    ),
                                                 },
                                                 {
                                                     title: 'Quản Lý',
@@ -612,9 +739,11 @@ const AdminDashboard = () => {
                                                         <div className="flex space-x-2">
                                                             <Button
                                                                 onClick={() => {
+                                                                    haneleSetSubject(subject)
                                                                     setSelectedSubject(subject);
-                                                                    setSubjectForm({ name: subject.name, price: subject.price });
-                                                                    setIsAddSubjectOpen(true);
+                                                                    // setSubjectForm({ name: subject.Name, image: subject.ImageLink });
+                                                                    // setIsAddSubjectOpen(true);
+                                                                    setIsOpen(true)
                                                                 }}
                                                             >
                                                                 Sửa
@@ -632,17 +761,79 @@ const AdminDashboard = () => {
                                         <div>No subjects available</div>
                                     )}
                                 </div>
+                                <Modal
+                                    visible={isOpen}
+                                    title="Thêm Môn Học"
+                                    onCancel={onClose}
+                                    footer={[
+                                        <Button key="back" onClick={onClose}>
+                                            Hủy
+                                        </Button>,
+                                        <Button
+                                            key="submit"
+                                            type="primary"
+                                            loading={loading}
+                                            onClick={() => form.submit()} // Kích hoạt submit form
+                                        >
+                                            Lưu
+                                        </Button>,
+                                    ]}
+                                >
+                                    <Form form={form} layout="vertical" onFinish={handleFinish}>
+                                        <Form.Item
+                                            name="Name"
+                                            label="Tên Môn Học"
+                                            rules={[{ required: true, message: 'Vui lòng nhập tên môn học' }]}
+                                        >
+                                            <Input placeholder="Nhập tên môn học" />
+                                        </Form.Item>
 
-                                <CRUDDialog
+                                        <Form.Item
+                                            name="ImageLink"
+                                            label="Ảnh Môn Học"
+                                            valuePropName="fileList"  // Đảm bảo sử dụng fileList trong valuePropName
+                                            getValueFromEvent={(e) => e?.fileList} // Lấy fileList khi thay đổi
+                                            rules={[{ required: true, message: 'Vui lòng tải lên ảnh môn học' }]}
+                                        >
+                                            <Upload
+                                                name="file"
+                                                listType="picture"
+                                                beforeUpload={() => false}  // Ngừng việc upload ngay khi chọn ảnh (chỉ lưu cục bộ)
+                                                defaultFileList={form.getFieldValue('ImageLink')}  // Sử dụng giá trị default từ form (dữ liệu đã có)
+                                            >
+                                                <Button icon={<UploadOutlined />}>Chọn Ảnh</Button>
+                                            </Upload>
+                                        </Form.Item>
+
+                                    </Form>
+                                </Modal>
+                                {/* <CRUDDialog
                                     isOpen={isAddSubjectOpen}
                                     onClose={() => setIsAddSubjectOpen(false)}
                                     title={selectedSubject ? "Sửa Môn Học" : "Thêm Môn Học"}
                                     fields={subjectFields}
                                     formData={subjectForm}
-                                    setFormData={setSubjectForm}
+                                    // setFormData={setSubjectForm}
+                                    setFormData={(field, value) => {
+                                        console.log("Field:", field); // Kiểm tra tên trường
+                                        console.log("Value:", value); // Kiểm tra giá trị trường hoặc file
+                                    
+                                        if (field === 'ImageLink') {
+                                            setSubjectForm(prev => ({
+                                                ...prev,
+                                                [field]: value.target.files[0] // Lưu file vào form
+                                            }));
+                                        } else {
+                                            setSubjectForm(prev => ({
+                                                ...prev,
+                                                [field]: value
+                                            }));
+                                        }
+                                    }}                                    
+                                    
                                     onSubmit={selectedSubject ? handleUpdateSubject : handleAddSubject}
                                     isLoading={loading}
-                                />
+                                /> */}
                             </CardContent>
                         </Card>
                     </TabsContent>
