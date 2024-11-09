@@ -42,7 +42,12 @@ const AdminDashboard = () => {
     const [selectedProblem, setSelectedProblem] = useState(null);
     const [selectedTopic, setSelectedTopic] = useState(null);
     const [unauthorized, setUnauthorized] = useState(false);
-    const [subjectForm, setSubjectForm] = useState({ name: '', price: '' });
+    const [subjectForm, setSubjectForm] = useState({
+        id: '',
+        name: '',
+        price: '',
+        imageLink: null
+    });
     const [chapterForm, setChapterForm] = useState({ subjectId: '', name: '', order: 1 });
     const [problemForm, setProblemForm] = useState({ chapterId: '', name: '', description: '' });
     const [topicForm, setTopicForm] = useState({ problemId: '', name: '', description: '' });
@@ -104,13 +109,20 @@ const AdminDashboard = () => {
         }
 
         try {
+            const headers = {
+                accept: '*/*',
+                Authorization: `Bearer ${token}`,
+            };
+
+            // Don't set Content-Type for FormData, let browser set it automatically
+            if (!(data instanceof FormData)) {
+                headers['Content-Type'] = 'application/json';
+            }
+
             const response = await axios({
                 method,
                 url: `${API_BASE_URL}${url}`,
-                headers: {
-                    accept: '*/*',
-                    Authorization: `Bearer ${token}`,
-                },
+                headers,
                 data,
             });
 
@@ -141,25 +153,40 @@ const AdminDashboard = () => {
 
     const handleAddSubject = async () => {
         try {
-            const response = await apiRequest('post', '/subjects', subjectForm);
-            if (response.data.statusCode === 200) {
+            const formData = new FormData();
+            formData.append('name', subjectForm.name);
+            formData.append('price', subjectForm.price);
+            if (subjectForm.imageLink) {
+                formData.append('imageLink', subjectForm.imageLink);
+            }
+
+            const response = await apiRequest('post', '/subjects', formData);
+            if (response) {
                 await fetchSubjects();
                 setIsAddSubjectOpen(false);
-                setSubjectForm({ name: '', price: '' });
+                setSubjectForm({ id: '', name: '', price: '', imageLink: null });
             }
         } catch (err) {
             console.error('Error adding subject:', err);
         }
     };
 
+// Update the update subject handler
     const handleUpdateSubject = async () => {
         try {
-            const response = await apiRequest('put', '/subjects', subjectForm);
-            if (response.data.statusCode === 200) {
+            const formData = new FormData();
+            formData.append('id', subjectForm.id);
+            formData.append('name', subjectForm.name);
+            if (subjectForm.imageLink) {
+                formData.append('imageLink', subjectForm.imageLink);
+            }
+
+            const response = await apiRequest('put', '/subjects', formData);
+            if (response) {
                 await fetchSubjects();
                 setIsAddSubjectOpen(false);
                 setSelectedSubject(null);
-                setSubjectForm({ name: '', price: '' });
+                setSubjectForm({ id: '', name: '', price: '', imageLink: null });
             }
         } catch (err) {
             console.error('Error updating subject:', err);
@@ -333,6 +360,13 @@ const AdminDashboard = () => {
 
     const subjectFields = [
         {
+            name: 'id',
+            label: 'ID Môn Học',
+            required: true,
+            type: 'text',
+            description: 'ID duy nhất của môn học'
+        },
+        {
             name: 'name',
             label: 'Tên Môn Học',
             required: true,
@@ -345,6 +379,14 @@ const AdminDashboard = () => {
             type: 'number',
             min: 0,
             description: 'Nhập giá không bao gồm dấu phẩy hoặc đơn vị tiền tệ'
+        },
+        {
+            name: 'imageLink',
+            label: 'Hình Ảnh',
+            required: false,
+            type: 'file',
+            accept: 'image/*',
+            description: 'Chọn hình ảnh cho môn học'
         }
     ];
 
