@@ -1,0 +1,416 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Button, Modal, Form, Input, Table, message, Layout } from 'antd';
+import { Wallet, CreditCard, History, GraduationCap, TrendingUp, Clock } from 'lucide-react';
+import Header from '../../components/Header/Header.tsx';
+import "./IntergratedWallet.css";
+import { Navigate } from 'react-router-dom';
+
+interface WalletData {
+    userId: string;
+    balance: number;
+    transactions: Array<{
+        id: string;
+        description: string;
+        amount: number;
+        date: string;
+        status: 'COMPLETED' | 'PENDING' | 'FAILED';
+        transactionType: 'PURCHASE' | 'DEPOSIT' | 'REFUND';
+    }>;
+    purchasedCourses: Array<{
+        id: string;
+        name: string;
+        price: number;
+    }>;
+}
+
+const BASE_API_URL = 'https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net';
+
+const getAuthToken = () => localStorage.getItem('accessToken');
+
+// Format number as Vietnamese currency (VND)
+const formatCurrency = (amount: number | undefined | null) => {
+    if (amount === undefined || amount === null) return '0 ₫';
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0
+    }).format(amount);
+};
+
+const IntegratedWallet: React.FC = () => {
+    const [walletData, setWalletData] = useState<WalletData>({
+        userId: '',
+        balance: 0,
+        transactions: [],
+        purchasedCourses: []
+    });
+    const [showAddFunds, setShowAddFunds] = useState(false);
+    const [amount, setAmount] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [solutions, setSolutions] = useState([]);
+    const [transaction, setTransaction] = useState([]);
+
+
+    const token = localStorage.getItem('accessToken');
+    // console.log("Token exist?:", !!token);
+    console.log("Token:", token);   
+    const headers = {
+        'accept': '*/*',
+        'Authorization': `Bearer ${token}`,
+    };
+
+    // Fetch wallet data
+    const fetchWalletData = async () => {
+        try {
+            setIsLoading(true);
+            const token = getAuthToken();
+            if (!token) {
+                message.error('Vui lòng đăng nhập để xem thông tin ví');
+                return;
+            }
+
+            const response = await axios.get(`${BASE_API_URL}/api/wallets`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.data) {
+                // Ensure numeric values are properly parsed
+                const parsedData = {
+                    userId: response.data.data.userId,
+                    balance: parseFloat(response.data.data.balance) || 0,
+                    transactions: (response.data.data.transactions || []).map((t: any) => ({
+                        ...t,
+                        amount: parseFloat(t.amount) || 0
+                    })),
+                    purchasedCourses: (response.data.data.purchasedCourses || []).map((c: any) => ({
+                        ...c,
+                        price: parseFloat(c.price) || 0
+                    }))
+                };
+                console.log("Parsed wallet data:", parsedData);  // Debug line
+                setWalletData(parsedData);
+            }
+        } catch (error) {
+            console.error('Error fetching wallet data:', error);
+            message.error('Không thể tải thông tin ví. Vui lòng thử lại sau.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Fetch transaction history
+    const fetchTransaction = async () => {
+        try {
+            const response = await axios.get(
+                `https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/transactions`,
+                { headers }
+            );
+            setTransaction(response.data.data.items);
+        }
+        catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    //Fetch solution data
+    const fetchSolutions = async () => {
+        try {
+            const response = await axios.get(
+                `https://manim-api-ffh6c8ewbehjc0hn.southeastasia-01.azurewebsites.net/api/solutions`,
+                { headers }
+            );
+            // setSolutions(response.data.data.items);
+            const id = localStorage.getItem('id')
+            const data = response.data.data.items?.filter((e) => e?.userId === id)
+            setSolutions(data)
+        }
+        catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Initial fetch when component mounts
+    useEffect(() => {
+        fetchWalletData();
+        fetchSolutions();
+        fetchTransaction();
+
+
+        // Set up polling for wallet data every 30 seconds
+        const pollInterval = setInterval(fetchWalletData, 30000);
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(pollInterval);
+    }, []);
+
+    // Handle payment success
+    const handlePaymentSuccess = async () => {
+        await fetchWalletData();
+        setShowAddFunds(false);
+        message.success('Nạp tiền thành công!');
+        setTimeout(() => {
+            Navigate("/wallet")
+        }, 10000)
+    };
+
+    // Handle adding funds to wallet
+    const handleAddFunds = async () => {
+        setLoading(true);
+
+        try {
+            const token = getAuthToken();
+            if (!token) {
+                message.error('Vui lòng đăng nhập để nạp tiền');
+                return;
+            }
+
+            // Ensure amount is a valid number
+            const numericAmount = parseFloat(amount);
+            if (isNaN(numericAmount) || numericAmount <= 0) {
+                message.error('Vui lòng nhập số tiền hợp lệ');
+                return;
+            }
+
+            const response = await axios.post(`${BASE_API_URL}/api/wallets/create`, null, {
+                params: { balance: numericAmount },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.data?.checkoutUrl) {
+                const newWindow = window.open(response.data.checkoutUrl, '_blank');
+                if (newWindow) {
+                    newWindow.focus();
+                }
+
+                // Set up payment status check
+                const checkPaymentStatus = setInterval(async () => {
+                    try {
+                        const statusResponse = await axios.get(`${BASE_API_URL}/api/wallets`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+
+                        const newBalance = parseFloat(statusResponse.data.data.balance) || 0;
+                        if (newBalance > walletData.balance) {
+                            clearInterval(checkPaymentStatus);
+                            handlePaymentSuccess();
+                        }
+                    } catch (error) {
+                        console.error('Error checking payment status:', error);
+                    }
+                }, 5000);
+
+                // Clear interval after 5 minutes
+                setTimeout(() => {
+                    clearInterval(checkPaymentStatus);
+                }, 300000);
+            }
+        } catch (error) {
+            console.error('Add funds error:', error);
+            message.error('Có lỗi xảy ra khi nạp tiền. Vui lòng thử lại sau.');
+        } finally {
+            setLoading(false);
+            setAmount('');
+        }
+    };
+
+    // Table columns for transactions
+    const transactionColumns = [
+        // {
+        //     title: 'Mô tả',
+        //     dataIndex: 'description',
+        //     key: 'description',
+        //     render: (text: string) => <div className="font-medium text-gray-800">{text}</div>
+        // },
+        {
+            title: 'Số tiền',
+            dataIndex: 'amount',
+            key: 'amount',
+            render: (amount: number) => (
+                <div className={`font-medium ${amount >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+                    {formatCurrency(amount)}
+                </div>
+            ),
+        },
+        // {
+        //     title: 'Ngày',
+        //     dataIndex: 'date',
+        //     key: 'date',
+        //     render: (date: string) => (
+        //         <div className="flex items-center gap-2 text-gray-600">
+        //             <Clock size={16} /> {date}
+        //         </div>
+        //     ),
+        // },
+        // {
+        //     title: 'Trạng thái',
+        //     dataIndex: 'status',
+        //     key: 'status',
+        //     render: (status: string) => {
+        //         const statusConfig = {
+        //             COMPLETED: { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200' },
+        //             PENDING: { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200' },
+        //             FAILED: { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200' }
+        //         };
+        //         const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.PENDING;
+        //         return (
+        //             <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${config.bg} ${config.text} ${config.border}`}>
+        //                 {status === 'COMPLETED' && '✓ '}
+        //                 {status === 'FAILED' && '✕ '}
+        //                 {status === 'PENDING' && '⋯ '}
+        //                 {status}
+        //             </span>
+        //         );
+        //     },
+        // },
+        {
+            title: 'Mô tả',
+            dataIndex: 'amount',
+            key: 'amount',
+            render: (amount: number) => (
+                <div className={`font-medium ${amount >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+                    {amount > 0 ? 'Nạp tiền' : 'Mua lời giải'} {formatCurrency(amount)}
+                </div>
+            ),
+        },
+        {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            key: 'status',
+            render: (text: string) => (
+                <div className={`font-medium ${text === 'Complete' ? 'text-green-600' : text === 'Failed' ? 'text-red-600' : 'text-gray-800'}`}>
+                    {text}
+                </div>
+            )
+        }
+    ];
+
+    // Table columns for purchased solution
+    const courseColumns = [
+        {
+            title: 'Tên',
+            dataIndex: 'name',
+            key: 'name',
+            render: (text: string) => <div className="name-col font-medium text-gray-800">{text}</div>
+        },
+        {
+            title: 'Mô tả',
+            dataIndex: 'description',
+            key: 'description',
+            render: (text: string) => <div className="des-col font-medium text-gray-800">{text}</div>
+        },
+        {
+            title: 'URL',
+            dataIndex: 'url',
+            key: 'url',
+            render: (text: string) => <div className="url-col font-medium text-gray-800">{text}</div>
+        },
+        {
+            title: 'Xem lời giải',
+            key: 'action',
+            render: (record: any) => (
+                <div className="url-button flex justify-center">
+                    <Button type="primary" onClick={() => window.open(record.url, '_blank')}>
+                        Xem
+                    </Button></div>
+            )
+        }
+    ];
+
+    return (
+        <Layout className="landing-page">
+            <Header />
+            <div className='body-content'>
+                <div className="min-h-screen bg-gray-50">
+                    <div className="max-w-20xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+                        {/* Wallet Header */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                            <div className="p-6 sm:p-8">
+                                <div className="flex justify-between items-center mb-8">
+                                    <div className="flex items-center gap-4">
+                                        <div className="bg-blue-50 p-3 rounded-xl">
+                                            <Wallet className="text-blue-600 h-6 w-6" />
+                                        </div>
+                                        <h1 className="text-2xl font-semibold leading-6 text-gray-900">Ví của tôi</h1>
+                                    </div>
+                                    <Button type="primary" className="h-10 w-30 flex items-center gap-2" onClick={() => setShowAddFunds(true)}>
+                                        <CreditCard className="h-5 w-5" />
+                                        Nạp tiền
+                                    </Button>
+                                </div>
+                                <div className="mb-8 flex gap-2 items-center text-gray-600 text-lg">
+                                    <TrendingUp size={26} /> Số dư khả dụng: <strong className="text-xl font-semibold text-gray-900">{formatCurrency(walletData.balance)}</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Transactions Section */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+                            <div className="p-6 sm:p-8">
+                                <div className="flex items-center gap-4 mb-6">
+                                    <History className="h-6 w-6 text-gray-500" />
+                                    <h2 className="text-lg font-semibold leading-6 text-gray-900">Lịch sử giao dịch</h2>
+                                </div>
+                                <Table
+                                    columns={transactionColumns}
+                                    dataSource={transaction}
+                                    rowKey="id"
+                                    pagination={{ pageSize: 5 }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Purchased Courses Section */}
+                        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div className="p-6 sm:p-8">
+                                <div className="flex items-center gap-4 mb-6">
+                                    <GraduationCap className="h-6 w-6 text-gray-500" />
+                                    <h2 className="text-lg font-semibold leading-6 text-gray-900">Lời giải đã mua</h2>
+                                </div>
+                                <Table
+                                    columns={courseColumns}
+                                    dataSource={solutions}
+                                    rowKey="id"
+                                    pagination={{ pageSize: 5 }}
+                                />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Add Funds Modal */}
+                <Modal
+                    title="Nạp tiền vào ví"
+                    visible={showAddFunds}
+                    onCancel={() => setShowAddFunds(false)}
+                    footer={[
+                        <Button key="cancel" onClick={() => setShowAddFunds(false)}>Hủy</Button>,
+                        <Button key="submit" type="primary" onClick={handleAddFunds} loading={loading}>Xác nhận</Button>
+                    ]}
+                >
+                    <Input
+                        placeholder="Nhập số tiền"
+                        value={amount}
+                        onChange={(e) => setAmount(e.target.value)}
+                    />
+                </Modal>
+            </div>
+        </Layout>
+    );
+};
+
+export default IntegratedWallet;

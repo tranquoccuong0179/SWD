@@ -1,0 +1,96 @@
+.subject-page {
+    font-family: 'Arial', sans-serif;
+}
+
+.content {
+    padding: 2rem 5%;
+}
+
+.breadcrumb {
+    margin-bottom: 1rem;
+}
+
+.subject-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    max-width: 90%; /* Giới hạn độ rộng tối đa của danh sách */
+    margin: 0 auto; /* Căn giữa danh sách */
+}
+
+.subject-list {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    scroll-behavior: smooth;
+    flex-grow: 1;
+    scroll-snap-type: x mandatory;
+    max-width: 100%; /* Giới hạn chiều rộng tối đa */
+}
+
+.subject-list::-webkit-scrollbar {
+    display: none; /* Ẩn thanh cuộn ngang */
+}
+
+.subject-card {
+    min-width: 280px;
+    max-width: 280px;
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start;
+}
+
+.subject-image {
+    transition: all 0.3s ease;
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.subject-details {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.subject-button {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-button.left {
+    left: -20px;
+}
+
+.scroll-button.right {
+    right: -20px;
+}
+
+@media (max-width: 768px) {
+    .subject-list {
+        flex-direction: column;
+        overflow-x: visible;
+    }
+
+    .scroll-button {
+        display: none;
+    }
+}

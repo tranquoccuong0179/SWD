@@ -1,0 +1,220 @@
+.container {
+  width: 100% !important;
+}
+.imageSetup {
+  /* background-image: url(../../assets/authpic.jpg); */
+  /* background-image: url(https://cdn-gkbkl.nitrocdn.com/EahsqmkNZSarsOQvgGaWKiasFdUDbxev/assets/images/optimized/rev-a96de8d/www.oloid.ai/wp-content/uploads/2023/01/AI-benefits.jpg); */
+  background-image: url(https://files.oaiusercontent.com/file-uwH5FCyjpmk9XMfL2R4uLEzL?se=2024-11-01T11%3A10%3A47Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D5443250a-6d6f-4168-bb87-6b1c8cc4c137.webp&sig=zy17GrIf2GMoICeV5pBewTUI/IYQOsTT9BO6cZ5JHL0%3D);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.auth-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.auth-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.tab {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #495057;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  color: #007bff;
+  border-bottom-color: #007bff;
+}
+
+.auth-form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+/* Styles mới cho Input Group */
+.input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  width: 100%;
+}
+
+.input-group .form-control {
+  position: relative;
+  flex: 1 1 auto;
+  width: 1%;
+  min-width: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input-group .btn-outline-secondary {
+  padding: 0 12px;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-left: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  width: 46px; /* Thêm chiều rộng cố định cho button */
+}
+
+.input-group .btn-outline-secondary:hover {
+  background-color: #f8f9fa;
+}
+
+.input-group .btn-outline-secondary:focus {
+  box-shadow: none;
+  border-color: #80bdff;
+}
+
+.input-group .btn-outline-secondary svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.social-button:hover {
+  background-color: #f8f9fa;
+}
+
+.social-button svg {
+  margin-right: 10px;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #ced4da;
+}
+
+.divider span {
+  padding: 0 10px;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-3 {
+  margin-top: 15px;
+}
+
+.two-columns {
+  display: flex;
+  justify-content: space-between;
+}
+
+.two-columns .form-group {
+  width: 48%;
+}
+
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.button-with-border {
+  border: 1px solid red;
+}
+
+.text-danger {
+  display: block;
+  white-space: normal;
+  max-width: 300px;
+  word-wrap: break-word;
+}
+
+.google-icon:hover {
+  color: white;
+}
