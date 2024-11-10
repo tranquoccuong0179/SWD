@@ -215,7 +215,7 @@ const TopicDetailsPage = () => {
                                                 onChange={handleInputChange} placeholder={`Nhập ${e.symbol}`} /></div>
                                         </>)
                                     })}
-                                    <Button type="primary" size="large" onClick={handleSubmit}>Gửi tham số</Button>
+                                    <Button type="primary" size="large" onClick={handleSubmit}>Mua lời giải (5000 vnđ)</Button>
                                 </div>
                             </div>
                         </div>
